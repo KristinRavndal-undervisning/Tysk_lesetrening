@@ -3,26 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lesetrening for tysk – Nivå 2</title>
+  <title>Lesetrening for tysk</title>
   <style>
-    /* ============================================================
-       KONFIGURASJON – rediger her for å legge til/endre kategorier
-       ============================================================
-       Hvert objekt i listen har:
-         icon   – et emoji-tegn som vises på kortet
-         title  – navn på oppgavetypen
-         desc   – kort beskrivelse (vises under tittelen)
-         accent – fargekode på toppstripe: "red" | "gold" | "dark"
-         href   – lenke til oppgavesiden (f.eks. "les-og-forsta.html")
-
-       Slik legger du til en ny kategori:
-         1. Kopier én av linjene nedenfor
-         2. Lim den inn etter den siste kategorien (før ];)
-         3. Endre verdiene
-    ============================================================ */
-
-    /* (konfigurasjonen er i <script>-blokken nederst) */
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
@@ -32,10 +14,10 @@
       min-height: 100vh;
     }
 
-    .page { max-width: 680px; margin: 0 auto; padding: 0 1.25rem 3rem; }
+    .page { max-width: 620px; margin: 0 auto; padding: 0 1.25rem 3rem; }
 
     /* ---- hero ---- */
-    .hero { text-align: center; padding: 2.5rem 1rem 1.5rem; }
+    .hero { text-align: center; padding: 2.5rem 1rem 1.75rem; }
 
     .flag { display: flex; justify-content: center; margin-bottom: 1.5rem; }
     .flag span { width: 44px; height: 14px; display: inline-block; }
@@ -43,74 +25,132 @@
     .flag .f2 { background: #DD0000; }
     .flag .f3 { background: #FFCE00; border-radius: 0 4px 4px 0; }
 
-    .reader { position: relative; width: 72px; height: 88px; margin: 0 auto 1rem; }
-    .eyes { position: absolute; top: 0; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; }
-    .eye { width: 8px; height: 8px; background: #333; border-radius: 50%;
-           animation: blink 2.5s ease-in-out infinite; }
-    .eye:last-child { animation-delay: .15s; }
-    .book-wrap { position: absolute; bottom: 0; width: 72px; height: 70px;
-                 animation: float 3s ease-in-out infinite; }
-    .book-body { width: 72px; height: 60px; background: #DD0000;
-                 border-radius: 3px 8px 8px 3px; position: absolute; bottom: 0;
-                 box-shadow: inset -4px 0 0 #b00000; }
-    .book-spine { width: 10px; height: 60px; background: #b00000;
-                  border-radius: 3px 0 0 3px; position: absolute; bottom: 0; left: 0; }
-    .book-page { width: 28px; height: 44px; background: #fffdf0;
-                 border-radius: 0 3px 3px 0; position: absolute; right: 8px; bottom: 8px; }
-    .book-line { height: 2px; background: #ccc; border-radius: 1px; margin: 5px 4px; }
-    .book-page-anim { width: 28px; height: 44px; background: #f5f0e0;
-                      border-radius: 0 3px 3px 0; position: absolute; right: 8px; bottom: 8px;
-                      transform-origin: left center;
-                      animation: pageFlip 2.4s ease-in-out infinite; }
-
-    @keyframes float    { 0%,100%{transform:translateY(0)}   50%{transform:translateY(-6px)} }
-    @keyframes pageFlip { 0%,100%{transform:rotateY(0deg)}   50%{transform:rotateY(-20deg)} }
-    @keyframes blink    { 0%,100%{opacity:1}                 50%{opacity:0.3} }
-
-    .level-pill {
-      display: inline-block; background: #FFCE00; color: #412402;
-      font-size: 11px; font-weight: 600; border-radius: 20px;
-      padding: 3px 14px; margin-bottom: 10px; letter-spacing: .04em;
+    /* ---- animated book scene ---- */
+    .scene {
+      width: 200px; height: 160px;
+      margin: 0 auto 1.2rem;
+      position: relative;
+      display: flex; align-items: flex-end; justify-content: center;
     }
+
+    .table-top   { position:absolute; bottom:28px; left:0; right:0; height:10px; background:#c8a96e; border-radius:3px; }
+    .table-edge  { position:absolute; bottom:18px; left:0; right:0; height:10px; background:#a8894e; border-radius:0 0 3px 3px; }
+    .table-shadow{ position:absolute; bottom:15px; left:20px; right:20px; height:6px; background:rgba(0,0,0,0.10); border-radius:50%; }
+
+    .book-wrap {
+      position: absolute;
+      bottom: 37px;
+      left: 50%; transform: translateX(-50%);
+    }
+    .book-shadow {
+      position: absolute;
+      bottom: -4px; left: 50%; transform: translateX(-50%);
+      width: 110px; height: 8px;
+      background: rgba(0,0,0,0.13);
+      border-radius: 50%;
+    }
+
+    .open-book {
+      display: flex; align-items: flex-end;
+      transform: perspective(400px) rotateX(28deg);
+      transform-origin: bottom center;
+    }
+
+    .page-left {
+      width: 52px; height: 64px;
+      background: #fffdf0;
+      border-radius: 5px 0 0 1px;
+      border: 1px solid #e0d8be;
+      transform: perspective(300px) rotateY(18deg);
+      transform-origin: right bottom;
+      position: relative;
+    }
+    .page-right {
+      width: 52px; height: 64px;
+      background: #faf6e4;
+      border-radius: 0 5px 1px 0;
+      border: 1px solid #e0d8be;
+      transform: perspective(300px) rotateY(-18deg);
+      transform-origin: left bottom;
+      position: relative;
+    }
+    .spine-center {
+      width: 10px; height: 64px;
+      background: #DD0000;
+      flex-shrink: 0;
+      border-radius: 1px;
+    }
+    .cover-left {
+      position: absolute; bottom: -7px; left: -4px; right: -1px; height: 9px;
+      background: #DD0000; border-radius: 3px 0 0 3px;
+      transform: perspective(300px) rotateY(18deg); transform-origin: right bottom;
+    }
+    .cover-right {
+      position: absolute; bottom: -7px; left: -1px; right: -4px; height: 9px;
+      background: #c40000; border-radius: 0 3px 3px 0;
+      transform: perspective(300px) rotateY(-18deg); transform-origin: left bottom;
+    }
+
+    .pl { height: 2px; background: #ddd; border-radius: 1px; margin: 8px 6px 0; }
+    .pl.s { width: 55%; }
+    .pl.m { width: 75%; }
+
+    /* Stars */
+    .star {
+      position: absolute;
+      clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+      background: #FFCE00;
+      opacity: 0;
+      animation: rise linear infinite;
+    }
+    .s1 { width:11px;height:11px; left:62px;  bottom:60px; animation-duration:2.2s; animation-delay:0s;   --dx: 5px;  }
+    .s2 { width:7px; height:7px;  left:78px;  bottom:60px; animation-duration:2.7s; animation-delay:0.5s; --dx:-8px;  }
+    .s3 { width:13px;height:13px; left:95px;  bottom:60px; animation-duration:2.0s; animation-delay:1.0s; --dx: 3px;  }
+    .s4 { width:6px; height:6px;  left:112px; bottom:60px; animation-duration:2.9s; animation-delay:0.3s; --dx:-5px;  }
+    .s5 { width:9px; height:9px;  left:70px;  bottom:60px; animation-duration:2.4s; animation-delay:1.4s; --dx: 11px; }
+    .s6 { width:7px; height:7px;  left:104px; bottom:60px; animation-duration:2.1s; animation-delay:1.8s; --dx:-10px; }
+    .s7 { width:10px;height:10px; left:86px;  bottom:60px; animation-duration:2.6s; animation-delay:0.8s; --dx: 7px;  }
+
+    @keyframes rise {
+      0%   { opacity:0;   transform:translateY(0)     translateX(0)              rotate(0deg)  scale(0.5); }
+      15%  { opacity:1; }
+      85%  { opacity:0.6; }
+      100% { opacity:0;   transform:translateY(-85px) translateX(var(--dx, 6px)) rotate(35deg) scale(1.1); }
+    }
+
+    /* ---- tittel ---- */
     h1 { font-size: 24px; font-weight: 500; color: #1a1a1a; margin-bottom: 6px; }
-    .subtitle { font-size: 14px; color: #555; margin-bottom: 2rem; }
+    .hero-sub { font-size: 14px; color: #555; }
 
-    /* ---- søk ---- */
-    .search-row { display: flex; justify-content: center; margin-bottom: 2rem; }
-    .search-wrap {
-      display: flex; align-items: center; gap: 8px;
-      background: #fff; border: 1px solid #ddd; border-radius: 12px;
-      padding: 8px 14px; width: 100%; max-width: 380px;
-    }
-    .search-wrap input {
-      border: none; outline: none; font-size: 14px; color: #1a1a1a;
-      background: transparent; flex: 1;
-    }
-
-    /* ---- seksjonslabel ---- */
+    /* ---- oppgaveliste ---- */
     .section-label {
       font-size: 11px; font-weight: 600; color: #888;
-      letter-spacing: .08em; text-transform: uppercase; margin-bottom: 10px;
+      letter-spacing: .08em; text-transform: uppercase;
+      margin: 2rem 0 10px;
     }
 
-    /* ---- kortgrid ---- */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; }
+    .task-list { display: flex; flex-direction: column; gap: 8px; }
 
-    .cat-card {
-      background: #fff; border: 1px solid #e5e5e5; border-radius: 12px;
-      padding: 1rem; text-decoration: none; color: inherit; display: block;
-      transition: border-color .15s, background .15s;
+    .task-card {
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-left: 4px solid #DD0000;
+      border-radius: 0 10px 10px 0;
+      padding: 1rem 1.1rem;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      transition: background .15s, border-color .15s;
     }
-    .cat-card:hover { border-color: #bbb; background: #fafaf8; }
+    .task-card:hover { background: #fafaf8; border-color: #ccc; border-left-color: #DD0000; }
 
-    .accent-bar { height: 3px; border-radius: 2px; margin-bottom: 10px; }
-    .accent-red  { background: #DD0000; }
-    .accent-gold { background: #FFCE00; }
-    .accent-dark { background: #1a1a1a; }
-
-    .cat-icon  { font-size: 22px; margin-bottom: 6px; display: block; }
-    .cat-title { font-size: 14px; font-weight: 500; color: #1a1a1a; margin-bottom: 3px; }
-    .cat-desc  { font-size: 12px; color: #666; line-height: 1.5; }
+    .task-text { flex: 1; }
+    .task-title { font-size: 15px; font-weight: 500; color: #1a1a1a; margin-bottom: 3px; }
+    .task-desc  { font-size: 13px; color: #666; line-height: 1.4; }
+    .task-arrow { color: #bbb; font-size: 20px; flex-shrink: 0; line-height: 1; }
 
     /* ---- footer ---- */
     footer {
@@ -130,35 +170,50 @@
     <div class="flag">
       <span class="f1"></span><span class="f2"></span><span class="f3"></span>
     </div>
-    <div class="reader">
-      <div class="eyes"><div class="eye"></div><div class="eye"></div></div>
+
+    <div class="scene">
+      <div class="star s1"></div>
+      <div class="star s2"></div>
+      <div class="star s3"></div>
+      <div class="star s4"></div>
+      <div class="star s5"></div>
+      <div class="star s6"></div>
+      <div class="star s7"></div>
+
       <div class="book-wrap">
-        <div class="book-spine"></div>
-        <div class="book-body"></div>
-        <div class="book-page">
-          <div class="book-line"></div>
-          <div class="book-line" style="width:70%"></div>
-          <div class="book-line"></div>
-          <div class="book-line" style="width:80%"></div>
-          <div class="book-line" style="width:55%"></div>
+        <div class="book-shadow"></div>
+        <div class="open-book">
+          <div class="page-left">
+            <div class="pl"></div>
+            <div class="pl s"></div>
+            <div class="pl m"></div>
+            <div class="pl s"></div>
+            <div class="pl"></div>
+          </div>
+          <div class="spine-center"></div>
+          <div class="page-right">
+            <div class="pl m"></div>
+            <div class="pl"></div>
+            <div class="pl s"></div>
+            <div class="pl m"></div>
+            <div class="pl s"></div>
+          </div>
+          <div class="cover-left"></div>
+          <div class="cover-right"></div>
         </div>
-        <div class="book-page-anim"></div>
       </div>
+
+      <div class="table-top"></div>
+      <div class="table-edge"></div>
+      <div class="table-shadow"></div>
     </div>
-    <div class="level-pill">Nivå 2</div>
+
     <h1>Lesetrening for tysk</h1>
-    <p class="subtitle">Velg en oppgavetype for å starte</p>
+    <p class="hero-sub">Velg en oppgave for å starte</p>
   </div>
 
-  <div class="search-row">
-    <div class="search-wrap">
-      <span style="font-size:14px;color:#999">🔍</span>
-      <input id="searchInput" placeholder="Søk etter oppgave..." />
-    </div>
-  </div>
-
-  <p class="section-label">Oppgavetyper</p>
-  <div class="grid" id="catGrid"></div>
+  <p class="section-label">Oppgaver</p>
+  <div class="task-list" id="taskList"></div>
 
   <footer>
     <div class="flag-mini">
@@ -166,47 +221,42 @@
     </div>
     Viel Erfolg beim Lesen!
   </footer>
-</div>
 
+</div>
 <script>
   /* ============================================================
-     LEGG TIL ELLER ENDRE KATEGORIER HER
+     LEGG TIL ELLER ENDRE OPPGAVER HER
      ============================================================
-     Kopier én linje og lim inn etter den siste kategorien.
-     Felter:
-       icon   – emoji
-       title  – navn på oppgavetypen
-       desc   – kort beskrivelse
-       accent – "red" | "gold" | "dark"
+     Hvert objekt har:
+       title  – navn på oppgaven
+       desc   – kort beskrivelse av hva eleven skal gjøre
        href   – filnavn til oppgavesiden
+
+     VIKTIG: Ikke endre href etter at undersiden er opprettet.
+     Tittelen kan du endre fritt uten at lenken brekker.
+
+     Slik legger du til en ny oppgave:
+       1. Kopier én av linjene nedenfor
+       2. Lim inn etter siste oppgave (før ];)
+       3. Gi den neste ledige nummer, f.eks. "oppgave-04.html"
+       4. Endre title og desc
   ============================================================ */
-  const categories = [
-    { icon: "📖", title: "Les og forstå",     desc: "Les en tekst og svar på spørsmål om innholdet",  accent: "red",  href: "les-og-forsta.html"      },
-    { icon: "🔤", title: "Velg rett ord",      desc: "Fyll inn det riktige ordet fra en liste",         accent: "gold", href: "velg-rett-ord.html"       },
-    { icon: "🧩", title: "Organiser teksten",  desc: "Sett setninger eller avsnitt i riktig rekkefølge", accent: "dark", href: "organiser-teksten.html"  },
+  const tasks = [
+    { title: "Der Wochenmarkt", desc: "Les teksten og svar på spørsmålene",  href: "oppgave-01.html" },
+    { title: "Im Restaurant",   desc: "Velg rett ord i setningene",           href: "oppgave-02.html" },
+    { title: "Eine Postkarte",  desc: "Sett setningene i riktig rekkefølge",  href: "oppgave-03.html" },
   ];
   /* ============================================================ */
 
-  function render(list) {
-    const grid = document.getElementById('catGrid');
-    grid.innerHTML = list.map(c => `
-      <a class="cat-card" href="${c.href}">
-        <div class="accent-bar accent-${c.accent}"></div>
-        <span class="cat-icon">${c.icon}</span>
-        <p class="cat-title">${c.title}</p>
-        <p class="cat-desc">${c.desc}</p>
-      </a>
-    `).join('');
-  }
-
-  render(categories);
-
-  document.getElementById('searchInput').addEventListener('input', function() {
-    const q = this.value.toLowerCase();
-    render(q ? categories.filter(c =>
-      c.title.toLowerCase().includes(q) || c.desc.toLowerCase().includes(q)
-    ) : categories);
-  });
+  document.getElementById('taskList').innerHTML = tasks.map(t => `
+    <a class="task-card" href="${t.href}">
+      <div class="task-text">
+        <p class="task-title">${t.title}</p>
+        <p class="task-desc">${t.desc}</p>
+      </div>
+      <span class="task-arrow">›</span>
+    </a>
+  `).join('');
 </script>
 </body>
 </html>
