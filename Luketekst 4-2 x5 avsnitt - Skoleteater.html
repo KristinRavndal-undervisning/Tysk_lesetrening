@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Die Theatergruppe – Lückentext</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500&display=swap');
+
+  :root {
+    --bg: #F5F0FC;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+
+    --c0: #D85A30; --c0l: #FAECE7; --c0d: #4A1B0C;
+    --c1: #534AB7; --c1l: #EEEDFE; --c1d: #26215C;
+    --c2: #1D9E75; --c2l: #E1F5EE; --c2d: #04342C;
+    --c3: #BA7517; --c3l: #FAEEDA; --c3d: #412402;
+    --c4: #185FA5; --c4l: #E6F1FB; --c4d: #042C53;
+
+    --correct-bg: #EAF3DE;
+    --correct-border: #3B6D11;
+    --correct-text: #27500A;
+    --wrong-bg: #FCEBEB;
+    --wrong-border: #A32D2D;
+    --wrong-text: #A32D2D;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2.5rem 2rem;
+  }
+
+  .page { max-width: 1100px; width: 100%; }
+
+  .page-header {
+    margin-bottom: 1.5rem;
+    padding: 1.5rem 2rem;
+    background: #fff;
+    border-radius: var(--radius-xl);
+    border: 0.5px solid #AFA9EC;
+  }
+
+  .page-title {
+    font-family: 'Source Serif 4', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--c1d);
+    margin-bottom: 0.3rem;
+  }
+
+  .instr-sub { font-size: 13px; color: var(--c1); margin-bottom: 0.2rem; }
+  .instr-note { font-size: 13px; color: var(--c1); font-style: italic; }
+
+  .sections { display: flex; flex-direction: column; gap: 1.25rem; }
+
+  .section {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    border: 0.5px solid rgba(0,0,0,0.1);
+  }
+
+  .word-col {
+    padding: 1.25rem 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 7px;
+    align-content: center;
+  }
+
+  .word-col-label {
+    grid-column: 1 / -1;
+  }
+
+  .word-col-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.65;
+  }
+
+  .text-col {
+    background: #fff;
+    padding: 1.25rem 1.75rem;
+    font-size: 15px;
+    line-height: 2.15;
+    border-left: 0.5px solid rgba(0,0,0,0.07);
+  }
+
+  .word-chip {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: grab;
+    user-select: none;
+    background: #fff;
+    text-align: center;
+    width: 100%;
+    transition: opacity 0.15s, transform 0.1s;
+    border: 1.5px solid currentColor;
+  }
+
+  .word-chip:hover { opacity: 0.75; }
+  .word-chip:active { transform: scale(0.96); }
+  .word-chip.used { opacity: 0.22; cursor: default; pointer-events: none; }
+  .word-chip.dragging { opacity: 0.45; }
+
+  .drop-slot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 82px;
+    height: 27px;
+    border-radius: 6px;
+    border: 1.5px dashed currentColor;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.15s;
+    vertical-align: middle;
+    margin: 0 2px;
+    padding: 0 8px;
+  }
+
+  .drop-slot.over { opacity: 0.55; }
+  .drop-slot.filled { border-style: solid; }
+  .drop-slot.correct { border-color: var(--correct-border) !important; background: var(--correct-bg) !important; color: var(--correct-text) !important; pointer-events: none; }
+  .drop-slot.wrong { border-color: var(--wrong-border) !important; background: var(--wrong-bg) !important; color: var(--wrong-text) !important; }
+
+  .s0 .word-col { background: var(--c0l); }
+  .s0 .word-col-label, .s0 .word-chip, .s0 .drop-slot { color: var(--c0d); }
+  .s0 .word-chip { border-color: var(--c0); }
+  .s0 .drop-slot { color: var(--c0); background: var(--c0l); }
+
+  .s1 .word-col { background: var(--c1l); }
+  .s1 .word-col-label, .s1 .word-chip, .s1 .drop-slot { color: var(--c1d); }
+  .s1 .word-chip { border-color: var(--c1); }
+  .s1 .drop-slot { color: var(--c1); background: var(--c1l); }
+
+  .s2 .word-col { background: var(--c2l); }
+  .s2 .word-col-label, .s2 .word-chip, .s2 .drop-slot { color: var(--c2d); }
+  .s2 .word-chip { border-color: var(--c2); }
+  .s2 .drop-slot { color: var(--c2); background: var(--c2l); }
+
+  .s3 .word-col { background: var(--c3l); }
+  .s3 .word-col-label, .s3 .word-chip, .s3 .drop-slot { color: var(--c3d); }
+  .s3 .word-chip { border-color: var(--c3); }
+  .s3 .drop-slot { color: var(--c3); background: var(--c3l); }
+
+  .s4 .word-col { background: var(--c4l); }
+  .s4 .word-col-label, .s4 .word-chip, .s4 .drop-slot { color: var(--c4d); }
+  .s4 .word-chip { border-color: var(--c4); }
+  .s4 .drop-slot { color: var(--c4); background: var(--c4l); }
+
+  .bottom-bar {
+    margin-top: 1.5rem;
+    padding: 1.25rem 2rem;
+    background: #fff;
+    border-radius: var(--radius-xl);
+    border: 0.5px solid #AFA9EC;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 20px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: opacity 0.15s;
+    border: 1.5px solid;
+  }
+
+  .btn-check { background: var(--c0); border-color: var(--c0); color: #fff; }
+  .btn-reset { background: #fff; border-color: var(--c1); color: var(--c1d); }
+  .btn-solution { background: #fff; border-color: var(--c2); color: var(--c2d); }
+  .btn:hover { opacity: 0.82; }
+  .btn:active { transform: scale(0.98); }
+
+  .result-msg { font-size: 14px; font-weight: 500; color: var(--c0d); flex: 1; }
+  .solution-note { font-size: 11px; color: #888; width: 100%; margin-top: 0.25rem; line-height: 1.7; }
+
+  #confetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  @media (max-width: 600px) {
+    .section { grid-template-columns: 1fr; }
+    .word-col { grid-template-columns: repeat(3, 1fr); border-bottom: 0.5px solid rgba(0,0,0,0.07); }
+    .text-col { border-left: none; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<div class="page">
+  <div class="page-header">
+    <p class="page-title">Die Theatergruppe</p>
+    <p class="instr-sub">Dra det riktige ordet til riktig plass i teksten. Klikk på et ord i teksten for å fjerne det igjen.</p>
+    <p class="instr-note">OBS: Hvert avsnitt har to ord til overs.</p>
+  </div>
+
+  <div class="sections" id="sections"></div>
+
+  <div class="bottom-bar">
+    <button class="btn btn-check" onclick="checkAll()">Sjekk alle svar ↗</button>
+    <button class="btn btn-reset" onclick="resetAll()">Start på nytt</button>
+    <button class="btn btn-solution" onclick="showSolution()">Vis løsning</button>
+    <div class="result-msg" id="resultMsg"></div>
+    <div class="solution-note" id="solutionNote"></div>
+  </div>
+</div>
+
+<script>
+const SECTIONS = [
+  {
+    color: 0,
+    words: ["probt", "geschrieben", "stolz", "Tipps", "gespielt", "müde"],
+    parts: [
+      "Die Theatergruppe der Schule ",
+      { id: "s0a", answer: "probt" },
+      " seit Wochen für ihre große Aufführung. Die Schülerinnen und Schüler haben das Stück selbst ",
+      { id: "s0b", answer: "geschrieben" },
+      " und sind sehr ",
+      { id: "s0c", answer: "stolz" },
+      " auf ihre Arbeit. Die Lehrerin, Frau Müller, leitet die Gruppe und gibt den Kindern viele hilfreiche ",
+      { id: "s0d", answer: "Tipps" },
+      ". Alle sind aufgeregt, aber auch ein bisschen nervös."
+    ]
+  },
+  {
+    color: 1,
+    words: ["Kostüme", "nähen", "wunderschön", "erwarten", "sehen", "Stühle"],
+    parts: [
+      "Für die Aufführung brauchen die Schüler bunte ",
+      { id: "s1a", answer: "Kostüme" },
+      " und verschiedene Requisiten. Einige Eltern haben geholfen, die Kleidung zu ",
+      { id: "s1b", answer: "nähen" },
+      " und die Bühne zu dekorieren. Das Bühnenbild zeigt einen alten Wald mit großen Bäumen und bunten Blumen. Die Kinder finden ihre Kostüme ",
+      { id: "s1c", answer: "wunderschön" },
+      " und können es kaum ",
+      { id: "s1d", answer: "erwarten" },
+      ", endlich auf der Bühne zu stehen."
+    ]
+  },
+  {
+    color: 2,
+    words: ["Stimmung", "wiederholen", "großartige", "atmen", "vergessen", "kleine"],
+    parts: [
+      "Am Tag der Aufführung herrscht in der Schule eine besondere ",
+      { id: "s2a", answer: "Stimmung" },
+      ". Die Schüler treffen sich früh in der Aula und ",
+      { id: "s2b", answer: "wiederholen" },
+      " noch einmal die wichtigsten Szenen. Frau Müller ermutigt die Gruppe und sagt, dass sie ",
+      { id: "s2c", answer: "großartige" },
+      " Arbeit geleistet haben. Kurz vor Beginn stellen sich alle hinter der Bühne auf und ",
+      { id: "s2d", answer: "atmen" },
+      " tief ein und aus."
+    ]
+  },
+  {
+    color: 3,
+    words: ["Platz", "Begeisterung", "ganz", "hören", "verlässt", "Theater"],
+    parts: [
+      "Das Publikum füllt langsam die Aula. Eltern, Geschwister und Mitschüler nehmen ",
+      { id: "s3a", answer: "Platz" },
+      " und warten gespannt. Als der Vorhang aufgeht, beginnt die Aufführung – und alle Schüler spielen ihre Rollen mit viel Energie und ",
+      { id: "s3b", answer: "Begeisterung" },
+      ". Im Saal wird es ",
+      { id: "s3c", answer: "ganz" },
+      " still, nur die Stimmen der Schauspieler sind zu ",
+      { id: "s3d", answer: "hören" },
+      "."
+    ]
+  },
+  {
+    color: 4,
+    words: ["Applaus", "Moment", "gerührt", "feiern", "Pause", "traurig"],
+    parts: [
+      "Nach der Vorstellung gibt es großen ",
+      { id: "s4a", answer: "Applaus" },
+      ". Viele Eltern stehen auf und klatschen – das ist für die Schüler ein unvergesslicher ",
+      { id: "s4b", answer: "Moment" },
+      ". Frau Müller ist sehr ",
+      { id: "s4c", answer: "gerührt" },
+      " und gratuliert allen persönlich. Danach ",
+      { id: "s4d", answer: "feiern" },
+      " alle zusammen mit Kuchen und Saft in der Aula, und die Kinder sind noch lange aufgeregt und glücklich."
+    ]
+  }
+];
+
+function shuffle(arr) {
+  let a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const shuffledWords = SECTIONS.map(s => shuffle(s.words));
+let slotValues = {};
+let checked = false;
+
+function buildAll() {
+  const container = document.getElementById("sections");
+  container.innerHTML = "";
+  SECTIONS.forEach((sec, si) => {
+    const div = document.createElement("div");
+    div.className = "section s" + si;
+
+    const wordCol = document.createElement("div");
+    wordCol.className = "word-col";
+    const label = document.createElement("div");
+    label.className = "word-col-label";
+    label.textContent = "Wörter";
+    wordCol.appendChild(label);
+
+    shuffledWords[si].forEach(w => {
+      const chip = document.createElement("span");
+      chip.className = "word-chip" + (Object.values(slotValues).includes(w) ? " used" : "");
+      chip.id = "chip-" + si + "-" + w;
+      chip.textContent = w;
+      chip.draggable = true;
+      chip.addEventListener("dragstart", e => { e.dataTransfer.setData("text/plain", si + "|" + w); chip.classList.add("dragging"); });
+      chip.addEventListener("dragend", () => chip.classList.remove("dragging"));
+      wordCol.appendChild(chip);
+    });
+
+    const textCol = document.createElement("div");
+    textCol.className = "text-col";
+
+    sec.parts.forEach(part => {
+      if (typeof part === "string") {
+        textCol.appendChild(document.createTextNode(part));
+      } else {
+        const slot = document.createElement("span");
+        const filled = slotValues[part.id];
+        slot.className = "drop-slot" + (filled ? " filled" : "");
+        slot.id = "slot-" + part.id;
+        slot.dataset.answer = part.answer;
+        slot.dataset.si = si;
+        slot.textContent = filled || "___";
+        slot.addEventListener("dragover", e => { e.preventDefault(); slot.classList.add("over"); });
+        slot.addEventListener("dragleave", () => slot.classList.remove("over"));
+        slot.addEventListener("drop", e => {
+          e.preventDefault();
+          slot.classList.remove("over");
+          const [fromSi, word] = e.dataTransfer.getData("text/plain").split("|");
+          if (parseInt(fromSi) !== si) return;
+          const prev = slotValues[part.id];
+          slotValues[part.id] = word;
+          if (prev) returnWord(si, prev);
+          markWordUsed(si, word);
+          checked = false;
+          buildAll();
+        });
+        slot.addEventListener("click", () => {
+          const w = slotValues[part.id];
+          if (w) { returnWord(si, w); delete slotValues[part.id]; checked = false; buildAll(); }
+        });
+        textCol.appendChild(slot);
+      }
+    });
+
+    div.appendChild(wordCol);
+    div.appendChild(textCol);
+    container.appendChild(div);
+  });
+
+  if (checked) applyColors();
+}
+
+function markWordUsed(si, w) { const c = document.getElementById("chip-" + si + "-" + w); if (c) c.classList.add("used"); }
+function returnWord(si, w) { const c = document.getElementById("chip-" + si + "-" + w); if (c) c.classList.remove("used"); }
+
+function getAllSlots() {
+  return SECTIONS.flatMap(s => s.parts.filter(p => typeof p === "object"));
+}
+
+function applyColors() {
+  getAllSlots().forEach(p => {
+    const slot = document.getElementById("slot-" + p.id);
+    if (!slot) return;
+    slot.classList.remove("correct", "wrong", "filled");
+    if (slotValues[p.id] === p.answer) slot.classList.add("correct");
+    else if (slotValues[p.id]) slot.classList.add("wrong");
+  });
+}
+
+function checkAll() {
+  const slots = getAllSlots();
+  if (slots.some(p => !slotValues[p.id])) {
+    document.getElementById("resultMsg").textContent = "Fyll inn alle lukene før du sjekker.";
+    return;
+  }
+  checked = true;
+  applyColors();
+  const correct = slots.filter(p => slotValues[p.id] === p.answer).length;
+  if (correct === slots.length) {
+    document.getElementById("resultMsg").textContent = "Sehr gut! Alle svar er riktige.";
+    launchCelebration();
+  } else {
+    document.getElementById("resultMsg").textContent = correct + " av " + slots.length + " riktige. Prøv igjen!";
+  }
+}
+
+function resetAll() {
+  slotValues = {};
+  checked = false;
+  document.getElementById("resultMsg").textContent = "";
+  document.getElementById("solutionNote").textContent = "";
+  buildAll();
+}
+
+function showSolution() {
+  getAllSlots().forEach(p => { slotValues[p.id] = p.answer; });
+  checked = true;
+  buildAll();
+  document.getElementById("resultMsg").textContent = "";
+  document.getElementById("solutionNote").textContent =
+    "Avsnitt 1: probt · geschrieben · stolz · Tipps (gespielt · müde til overs) | " +
+    "Avsnitt 2: Kostüme · nähen · wunderschön · erwarten (sehen · Stühle til overs) | " +
+    "Avsnitt 3: Stimmung · wiederholen · großartige · atmen (vergessen · kleine til overs) | " +
+    "Avsnitt 4: Platz · Begeisterung · ganz · hören (verlässt · Theater til overs) | " +
+    "Avsnitt 5: Applaus · Moment · gerührt · feiern (Pause · traurig til overs)";
+}
+
+function launchCelebration() {
+  const canvas = document.getElementById("confetti-canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ["#D85A30","#534AB7","#1D9E75","#BA7517","#185FA5","#D4537E","#639922","#993C1D","#0C447C","#EF9F27"];
+
+  const particles = [];
+  for (let i = 0; i < 80; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * 200,
+      type: Math.random() < 0.5 ? "note" : "mask",
+      color: colors[Math.floor(Math.random() * colors.length)],
+      speed: 1.5 + Math.random() * 2.5,
+      drift: (Math.random() - 0.5) * 1.2,
+      rot: (Math.random() - 0.5) * 0.6,
+      rotSpeed: (Math.random() - 0.5) * 0.09,
+      scale: 0.6 + Math.random() * 0.6
+    });
+  }
+
+  function drawNote(ctx, color) {
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.ellipse(-2, 8, 5, 4, -0.4, 0, Math.PI * 2); ctx.fill();
+    ctx.fillRect(3, -14, 2.5, 22);
+    ctx.beginPath(); ctx.ellipse(12, 2, 5, 4, -0.4, 0, Math.PI * 2); ctx.fill();
+    ctx.fillRect(17, -20, 2.5, 20);
+    ctx.beginPath();
+    ctx.moveTo(5.5, -14); ctx.lineTo(19.5, -20); ctx.lineTo(19.5, -16); ctx.lineTo(5.5, -10);
+    ctx.closePath(); ctx.fill();
+  }
+
+  function drawMask(ctx, color) {
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.ellipse(0, 0, 15, 12, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "rgba(255,255,255,0.9)";
+    ctx.beginPath(); ctx.ellipse(-5, -2, 3, 4.5, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(5, -2, 3, 4.5, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,0.9)";
+    ctx.lineWidth = 1.8; ctx.lineCap = "round";
+    ctx.beginPath(); ctx.arc(0, 3, 5, 0.25, Math.PI - 0.25); ctx.stroke();
+  }
+
+  let frame = 0;
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const fade = frame > 120 ? 1 - (frame - 120) / 60 : 1;
+    particles.forEach(p => {
+      p.y += p.speed; p.x += p.drift; p.rot += p.rotSpeed;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.scale(p.scale, p.scale);
+      ctx.globalAlpha = fade;
+      if (p.type === "note") drawNote(ctx, p.color);
+      else drawMask(ctx, p.color);
+      ctx.restore();
+    });
+    frame++;
+    if (frame < 180) requestAnimationFrame(animate);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  animate();
+}
+
+buildAll();
+</script>
+</body>
+</html>
