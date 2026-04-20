@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ein Tag im Kindergarten – Lückentext</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500&display=swap');
+
+  :root {
+    --bg: #FFF5FB;
+    --card: #ffffff;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+
+    --c1: #D4537E; --c1l: #FBEAF0; --c1d: #72243E;
+    --c2: #7F77DD; --c2l: #EEEDFE; --c2d: #3C3489;
+    --c3: #1D9E75; --c3l: #E1F5EE; --c3d: #085041;
+    --c4: #EF9F27; --c4l: #FAEEDA; --c4d: #633806;
+    --c5: #378ADD; --c5l: #E6F1FB; --c5d: #0C447C;
+
+    --correct-bg: #EAF3DE;
+    --correct-border: #3B6D11;
+    --correct-text: #27500A;
+    --wrong-bg: #FCEBEB;
+    --wrong-border: #A32D2D;
+    --wrong-text: #A32D2D;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2.5rem 2rem;
+  }
+
+  .page {
+    max-width: 1100px;
+    width: 100%;
+  }
+
+  .page-header {
+    margin-bottom: 1.75rem;
+    padding: 1.5rem 2rem;
+    background: #fff;
+    border-radius: var(--radius-xl);
+    border: 0.5px solid #F4C0D1;
+  }
+
+  .page-title {
+    font-family: 'Source Serif 4', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--c1d);
+    margin-bottom: 0.3rem;
+  }
+
+  .instr-sub { font-size: 13px; color: var(--c2); margin-bottom: 0.2rem; }
+  .instr-note { font-size: 13px; color: var(--c2); font-style: italic; }
+
+  .sections { display: flex; flex-direction: column; gap: 1.25rem; }
+
+  .section {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 0;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    border: 0.5px solid #e0e0e0;
+  }
+
+  .word-col {
+    padding: 1.25rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .word-col-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+
+  .text-col {
+    background: #fff;
+    padding: 1.25rem 1.5rem;
+    font-size: 15px;
+    line-height: 2.1;
+    border-left: 0.5px solid rgba(0,0,0,0.07);
+  }
+
+  .section-title {
+    font-family: 'Source Serif 4', serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.5rem;
+    display: block;
+    opacity: 0.8;
+  }
+
+  .word-chip {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: grab;
+    user-select: none;
+    background: #fff;
+    text-align: center;
+    transition: opacity 0.15s, transform 0.1s;
+    border: 1.5px solid currentColor;
+  }
+
+  .word-chip:hover { opacity: 0.8; }
+  .word-chip:active { transform: scale(0.96); }
+  .word-chip.used { opacity: 0.25; cursor: default; pointer-events: none; }
+  .word-chip.dragging { opacity: 0.5; }
+
+  .drop-slot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    height: 28px;
+    border-radius: 6px;
+    border: 1.5px dashed currentColor;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s;
+    vertical-align: middle;
+    margin: 0 2px;
+    padding: 0 8px;
+  }
+
+  .drop-slot.over { opacity: 0.6; }
+  .drop-slot.filled { border-style: solid; }
+  .drop-slot.correct { border-color: var(--correct-border) !important; background: var(--correct-bg) !important; color: var(--correct-text) !important; pointer-events: none; }
+  .drop-slot.wrong { border-color: var(--wrong-border) !important; background: var(--wrong-bg) !important; color: var(--wrong-text) !important; }
+
+  .s0 .word-col { background: var(--c1l); }
+  .s0 .word-col-label { color: var(--c1d); }
+  .s0 .section-title { color: var(--c1d); }
+  .s0 .word-chip { color: var(--c1d); border-color: var(--c1); }
+  .s0 .drop-slot { color: var(--c1); background: var(--c1l); }
+
+  .s1 .word-col { background: var(--c2l); }
+  .s1 .word-col-label { color: var(--c2d); }
+  .s1 .section-title { color: var(--c2d); }
+  .s1 .word-chip { color: var(--c2d); border-color: var(--c2); }
+  .s1 .drop-slot { color: var(--c2); background: var(--c2l); }
+
+  .s2 .word-col { background: var(--c3l); }
+  .s2 .word-col-label { color: var(--c3d); }
+  .s2 .section-title { color: var(--c3d); }
+  .s2 .word-chip { color: var(--c3d); border-color: var(--c3); }
+  .s2 .drop-slot { color: var(--c3); background: var(--c3l); }
+
+  .s3 .word-col { background: var(--c4l); }
+  .s3 .word-col-label { color: var(--c4d); }
+  .s3 .section-title { color: var(--c4d); }
+  .s3 .word-chip { color: var(--c4d); border-color: var(--c4); }
+  .s3 .drop-slot { color: var(--c4); background: var(--c4l); }
+
+  .s4 .word-col { background: var(--c5l); }
+  .s4 .word-col-label { color: var(--c5d); }
+  .s4 .section-title { color: var(--c5d); }
+  .s4 .word-chip { color: var(--c5d); border-color: var(--c5); }
+  .s4 .drop-slot { color: var(--c5); background: var(--c5l); }
+
+  .bottom-bar {
+    margin-top: 1.5rem;
+    padding: 1.25rem 2rem;
+    background: #fff;
+    border-radius: var(--radius-xl);
+    border: 0.5px solid #F4C0D1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 20px;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: opacity 0.15s;
+    border: 1.5px solid;
+  }
+
+  .btn-check { background: var(--c1); border-color: var(--c1); color: #fff; }
+  .btn-reset { background: #fff; border-color: var(--c2); color: var(--c2d); }
+  .btn-solution { background: #fff; border-color: var(--c3); color: var(--c3d); }
+  .btn:hover { opacity: 0.85; }
+  .btn:active { transform: scale(0.98); }
+
+  .result-msg { font-size: 14px; font-weight: 500; color: var(--c1d); flex: 1; }
+  .solution-note { font-size: 11px; color: #888; width: 100%; margin-top: 0.25rem; line-height: 1.6; }
+
+  #confetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  @media (max-width: 600px) {
+    .section { grid-template-columns: 1fr; }
+    .word-col { flex-direction: row; flex-wrap: wrap; border-left: none; border-bottom: 0.5px solid rgba(0,0,0,0.07); }
+    .text-col { border-left: none; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<div class="page">
+  <div class="page-header">
+    <p class="page-title">Ein Tag im Kindergarten</p>
+    <p class="instr-sub">Dra det riktige ordet til riktig plass i teksten. Klikk på et ord i teksten for å fjerne det igjen.</p>
+    <p class="instr-note">OBS: Hvert avsnitt har ett ord til overs.</p>
+  </div>
+
+  <div class="sections" id="sections"></div>
+
+  <div class="bottom-bar">
+    <button class="btn btn-check" onclick="checkAll()">Sjekk alle svar ↗</button>
+    <button class="btn btn-reset" onclick="resetAll()">Start på nytt</button>
+    <button class="btn btn-solution" onclick="showSolution()">Vis løsning</button>
+    <div class="result-msg" id="resultMsg"></div>
+    <div class="solution-note" id="solutionNote"></div>
+  </div>
+</div>
+
+<script>
+const SECTIONS = [
+  {
+    title: "Der Morgen",
+    color: 0,
+    words: ["stehe", "liebe", "überprüfe", "Fahrrad", "esse"],
+    parts: [
+      "Jeden Morgen ",
+      { id: "s0a", answer: "stehe" },
+      " ich um sechs Uhr auf und bereite mich auf meinen Arbeitstag vor. Ich arbeite als Erzieherin im Kindergarten und ",
+      { id: "s0b", answer: "liebe" },
+      " meinen Beruf von ganzem Herzen. Bevor ich das Haus verlasse, packe ich meine Tasche und ",
+      { id: "s0c", answer: "überprüfe" },
+      ", ob ich alles dabei habe. Der Weg zur Arbeit dauert etwa zwanzig Minuten – meistens fahre ich mit dem ",
+      { id: "s0d", answer: "Fahrrad" },
+      "."
+    ]
+  },
+  {
+    title: "Die Ankunft",
+    color: 1,
+    words: ["ankomme", "Aufgaben", "halb", "Ausziehen", "Anziehen"],
+    parts: [
+      "Wenn ich im Kindergarten ",
+      { id: "s1a", answer: "ankomme" },
+      ", begrüße ich zuerst meine Kolleginnen. Gemeinsam teilen wir uns die ",
+      { id: "s1b", answer: "Aufgaben" },
+      " auf und besprechen den Plan für den Tag. Die ersten Kinder kommen meistens gegen ",
+      { id: "s1c", answer: "halb" },
+      " acht – ich empfange sie an der Tür und helfe ihnen beim ",
+      { id: "s1d", answer: "Ausziehen" },
+      " der Jacken und Schuhe."
+    ]
+  },
+  {
+    title: "Der Vormittag",
+    color: 2,
+    words: ["lebendig", "Geschichten", "wohlfühlen", "Konflikte", "Filme"],
+    parts: [
+      "Der Vormittag ist immer sehr ",
+      { id: "s2a", answer: "lebendig" },
+      ". Wir singen Lieder, malen Bilder und lesen ",
+      { id: "s2b", answer: "Geschichten" },
+      " vor. Ich achte darauf, dass sich alle Kinder ",
+      { id: "s2c", answer: "wohlfühlen" },
+      " und niemand allein ist. Manchmal gibt es kleine ",
+      { id: "s2d", answer: "Konflikte" },
+      " zwischen den Kindern – dann versuche ich ruhig zu bleiben und zu vermitteln."
+    ]
+  },
+  {
+    title: "Mittagessen und Ruhezeit",
+    color: 3,
+    words: ["Mittag", "trinken", "Ruhezeit", "spielen", "singen"],
+    parts: [
+      "Gegen zwölf Uhr essen wir gemeinsam zu ",
+      { id: "s3a", answer: "Mittag" },
+      ". Ich sitze mit den Kindern am Tisch und achte darauf, dass alle genug ",
+      { id: "s3b", answer: "trinken" },
+      " und essen. Nach dem Essen ist ",
+      { id: "s3c", answer: "Ruhezeit" },
+      " – die kleineren Kinder schlafen, während die größeren ruhige Spiele ",
+      { id: "s3d", answer: "spielen" },
+      "."
+    ]
+  },
+  {
+    title: "Der Nachmittag",
+    color: 4,
+    words: ["Eltern", "berichte", "auf", "müde", "mit"],
+    parts: [
+      "Am Nachmittag holen die ",
+      { id: "s4a", answer: "Eltern" },
+      " ihre Kinder ab. Ich spreche kurz mit ihnen und ",
+      { id: "s4b", answer: "berichte" },
+      ", wie der Tag war. Danach räumen wir das Zimmer ",
+      { id: "s4c", answer: "auf" },
+      " und bereiten alles für den nächsten Tag vor. Wenn ich nach Hause komme, bin ich oft ",
+      { id: "s4d", answer: "müde" },
+      " – aber auch glücklich und dankbar für meinen Beruf."
+    ]
+  }
+];
+
+const COLORS = [
+  { slot: "var(--c1)", bg: "var(--c1l)", dark: "var(--c1d)" },
+  { slot: "var(--c2)", bg: "var(--c2l)", dark: "var(--c2d)" },
+  { slot: "var(--c3)", bg: "var(--c3l)", dark: "var(--c3d)" },
+  { slot: "var(--c4)", bg: "var(--c4l)", dark: "var(--c4d)" },
+  { slot: "var(--c5)", bg: "var(--c5l)", dark: "var(--c5d)" },
+];
+
+function shuffle(arr) {
+  let a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const shuffledWords = SECTIONS.map(s => shuffle(s.words));
+let slotValues = {};
+let checked = false;
+
+function buildAll() {
+  const container = document.getElementById("sections");
+  container.innerHTML = "";
+  SECTIONS.forEach((sec, si) => {
+    const div = document.createElement("div");
+    div.className = "section s" + si;
+
+    const wordCol = document.createElement("div");
+    wordCol.className = "word-col";
+    const label = document.createElement("div");
+    label.className = "word-col-label";
+    label.textContent = "Wörter";
+    wordCol.appendChild(label);
+
+    shuffledWords[si].forEach(w => {
+      const chip = document.createElement("span");
+      chip.className = "word-chip" + (Object.values(slotValues).includes(w) ? " used" : "");
+      chip.id = "chip-" + si + "-" + w;
+      chip.textContent = w;
+      chip.draggable = true;
+      chip.addEventListener("dragstart", e => { e.dataTransfer.setData("text/plain", si + "|" + w); chip.classList.add("dragging"); });
+      chip.addEventListener("dragend", () => chip.classList.remove("dragging"));
+      wordCol.appendChild(chip);
+    });
+
+    const textCol = document.createElement("div");
+    textCol.className = "text-col";
+    const titleEl = document.createElement("span");
+    titleEl.className = "section-title";
+    titleEl.textContent = sec.title;
+    textCol.appendChild(titleEl);
+
+    sec.parts.forEach(part => {
+      if (typeof part === "string") {
+        textCol.appendChild(document.createTextNode(part));
+      } else {
+        const slot = document.createElement("span");
+        const filled = slotValues[part.id];
+        slot.className = "drop-slot" + (filled ? " filled" : "");
+        slot.id = "slot-" + part.id;
+        slot.dataset.answer = part.answer;
+        slot.dataset.si = si;
+        slot.textContent = filled || "___";
+        slot.addEventListener("dragover", e => { e.preventDefault(); slot.classList.add("over"); });
+        slot.addEventListener("dragleave", () => slot.classList.remove("over"));
+        slot.addEventListener("drop", e => {
+          e.preventDefault();
+          slot.classList.remove("over");
+          const [fromSi, word] = e.dataTransfer.getData("text/plain").split("|");
+          if (parseInt(fromSi) !== si) return;
+          const prev = slotValues[part.id];
+          slotValues[part.id] = word;
+          if (prev) returnWord(si, prev);
+          markWordUsed(si, word);
+          checked = false;
+          buildAll();
+        });
+        slot.addEventListener("click", () => {
+          const w = slotValues[part.id];
+          if (w) { returnWord(si, w); delete slotValues[part.id]; checked = false; buildAll(); }
+        });
+        textCol.appendChild(slot);
+      }
+    });
+
+    div.appendChild(wordCol);
+    div.appendChild(textCol);
+    container.appendChild(div);
+  });
+
+  if (checked) applyColors();
+}
+
+function markWordUsed(si, w) {
+  const c = document.getElementById("chip-" + si + "-" + w);
+  if (c) c.classList.add("used");
+}
+function returnWord(si, w) {
+  const c = document.getElementById("chip-" + si + "-" + w);
+  if (c) c.classList.remove("used");
+}
+
+function getAllSlots() {
+  return SECTIONS.flatMap(s => s.parts.filter(p => typeof p === "object"));
+}
+
+function applyColors() {
+  getAllSlots().forEach(p => {
+    const slot = document.getElementById("slot-" + p.id);
+    if (!slot) return;
+    slot.classList.remove("correct", "wrong", "filled");
+    if (slotValues[p.id] === p.answer) slot.classList.add("correct");
+    else if (slotValues[p.id]) slot.classList.add("wrong");
+  });
+}
+
+function checkAll() {
+  const slots = getAllSlots();
+  const unfilled = slots.filter(p => !slotValues[p.id]);
+  if (unfilled.length > 0) {
+    document.getElementById("resultMsg").textContent = "Fyll inn alle lukene før du sjekker.";
+    return;
+  }
+  checked = true;
+  applyColors();
+  const correct = slots.filter(p => slotValues[p.id] === p.answer).length;
+  if (correct === slots.length) {
+    document.getElementById("resultMsg").textContent = "Sehr gut! Alle svar er riktige.";
+    launchCelebration();
+  } else {
+    document.getElementById("resultMsg").textContent = correct + " av " + slots.length + " riktige. Prøv igjen!";
+  }
+}
+
+function resetAll() {
+  slotValues = {};
+  checked = false;
+  document.getElementById("resultMsg").textContent = "";
+  document.getElementById("solutionNote").textContent = "";
+  buildAll();
+}
+
+function showSolution() {
+  getAllSlots().forEach(p => { slotValues[p.id] = p.answer; });
+  checked = true;
+  buildAll();
+  document.getElementById("resultMsg").textContent = "";
+  document.getElementById("solutionNote").textContent =
+    "Avsnitt 1: stehe · liebe · überprüfe · Fahrrad (esse til overs) | " +
+    "Avsnitt 2: ankomme · Aufgaben · halb · Ausziehen (Anziehen til overs) | " +
+    "Avsnitt 3: lebendig · Geschichten · wohlfühlen · Konflikte (Filme til overs) | " +
+    "Avsnitt 4: Mittag · trinken · Ruhezeit · spielen (singen til overs) | " +
+    "Avsnitt 5: Eltern · berichte · auf · müde (mit til overs)";
+}
+
+function launchCelebration() {
+  const canvas = document.getElementById("confetti-canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const colors = ["#D4537E","#7F77DD","#1D9E75","#EF9F27","#378ADD","#F4C0D1","#CECBF6","#9FE1CB","#FAC775","#B5D4F4","#97C459","#ED93B1"];
+
+  const particles = [];
+  for (let i = 0; i < 90; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * 200,
+      type: Math.random() < 0.5 ? "heart" : "star",
+      color: colors[Math.floor(Math.random() * colors.length)],
+      size: 8 + Math.random() * 8,
+      speed: 1.5 + Math.random() * 2.5,
+      drift: (Math.random() - 0.5) * 1.2,
+      rot: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.12
+    });
+  }
+
+  function drawHeart(ctx, size, color) {
+    ctx.beginPath();
+    ctx.moveTo(0, size * 0.3);
+    ctx.bezierCurveTo(-size, -size * 0.2, -size, -size * 0.9, 0, -size * 0.4);
+    ctx.bezierCurveTo(size, -size * 0.9, size, -size * 0.2, 0, size * 0.3);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+
+  function drawStar(ctx, size, color) {
+    const spikes = 5, inner = size * 0.45;
+    ctx.beginPath();
+    for (let i = 0; i < spikes * 2; i++) {
+      const angle = (i * Math.PI) / spikes - Math.PI / 2;
+      const r = i % 2 === 0 ? size : inner;
+      ctx.lineTo(Math.cos(angle) * r, Math.sin(angle) * r);
+    }
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+  }
+
+  let frame = 0;
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const fade = frame > 120 ? 1 - (frame - 120) / 60 : 1;
+    particles.forEach(p => {
+      p.y += p.speed; p.x += p.drift; p.rot += p.rotSpeed;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha = fade;
+      if (p.type === "heart") drawHeart(ctx, p.size, p.color);
+      else drawStar(ctx, p.size, p.color);
+      ctx.restore();
+    });
+    frame++;
+    if (frame < 180) requestAnimationFrame(animate);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  animate();
+}
+
+buildAll();
+</script>
+</body>
+</html>

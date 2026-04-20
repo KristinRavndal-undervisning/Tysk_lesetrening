@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zusammen essen – Lückentext</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500&display=swap');
+
+  :root {
+    --warm-bg: #FDF3E7;
+    --warm-mid: #F5C4B3;
+    --warm-border: #D85A30;
+    --warm-dark: #712B13;
+    --warm-deep: #4A1B0C;
+    --chip-bg: #fff;
+    --chip-border: #EF9F27;
+    --chip-text: #633806;
+    --slot-bg: #FFF8F0;
+    --slot-border: #FAC775;
+    --slot-text: #854F0B;
+    --text-bg: #FFFAF5;
+    --text-border: #F5C4B3;
+    --title-color: #712B13;
+    --body-color: #2C1A0E;
+    --correct-bg: #EAF3DE;
+    --correct-border: #3B6D11;
+    --correct-text: #27500A;
+    --wrong-bg: #FCEBEB;
+    --wrong-border: #A32D2D;
+    --wrong-text: #A32D2D;
+    --btn-bg: #fff;
+    --btn-border: #F5C4B3;
+    --btn-text: #712B13;
+    --btn-hover: #FDF3E7;
+    --instr-title: #4A1B0C;
+    --instr-sub: #993C1D;
+    --result-color: #4A1B0C;
+    --solution-color: #993C1D;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm-bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 3rem 1.5rem;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: var(--radius-xl);
+    border: 0.5px solid var(--warm-mid);
+    padding: 2.5rem;
+    max-width: 640px;
+    width: 100%;
+  }
+
+  .header {
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 0.5px solid var(--warm-mid);
+  }
+
+  .instr-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--instr-title);
+    margin-bottom: 0.25rem;
+  }
+
+  .instr-sub {
+    font-size: 13px;
+    color: var(--instr-sub);
+    margin-bottom: 0.2rem;
+  }
+
+  .instr-note {
+    font-size: 13px;
+    color: var(--instr-sub);
+    font-style: italic;
+  }
+
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.1rem;
+    background: #FFF8F0;
+    border-radius: var(--radius-lg);
+    border: 0.5px solid #FAC775;
+  }
+
+  .word-chip {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: grab;
+    user-select: none;
+    border: 1.5px solid var(--chip-border);
+    background: var(--chip-bg);
+    color: var(--chip-text);
+    transition: opacity 0.15s, transform 0.1s, background 0.15s;
+  }
+
+  .word-chip:hover { background: #FFF8F0; }
+  .word-chip:active { transform: scale(0.96); }
+  .word-chip.used { opacity: 0.3; cursor: default; pointer-events: none; }
+  .word-chip.dragging { opacity: 0.5; }
+
+  .text-box {
+    background: var(--text-bg);
+    border: 0.5px solid var(--text-border);
+    border-radius: var(--radius-lg);
+    padding: 1.4rem 1.6rem;
+    font-size: 15px;
+    line-height: 2.2;
+    color: var(--body-color);
+    margin-bottom: 1.25rem;
+  }
+
+  .text-title {
+    font-family: 'Source Serif 4', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--title-color);
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .drop-slot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 96px;
+    height: 30px;
+    border-radius: 6px;
+    border: 1.5px dashed var(--slot-border);
+    background: var(--slot-bg);
+    color: var(--slot-text);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    vertical-align: middle;
+    margin: 0 3px;
+    padding: 0 10px;
+  }
+
+  .drop-slot.over { background: #FAC775; border-color: #854F0B; }
+  .drop-slot.filled { border-style: solid; border-color: #EF9F27; background: #FFF8F0; color: #633806; cursor: pointer; }
+  .drop-slot.correct { border-color: var(--correct-border); background: var(--correct-bg); color: var(--correct-text); pointer-events: none; }
+  .drop-slot.wrong { border-color: var(--wrong-border); background: var(--wrong-bg); color: var(--wrong-text); }
+
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 20px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--btn-border);
+    background: var(--btn-bg);
+    color: var(--btn-text);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .btn:hover { background: var(--btn-hover); border-color: var(--warm-border); }
+  .btn:active { transform: scale(0.98); }
+
+  .result-msg {
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 1rem;
+    color: var(--result-color);
+    min-height: 20px;
+  }
+
+  .solution-note {
+    font-size: 12px;
+    color: var(--solution-color);
+    margin-top: 1.25rem;
+    border-top: 0.5px solid var(--warm-mid);
+    padding-top: 0.75rem;
+  }
+
+  #confetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 999;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<div class="card">
+  <div class="header">
+    <p class="instr-title">Fyll inn de manglende ordene.</p>
+    <p class="instr-sub">Dra det riktige ordet til riktig plass i teksten. Klikk på et ord i teksten for å fjerne det igjen.</p>
+    <p class="instr-note">OBS: Ett ord blir til overs.</p>
+  </div>
+
+  <div class="word-bank" id="wordBank"></div>
+  <div class="text-box" id="textBox"></div>
+
+  <div class="btn-row">
+    <button class="btn" onclick="checkAnswers()">Sjekk svar ↗</button>
+    <button class="btn" onclick="resetAll()">Start på nytt</button>
+    <button class="btn" onclick="showSolution()">Vis løsning</button>
+  </div>
+  <div class="result-msg" id="resultMsg"></div>
+  <div class="solution-note" id="solutionNote"></div>
+</div>
+
+<script>
+const TEXT_PARTS = [
+  "Viele Menschen essen heutzutage ihr Mittagessen allein vor dem Fernseher. Das gemeinsame Essen am Tisch hat aber viele ",
+  { id: "s1", answer: "Vorteile" },
+  ". Man spricht miteinander, ",
+  { id: "s2", answer: "teilt" },
+  " den Tag und fühlt sich weniger einsam. Studien zeigen, dass Familien, die regelmäßig zusammen essen, gesünder leben. Vor dem Fernseher isst man oft schneller und achtet weniger auf das Essen. Außerdem fehlen die ",
+  { id: "s3", answer: "Gespräche" },
+  ", die das Zusammensein so ",
+  { id: "s4", answer: "wertvoll" },
+  " machen. Experten empfehlen deshalb, mindestens einmal am Tag gemeinsam am Tisch zu sitzen – ohne Bildschirm."
+];
+
+function shuffle(arr) {
+  let a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+const WORDS = shuffle(["Vorteile", "teilt", "Gespräche", "wertvoll", "langweilig"]);
+
+let slotValues = {};
+let checked = false;
+
+function buildText() {
+  const box = document.getElementById("textBox");
+  box.innerHTML = "";
+  const title = document.createElement("span");
+  title.className = "text-title";
+  title.textContent = "Zusammen essen oder vor dem Fernseher?";
+  box.appendChild(title);
+  TEXT_PARTS.forEach(part => {
+    if (typeof part === "string") {
+      box.appendChild(document.createTextNode(part));
+    } else {
+      const slot = document.createElement("span");
+      slot.className = "drop-slot" + (slotValues[part.id] ? " filled" : "");
+      slot.id = "slot-" + part.id;
+      slot.dataset.answer = part.answer;
+      slot.textContent = slotValues[part.id] || "___";
+      slot.addEventListener("dragover", e => { e.preventDefault(); slot.classList.add("over"); });
+      slot.addEventListener("dragleave", () => slot.classList.remove("over"));
+      slot.addEventListener("drop", e => {
+        e.preventDefault();
+        slot.classList.remove("over");
+        const word = e.dataTransfer.getData("text/plain");
+        if (!word) return;
+        const prev = slotValues[part.id];
+        slotValues[part.id] = word;
+        if (prev) returnWord(prev);
+        markWordUsed(word);
+        checked = false;
+        buildText();
+      });
+      slot.addEventListener("click", () => {
+        const w = slotValues[part.id];
+        if (w) { returnWord(w); delete slotValues[part.id]; checked = false; buildText(); }
+      });
+      box.appendChild(slot);
+    }
+  });
+  if (checked) applyColors();
+}
+
+function buildBank() {
+  const bank = document.getElementById("wordBank");
+  bank.innerHTML = "";
+  WORDS.forEach(w => {
+    const chip = document.createElement("span");
+    chip.className = "word-chip" + (Object.values(slotValues).includes(w) ? " used" : "");
+    chip.id = "chip-" + w;
+    chip.textContent = w;
+    chip.draggable = true;
+    chip.addEventListener("dragstart", e => { e.dataTransfer.setData("text/plain", w); chip.classList.add("dragging"); });
+    chip.addEventListener("dragend", () => chip.classList.remove("dragging"));
+    bank.appendChild(chip);
+  });
+}
+
+function markWordUsed(w) { const c = document.getElementById("chip-" + w); if (c) c.classList.add("used"); }
+function returnWord(w) { const c = document.getElementById("chip-" + w); if (c) c.classList.remove("used"); }
+
+function applyColors() {
+  TEXT_PARTS.filter(p => typeof p === "object").forEach(p => {
+    const slot = document.getElementById("slot-" + p.id);
+    if (!slot) return;
+    slot.classList.remove("correct", "wrong", "filled");
+    if (slotValues[p.id] === p.answer) slot.classList.add("correct");
+    else if (slotValues[p.id]) slot.classList.add("wrong");
+  });
+}
+
+function checkAnswers() {
+  const slots = TEXT_PARTS.filter(p => typeof p === "object");
+  const filled = slots.filter(p => slotValues[p.id]);
+  if (filled.length < slots.length) {
+    document.getElementById("resultMsg").textContent = "Fyll inn alle lukene før du sjekker.";
+    return;
+  }
+  checked = true;
+  applyColors();
+  const correct = slots.filter(p => slotValues[p.id] === p.answer).length;
+  if (correct === slots.length) {
+    document.getElementById("resultMsg").textContent = "Sehr gut! Alle svar er riktige.";
+    launchConfetti();
+  } else {
+    document.getElementById("resultMsg").textContent = correct + " av " + slots.length + " riktige. Prøv igjen!";
+  }
+}
+
+function resetAll() {
+  slotValues = {};
+  checked = false;
+  document.getElementById("resultMsg").textContent = "";
+  document.getElementById("solutionNote").textContent = "";
+  buildBank();
+  buildText();
+}
+
+function showSolution() {
+  TEXT_PARTS.filter(p => typeof p === "object").forEach(p => { slotValues[p.id] = p.answer; });
+  WORDS.forEach(markWordUsed);
+  checked = true;
+  buildText();
+  document.getElementById("resultMsg").textContent = "";
+  document.getElementById("solutionNote").textContent = "Løsning: Vorteile · teilt · Gespräche · wertvoll — Distraktør: langweilig";
+}
+
+function launchConfetti() {
+  const canvas = document.getElementById("confetti-canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const colors = ["#FAC775", "#EF9F27", "#F5C4B3", "#D85A30", "#9FE1CB", "#C0DD97", "#F4C0D1"];
+  const particles = [];
+  for (let i = 0; i < 80; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * 200,
+      size: 10 + Math.random() * 8,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      speed: 1.5 + Math.random() * 2.5,
+      drift: (Math.random() - 0.5) * 1.2,
+      rot: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.12,
+      opacity: 0.85 + Math.random() * 0.15
+    });
+  }
+  function drawStar(ctx, cx, cy, r, rot) {
+    const spikes = 5, inner = r * 0.45;
+    ctx.beginPath();
+    for (let i = 0; i < spikes * 2; i++) {
+      const angle = (i * Math.PI) / spikes - Math.PI / 2 + rot;
+      const radius = i % 2 === 0 ? r : inner;
+      ctx.lineTo(cx + Math.cos(angle) * radius, cy + Math.sin(angle) * radius);
+    }
+    ctx.closePath();
+  }
+  let frame = 0;
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.y += p.speed; p.x += p.drift; p.rot += p.rotSpeed;
+      const fade = frame > 120 ? 1 - (frame - 120) / 60 : 1;
+      ctx.save();
+      ctx.globalAlpha = p.opacity * fade;
+      ctx.fillStyle = p.color;
+      drawStar(ctx, p.x, p.y, p.size, p.rot);
+      ctx.fill();
+      ctx.restore();
+    });
+    frame++;
+    if (frame < 180) requestAnimationFrame(animate);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  animate();
+}
+
+buildBank();
+buildText();
+</script>
+</body>
+</html>
