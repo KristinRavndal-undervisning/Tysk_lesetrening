@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesetrening: Låst ute!</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rain-dark:  #1E2D3D;
+    --rain-mid:   #2E4A62;
+    --rain-light: #4A7A9B;
+    --puddle:     #6BAED6;
+    --fog:        #B8CDD9;
+    --warm:       #E8A24A;
+    --bg:         #EDF2F7;
+    --surface:    #DAE4ED;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Subtle rain streaks in background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        105deg,
+        transparent,
+        transparent 40px,
+        rgba(74,122,155,0.04) 40px,
+        rgba(74,122,155,0.04) 41px
+      );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
+  }
+
+  /* ── Animated rain canvas in header ── */
+  .header-scene {
+    position: relative;
+    text-align: center;
+    padding: 2.5rem 1rem 1.8rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(180deg, #1A2A3A, #2E4A62);
+    overflow: hidden;
+  }
+
+  #rain-canvas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    position: relative;
+    z-index: 1;
+  }
+
+  header h1 {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+    color: white;
+    line-height: 1.15;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+  }
+  header h1 span { color: #E8A24A; }
+
+  /* ── Instruksjon ── */
+  .instruksjon {
+    background: var(--surface);
+    border: 2px solid var(--rain-light);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
+    color: var(--rain-dark);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+    box-shadow: 0 3px 10px rgba(30,45,61,0.12);
+  }
+
+  /* ── Two-column layout ── */
+  .tokolonner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+    margin-bottom: 1.75rem;
+  }
+  @media (max-width: 680px) { .tokolonner { grid-template-columns: 1fr; } }
+
+  /* ── Text box ── */
+  .tekst-boks {
+    background: white;
+    border: 2px solid var(--rain-mid);
+    border-radius: 14px;
+    padding: 1.5rem;
+    line-height: 1.8;
+    font-size: 0.92rem;
+    box-shadow: 4px 4px 0 rgba(46,74,98,0.14);
+    position: relative;
+  }
+  .tekst-boks::before {
+    content: '🔑';
+    position: absolute;
+    top: -16px; left: 16px;
+    font-size: 1.5rem;
+    background: white;
+    padding: 0 4px;
+  }
+  .tekst-boks p { margin-bottom: 1rem; color: #2a2a2a; }
+  .tekst-boks p:last-child { margin-bottom: 0; }
+
+  .navn { font-weight: 800; font-size: 1rem; }
+  .navn.jonas { color: var(--rain-mid); }
+  .navn.lena  { color: #7B3F8A; }
+  .navn.mats  { color: var(--warm); filter: brightness(0.85); }
+
+  /* ── Questions box ── */
+  .sporsmal-boks {
+    background: white;
+    border: 2px solid var(--rain-light);
+    border-radius: 14px;
+    padding: 1.5rem;
+    box-shadow: 4px 4px 0 rgba(74,122,155,0.14);
+    position: relative;
+  }
+  .sporsmal-boks::before {
+    content: '✏️';
+    position: absolute;
+    top: -16px; left: 16px;
+    font-size: 1.5rem;
+    background: white;
+    padding: 0 4px;
+  }
+  .sporsmal-rad { margin-bottom: 1rem; }
+  .sporsmal-rad:last-child { margin-bottom: 0; }
+  .sporsmal-tekst {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #2a2a2a;
+    margin-bottom: 5px;
+    line-height: 1.35;
+  }
+  .svar-rad { display: flex; align-items: center; gap: 8px; }
+
+  select {
+    flex: 1;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1.5px solid #ccc;
+    background: #fafafa;
+    color: #2a2a2a;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  select:focus { outline: none; border-color: var(--rain-dark); }
+  select.rett  { border-color: #3A7A5A; background: #f0f7f3; }
+  select.feil  { border-color: #8B3A2A; background: #fdf2f0; }
+  .status-ikon { font-size: 1.2rem; min-width: 22px; text-align: center; }
+
+  /* ── Bottom ── */
+  .bunn { text-align: center; }
+
+  @keyframes pulse-btn {
+    0%,100% { box-shadow: 0 5px 18px rgba(30,45,61,0.3); }
+    50%     { box-shadow: 0 5px 26px rgba(74,122,155,0.5); }
+  }
+
+  #sjekkBtn {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 13px 44px;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(135deg, var(--rain-dark), var(--rain-light));
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 5px 18px rgba(30,45,61,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  #sjekkBtn.aktiv {
+    opacity: 1;
+    pointer-events: auto;
+    animation: pulse-btn 2s ease-in-out infinite;
+  }
+  #sjekkBtn.aktiv:hover  { transform: scale(1.04) translateY(-2px); }
+  #sjekkBtn.aktiv:active { transform: scale(0.97); }
+
+  #resultat-melding {
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    min-height: 1.5em;
+  }
+
+  #konfetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="header-scene">
+    <canvas id="rain-canvas"></canvas>
+    <header>
+      <h1>Lesetrening:<br><span>Låst ute!</span></h1>
+    </header>
+  </div>
+
+  <div class="instruksjon">
+    Tre søsken har kommet hjem fra skolen og oppdager at ingen har med seg nøkkel.<br>
+    Les teksten og svar på spørsmålene til høyre.<br>
+    Du kan ikke sjekke svarene før alle 8 spørsmål er besvart.
+  </div>
+
+  <div class="tokolonner">
+    <div class="tekst-boks">
+      <p><span class="navn jonas">Jonas:</span> Also, keiner von uns hat einen Schlüssel? Super. Okay, kein Stress – lass uns kurz nachdenken. Ich glaube, das Küchenfenster schließt manchmal nicht richtig. Das könnten wir mal überprüfen.</p>
+      <p><span class="navn lena">Lena:</span> Ich habe Mathe-Hausaufgaben für morgen, die ich unbedingt heute noch machen muss. Wenn wir jetzt ewig hier draußen stehen, wird das nichts. Und es fängt gleich an zu regnen – habt ihr das gesehen? Ich habe keine Jacke dabei.</p>
+      <p><span class="navn mats">Mats:</span> Ich habe Hunger. Wir waren seit sieben Uhr in der Schule und ich habe seit dem Frühstück nichts gegessen. Können wir nicht einfach zu Tante Petra fahren? Die wohnt doch nur zwei Bushaltestellen entfernt.</p>
+      <p><span class="navn jonas">Jonas:</span> Tante Petra ist eine gute Idee, Mats, aber ich habe in zwei Stunden Fußballtraining und mein Sportzeug liegt drinnen. Ohne das kann ich nicht hin. Ich schaue erstmal nach dem Fenster – wenn das offen ist, sind wir in fünf Minuten drin.</p>
+      <p><span class="navn lena">Lena:</span> Okay, aber beeil dich. Es regnet schon. Und Mats, hör auf zu jammern – wir alle haben Hunger. Vielleicht hat Tante Petra auch etwas zu essen, falls das Fenster zu ist.</p>
+      <p><span class="navn mats">Mats:</span> Na gut, dann warte ich hier. Aber ich sage euch – wenn das Fenster zu ist, fahre ich sofort zu Tante Petra.</p>
+    </div>
+
+    <div class="sporsmal-boks" id="sporsmalListe"></div>
+  </div>
+
+  <div class="bunn">
+    <button id="sjekkBtn">Sjekk svarene!</button>
+    <div id="resultat-melding"></div>
+  </div>
+
+</div>
+
+<canvas id="konfetti-canvas"></canvas>
+
+<script>
+/* ── Header rain animation ── */
+(function() {
+  const canvas = document.getElementById("rain-canvas");
+  const scene  = canvas.parentElement;
+  function resize() {
+    canvas.width  = scene.offsetWidth;
+    canvas.height = scene.offsetHeight;
+  }
+  resize();
+  window.addEventListener("resize", resize);
+
+  const ctx = canvas.getContext("2d");
+  const drops = Array.from({length: 80}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    len: 8 + Math.random() * 12,
+    speed: 2 + Math.random() * 3,
+    opacity: 0.2 + Math.random() * 0.35
+  }));
+
+  function drawRain() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drops.forEach(d => {
+      ctx.beginPath();
+      ctx.moveTo(d.x, d.y);
+      ctx.lineTo(d.x + d.len * 0.18, d.y + d.len);
+      ctx.strokeStyle = `rgba(180,220,240,${d.opacity})`;
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      d.y += d.speed;
+      d.x += d.speed * 0.18;
+      if (d.y > canvas.height) {
+        d.y = -d.len;
+        d.x = Math.random() * canvas.width;
+      }
+    });
+    requestAnimationFrame(drawRain);
+  }
+  drawRain();
+})();
+
+/* ── Quiz ── */
+const alleFasit = [
+  {
+    spm: "Hvem foreslår å sjekke kjøkkenvinduet?",
+    alt: ["Jonas","Lena","Mats"],
+    svar: "Jonas"
+  },
+  {
+    spm: "Hvem foreslår å ta bussen til tante Petra?",
+    alt: ["Jonas","Lena","Mats"],
+    svar: "Mats"
+  },
+  {
+    spm: "Hvem har lekser til i morgen?",
+    alt: ["Jonas","Lena","Mats"],
+    svar: "Lena"
+  },
+  {
+    spm: "Hvem trenger treningstøy til fotballtrening?",
+    alt: ["Jonas","Lena","Mats"],
+    svar: "Jonas"
+  },
+  {
+    spm: "Hvem har ikke jakke med seg?",
+    alt: ["Jonas","Lena","Mats"],
+    svar: "Lena"
+  },
+  {
+    spm: "Hvor mange bussholdeplasser unna bor tante Petra?",
+    alt: ["Én","To","Tre","Fire"],
+    svar: "To"
+  },
+  {
+    spm: "Hvor lenge er det til fotballtreningen starter?",
+    alt: ["Én liten stund","To timer","Tre timer","En halvtime"],
+    svar: "To timer"
+  },
+  {
+    spm: "Hvordan reagerer Lena på Mats sine bekymringer?",
+    alt: ["Bestemt","Sint","Trøstende","Unnvikende"],
+    svar: "Bestemt"
+  }
+];
+
+const liste   = document.getElementById("sporsmalListe");
+const btn     = document.getElementById("sjekkBtn");
+const melding = document.getElementById("resultat-melding");
+
+alleFasit.forEach((q, i) => {
+  const rad = document.createElement("div");
+  rad.className = "sporsmal-rad";
+
+  const tekst = document.createElement("div");
+  tekst.className = "sporsmal-tekst";
+  tekst.innerHTML = (i+1) + ". " + q.spm;
+
+  const svarRad = document.createElement("div");
+  svarRad.className = "svar-rad";
+
+  const sel = document.createElement("select");
+  sel.id = "q" + i;
+  const blank = document.createElement("option");
+  blank.value = ""; blank.textContent = "— Velg svar —";
+  sel.appendChild(blank);
+  q.alt.forEach(a => {
+    const opt = document.createElement("option");
+    opt.value = a; opt.textContent = a;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener("change", sjekkKlar);
+
+  const ikon = document.createElement("span");
+  ikon.className = "status-ikon";
+  ikon.id = "ikon" + i;
+
+  svarRad.appendChild(sel);
+  svarRad.appendChild(ikon);
+  rad.appendChild(tekst);
+  rad.appendChild(svarRad);
+  liste.appendChild(rad);
+});
+
+function sjekkKlar() {
+  const alle = alleFasit.every((_, i) => document.getElementById("q"+i).value !== "");
+  btn.classList.toggle("aktiv", alle);
+}
+
+btn.addEventListener("click", () => {
+  let feil = 0;
+  alleFasit.forEach((q, i) => {
+    const sel  = document.getElementById("q"+i);
+    const ikon = document.getElementById("ikon"+i);
+    if (sel.value === q.svar) {
+      ikon.textContent = "✅"; sel.className = "rett";
+    } else {
+      ikon.textContent = "❌"; sel.className = "feil"; feil++;
+    }
+  });
+  if (feil === 0) {
+    melding.textContent = "🎉 Alle svar er riktige! Fantastisk jobbet! 🎉";
+    melding.style.color = "#2E6A4A";
+    startKeyCelebration();
+  } else {
+    melding.textContent = feil + " svar er feil. Prøv igjen – fasit gis ikke!";
+    melding.style.color = "#8B3A2A";
+  }
+});
+
+/* ── Key confetti rain ── */
+function startKeyCelebration() {
+  const canvas = document.getElementById("konfetti-canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const emojis = ["🔑","🗝️","🔑","🔑","🗝️","🔓","🏠","🔑"];
+  const keys = Array.from({length: 40}, () => ({
+    x:    Math.random() * canvas.width,
+    y:    -30 - Math.random() * canvas.height,
+    vy:   3 + Math.random() * 5,
+    vx:   (Math.random() - 0.5) * 2,
+    size: 18 + Math.random() * 20,
+    rot:  Math.random() * Math.PI * 2,
+    drot: (Math.random() - 0.5) * 0.1,
+    emoji: emojis[Math.floor(Math.random() * emojis.length)]
+  }));
+
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    keys.forEach(k => {
+      ctx.save();
+      ctx.translate(k.x, k.y);
+      ctx.rotate(k.rot);
+      ctx.font = `${Math.round(k.size)}px serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(k.emoji, 0, 0);
+      ctx.restore();
+      k.y   += k.vy;
+      k.x   += k.vx;
+      k.rot += k.drot;
+    });
+    frame++;
+    if (frame < 300) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+</script>
+</body>
+</html>

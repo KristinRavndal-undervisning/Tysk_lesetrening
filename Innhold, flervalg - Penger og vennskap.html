@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesetrening: Tobi og pengene</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:    #2A6B6B;
+    --rust:    #8B3A2A;
+    --plum:    #5C3D6B;
+    --moss:    #4A5E38;
+    --bg:      #F2F0EB;
+    --surface: #E8E4DC;
+    --dark:    #1E1E1E;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle, rgba(42,107,107,0.07) 3px, transparent 3px),
+      radial-gradient(circle, rgba(92,61,107,0.05) 2px, transparent 2px);
+    background-size: 58px 58px, 34px 34px;
+    background-position: 0 0, 18px 18px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
+  }
+
+  /* ── Header ── */
+  .header-scene {
+    position: relative;
+    text-align: center;
+    padding: 2.5rem 1rem 1.8rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #1E1E1E, #2A3A3A);
+    overflow: hidden;
+  }
+
+  .bubble-icon {
+    position: absolute;
+    font-size: 1.5rem;
+    opacity: 0.15;
+    pointer-events: none;
+    animation: bubble-float 5s ease-in-out infinite;
+  }
+  .bubble-icon:nth-child(1) { top: 15%; left:  6%; animation-delay: 0s; }
+  .bubble-icon:nth-child(2) { top: 55%; left: 14%; animation-delay: 1s; }
+  .bubble-icon:nth-child(3) { top: 20%; left: 85%; animation-delay: 2s; }
+  .bubble-icon:nth-child(4) { top: 65%; left: 80%; animation-delay: 0.6s; }
+  .bubble-icon:nth-child(5) { top: 40%; left: 50%; animation-delay: 1.8s; }
+  .bubble-icon:nth-child(6) { top:  8%; left: 58%; animation-delay: 2.8s; }
+  .bubble-icon:nth-child(7) { top: 72%; left: 38%; animation-delay: 3.2s; }
+  .bubble-icon:nth-child(8) { top: 28%; left: 26%; animation-delay: 0.9s; }
+
+  @keyframes bubble-float {
+    0%,100% { transform: translateY(0) scale(1); }
+    50%     { transform: translateY(-10px) scale(1.08); }
+  }
+
+  header { position: relative; z-index: 1; }
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+    color: white;
+    line-height: 1.15;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  }
+  header h1 span { color: #A8D4C8; }
+
+  /* ── Instruksjon ── */
+  .instruksjon {
+    background: var(--surface);
+    border: 2px solid var(--teal);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
+    color: var(--dark);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 600;
+    box-shadow: 0 3px 10px rgba(42,107,107,0.12);
+  }
+
+  /* ── Two-column layout ── */
+  .tokolonner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+    margin-bottom: 1.75rem;
+  }
+  @media (max-width: 680px) { .tokolonner { grid-template-columns: 1fr; } }
+
+  /* ── Text box ── */
+  .tekst-boks {
+    background: white;
+    border: 2px solid var(--teal);
+    border-radius: 14px;
+    padding: 1.5rem;
+    line-height: 1.8;
+    font-size: 0.92rem;
+    box-shadow: 4px 4px 0 rgba(42,107,107,0.14);
+    position: relative;
+  }
+  .tekst-boks::before {
+    content: '💬';
+    position: absolute;
+    top: -16px; left: 16px;
+    font-size: 1.5rem;
+    background: white;
+    padding: 0 4px;
+  }
+  .tekst-boks p { margin-bottom: 1rem; color: #2a2a2a; }
+  .tekst-boks p:last-child { margin-bottom: 0; }
+
+  .navn { font-weight: 700; font-size: 1rem; }
+  .navn.finn  { color: var(--rust); }
+  .navn.hanna { color: var(--teal); }
+  .navn.leo   { color: var(--plum); }
+  .navn.klara { color: var(--moss); }
+
+  /* ── Questions box ── */
+  .sporsmal-boks {
+    background: white;
+    border: 2px solid var(--plum);
+    border-radius: 14px;
+    padding: 1.5rem;
+    box-shadow: 4px 4px 0 rgba(92,61,107,0.14);
+    position: relative;
+  }
+  .sporsmal-boks::before {
+    content: '✏️';
+    position: absolute;
+    top: -16px; left: 16px;
+    font-size: 1.5rem;
+    background: white;
+    padding: 0 4px;
+  }
+  .sporsmal-rad { margin-bottom: 1rem; }
+  .sporsmal-rad:last-child { margin-bottom: 0; }
+  .sporsmal-tekst {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #2a2a2a;
+    margin-bottom: 5px;
+    line-height: 1.35;
+  }
+  .svar-rad { display: flex; align-items: center; gap: 8px; }
+
+  select {
+    flex: 1;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1.5px solid #ccc;
+    background: #fafafa;
+    color: #2a2a2a;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  select:focus { outline: none; border-color: var(--plum); }
+  select.rett  { border-color: var(--moss); background: #f3f6f0; }
+  select.feil  { border-color: var(--rust); background: #fdf2f0; }
+  .status-ikon { font-size: 1.2rem; min-width: 22px; text-align: center; }
+
+  /* ── Bottom ── */
+  .bunn { text-align: center; }
+
+  @keyframes pulse-btn {
+    0%,100% { box-shadow: 0 5px 18px rgba(30,30,30,0.25); }
+    50%     { box-shadow: 0 5px 26px rgba(92,61,107,0.4); }
+  }
+
+  #sjekkBtn {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 13px 44px;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(135deg, var(--dark), var(--plum));
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 5px 18px rgba(30,30,30,0.25);
+    transition: transform 0.2s, box-shadow 0.2s;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  #sjekkBtn.aktiv {
+    opacity: 1;
+    pointer-events: auto;
+    animation: pulse-btn 2s ease-in-out infinite;
+  }
+  #sjekkBtn.aktiv:hover  { transform: scale(1.04) translateY(-2px); }
+  #sjekkBtn.aktiv:active { transform: scale(0.97); }
+
+  #resultat-melding {
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    min-height: 1.5em;
+  }
+
+  #konfetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="header-scene">
+    <span class="bubble-icon">💬</span>
+    <span class="bubble-icon">💸</span>
+    <span class="bubble-icon">🤔</span>
+    <span class="bubble-icon">💰</span>
+    <span class="bubble-icon">😤</span>
+    <span class="bubble-icon">🤝</span>
+    <span class="bubble-icon">💭</span>
+    <span class="bubble-icon">💶</span>
+    <header>
+      <h1>Lesetrening:<br><span>Tobi og pengene</span></h1>
+    </header>
+  </div>
+
+  <div class="instruksjon">
+    Fire ungdommer diskuterer en bekymring de har angående en felles venn.<br>
+    Les teksten og svar på spørsmålene til høyre.<br>
+    Du kan ikke sjekke svarene før alle 8 spørsmål er besvart.
+  </div>
+
+  <div class="tokolonner">
+    <div class="tekst-boks">
+      <p><span class="navn finn">Finn:</span> Also, ich muss das jetzt ansprechen – ich habe Tobi dreimal Geld geliehen und noch nichts zurückbekommen. Beim ersten Mal dachte ich, er hat es einfach vergessen. Beim zweiten Mal auch. Aber langsam frage ich mich, ob das wirklich nur Vergesslichkeit ist. Das ist keine Kleinigkeit mehr.</p>
+      <p><span class="navn hanna">Hanna:</span> Ich verstehe deinen Frust, Finn, wirklich. Aber ich kenne Tobi schon seit der Grundschule – er ist einfach total chaotisch mit Geld. Er vergisst auch, seinen Müll rauszubringen, und vergisst Geburtstage. Das ist keine böse Absicht, das ist einfach, wie er ist. Ich würde das nicht so schwer nehmen.</p>
+      <p><span class="navn leo">Leo:</span> Tut mir leid, Hanna, aber das sehe ich anders. Jeder vergisst mal was – aber dreimal? Irgendwann ist das keine Vergesslichkeit mehr, das ist Respektlosigkeit. Und außerdem – vielleicht steckt da mehr dahinter. Was, wenn Tobi gerade wirklich in Schwierigkeiten ist und sich nicht traut, darüber zu reden? Das würde einiges erklären.</p>
+      <p><span class="navn klara">Klara:</span> Ehrlich gesagt brauche ich das Geld zurück. Ich habe ihm fünfzig Euro geliehen und das war nicht nichts für mich. Wenn Hanna sagt, es ist nicht so schlimm – dann ist das vielleicht leicht gesagt, wenn man sich keine Sorgen ums Geld machen muss. Ich will die Freundschaft nicht aufs Spiel setzen, aber ich kann das auch nicht einfach abhaken. Vielleicht sollten wir einfach offen mit ihm reden, bevor wir urteilen.</p>
+    </div>
+
+    <div class="sporsmal-boks" id="sporsmalListe"></div>
+  </div>
+
+  <div class="bunn">
+    <button id="sjekkBtn">Sjekk svarene!</button>
+    <div id="resultat-melding"></div>
+  </div>
+
+</div>
+
+<canvas id="konfetti-canvas"></canvas>
+
+<script>
+const alleFasit = [
+  {
+    spm: "Hvem har kjent Tobi siden barneskolen?",
+    alt: ["Finn","Hanna","Leo","Klara"],
+    svar: "Hanna"
+  },
+  {
+    spm: "Hvem tror Tobi kanskje har økonomiske problemer?",
+    alt: ["Finn","Hanna","Leo","Klara"],
+    svar: "Leo"
+  },
+  {
+    spm: "Hvem trenger faktisk pengene tilbake?",
+    alt: ["Finn","Hanna","Leo","Klara"],
+    svar: "Klara"
+  },
+  {
+    spm: "Hvem mener det er respektløst å glemme tre ganger?",
+    alt: ["Finn","Hanna","Leo","Klara"],
+    svar: "Leo"
+  },
+  {
+    spm: "Hvem synes Hanna virker bortskjemt når hun sier det ikke er så farlig?",
+    alt: ["Finn","Hanna","Leo","Klara"],
+    svar: "Klara"
+  },
+  {
+    spm: "Hvor mange ganger har Finn lånt penger til Tobi?",
+    alt: ["Én gang","To ganger","Tre ganger","Fire ganger"],
+    svar: "Tre ganger"
+  },
+  {
+    spm: "Hvor mye har Klara lånt ut?",
+    alt: ["Femten euro","Tjuefem euro","Femti euro","Hundre euro"],
+    svar: "Femti euro"
+  },
+  {
+    spm: "Hvem er mest opptatt av å få pengene tilbake?",
+    alt: ["Finn og Hanna","Finn og Klara","Leo og Klara","Hanna og Leo"],
+    svar: "Finn og Klara"
+  }
+];
+
+const liste   = document.getElementById("sporsmalListe");
+const btn     = document.getElementById("sjekkBtn");
+const melding = document.getElementById("resultat-melding");
+
+alleFasit.forEach((q, i) => {
+  const rad = document.createElement("div");
+  rad.className = "sporsmal-rad";
+
+  const tekst = document.createElement("div");
+  tekst.className = "sporsmal-tekst";
+  tekst.innerHTML = (i+1) + ". " + q.spm;
+
+  const svarRad = document.createElement("div");
+  svarRad.className = "svar-rad";
+
+  const sel = document.createElement("select");
+  sel.id = "q" + i;
+  const blank = document.createElement("option");
+  blank.value = ""; blank.textContent = "— Velg svar —";
+  sel.appendChild(blank);
+  q.alt.forEach(a => {
+    const opt = document.createElement("option");
+    opt.value = a; opt.textContent = a;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener("change", sjekkKlar);
+
+  const ikon = document.createElement("span");
+  ikon.className = "status-ikon";
+  ikon.id = "ikon" + i;
+
+  svarRad.appendChild(sel);
+  svarRad.appendChild(ikon);
+  rad.appendChild(tekst);
+  rad.appendChild(svarRad);
+  liste.appendChild(rad);
+});
+
+function sjekkKlar() {
+  const alle = alleFasit.every((_, i) => document.getElementById("q"+i).value !== "");
+  btn.classList.toggle("aktiv", alle);
+}
+
+btn.addEventListener("click", () => {
+  let feil = 0;
+  alleFasit.forEach((q, i) => {
+    const sel  = document.getElementById("q"+i);
+    const ikon = document.getElementById("ikon"+i);
+    if (sel.value === q.svar) {
+      ikon.textContent = "✅"; sel.className = "rett";
+    } else {
+      ikon.textContent = "❌"; sel.className = "feil"; feil++;
+    }
+  });
+  if (feil === 0) {
+    melding.textContent = "🎉 Alle svar er riktige! Fantastisk jobbet! 🎉";
+    melding.style.color = "#2A6B6B";
+    startCelebration();
+  } else {
+    melding.textContent = feil + " svar er feil. Prøv igjen – fasit gis ikke!";
+    melding.style.color = "#8B3A2A";
+  }
+});
+
+function startCelebration() {
+  const canvas = document.getElementById("konfetti-canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const emojis = ["💬","🤝","💸","😊","🎉","💶","✨","🙌"];
+  const items = Array.from({length: 24}, () => {
+    const fromLeft = Math.random() > 0.5;
+    return {
+      x:    fromLeft ? -50 : canvas.width + 50,
+      y:    Math.random() * canvas.height,
+      vx:   (fromLeft ? 1 : -1) * (5 + Math.random() * 10),
+      vy:   (Math.random() - 0.5) * 5,
+      size: 20 + Math.random() * 24,
+      rot:  Math.random() * Math.PI * 2,
+      drot: (Math.random() - 0.5) * 0.12,
+      emoji: emojis[Math.floor(Math.random() * emojis.length)]
+    };
+  });
+
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    items.forEach(b => {
+      ctx.save();
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.rot);
+      ctx.font = `${Math.round(b.size)}px serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(b.emoji, 0, 0);
+      ctx.restore();
+      b.x   += b.vx;
+      b.y   += b.vy;
+      b.rot += b.drot;
+      if (b.y < 0 || b.y > canvas.height) b.vy *= -1;
+    });
+    frame++;
+    if (frame < 280) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+</script>
+</body>
+</html>

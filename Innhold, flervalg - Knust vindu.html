@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesetrening: Hvem knuste vinduet?</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #C9A84C;
+    --orange: #C0622A;
+    --green:  #4A7C6F;
+    --blue:   #2E6A8E;
+    --pink:   #A64B6B;
+    --purple: #4A3F6B;
+    --light:  #F4F6F8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--light);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle, rgba(46,106,142,0.08) 4px, transparent 4px),
+      radial-gradient(circle, rgba(74,63,107,0.06) 3px, transparent 3px);
+    background-size: 70px 70px, 45px 45px;
+    background-position: 0 0, 25px 25px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 3rem;
+  }
+
+  /* ── Flying ball ── */
+  .header-scene {
+    position: relative;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    padding: 0.5rem 0 0.2rem;
+  }
+
+  .flying-ball {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-60%);
+    font-size: 2rem;
+    animation: fly-across 3.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.2));
+    pointer-events: none;
+  }
+
+  @keyframes fly-across {
+    0%   { left: -6%; transform: translateY(40%) rotate(0deg); opacity: 0; }
+    8%   { opacity: 1; }
+    92%  { opacity: 1; }
+    100% { left: 106%; transform: translateY(-120%) rotate(720deg); opacity: 0; }
+  }
+
+  /* ── Header ── */
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+    color: var(--purple);
+    letter-spacing: 0.5px;
+    line-height: 1.15;
+    text-shadow: 2px 2px 0 rgba(74,63,107,0.1);
+    position: relative;
+    z-index: 1;
+  }
+  header h1 span { color: var(--orange); }
+
+  /* ── Instruksjon ── */
+  .instruksjon {
+    background: linear-gradient(135deg, #eef2f7, #e4eaf2);
+    border: 2px solid var(--blue);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
+    color: #2e3a4a;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(46,106,142,0.15);
+  }
+
+  /* ── Two-column layout ── */
+  .tokolonner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+    margin-bottom: 1.75rem;
+  }
+  @media (max-width: 680px) { .tokolonner { grid-template-columns: 1fr; } }
+
+  /* ── Text box ── */
+  .tekst-boks {
+    background: white;
+    border: 2px solid var(--blue);
+    border-radius: 14px;
+    padding: 1.5rem;
+    line-height: 1.8;
+    font-size: 0.92rem;
+    box-shadow: 4px 4px 0 rgba(46,106,142,0.14);
+    position: relative;
+  }
+  .tekst-boks::before {
+    content: '🪟';
+    position: absolute;
+    top: -16px; left: 16px;
+    font-size: 1.5rem;
+    background: white;
+    padding: 0 4px;
+  }
+  .tekst-boks p { margin-bottom: 1rem; color: #2e2e2e; }
+  .tekst-boks p:last-child { margin-bottom: 0; }
+
+  .navn { font-weight: 900; font-size: 1rem; }
+  .navn.kevin { color: var(--blue); }
+  .navn.mia   { color: var(--pink); }
+  .navn.leon  { color: var(--green); }
+
+  /* ── Questions box ── */
+  .sporsmal-boks {
+    background: white;
+    border: 2px solid var(--purple);
+    border-radius: 14px;
+    padding: 1.5rem;
+    box-shadow: 4px 4px 0 rgba(74,63,107,0.14);
+    position: relative;
+  }
+  .sporsmal-boks::before {
+    content: '✏️';
+    position: absolute;
+    top: -16px; left: 16px;
+    font-size: 1.5rem;
+    background: white;
+    padding: 0 4px;
+  }
+  .sporsmal-rad { margin-bottom: 1rem; }
+  .sporsmal-rad:last-child { margin-bottom: 0; }
+  .sporsmal-tekst {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #2e2e2e;
+    margin-bottom: 5px;
+    line-height: 1.35;
+  }
+  .svar-rad { display: flex; align-items: center; gap: 8px; }
+
+  select {
+    flex: 1;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1.5px solid #ccc;
+    background: #fafafa;
+    color: #2e2e2e;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  select:focus { outline: none; border-color: var(--purple); }
+  select.rett  { border-color: var(--green); background: #f0f7f5; }
+  select.feil  { border-color: var(--pink);  background: #fdf2f5; }
+  .status-ikon { font-size: 1.2rem; min-width: 22px; text-align: center; }
+
+  /* ── Bottom ── */
+  .bunn { text-align: center; }
+
+  @keyframes pulse-btn {
+    0%,100% { box-shadow: 0 5px 18px rgba(74,63,107,0.3); }
+    50%     { box-shadow: 0 5px 26px rgba(166,75,107,0.4); }
+  }
+
+  #sjekkBtn {
+    font-family: 'Lato', sans-serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 13px 44px;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 5px 18px rgba(74,63,107,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  #sjekkBtn.aktiv {
+    opacity: 1;
+    pointer-events: auto;
+    animation: pulse-btn 2s ease-in-out infinite;
+  }
+  #sjekkBtn.aktiv:hover { transform: scale(1.04) translateY(-2px); }
+  #sjekkBtn.aktiv:active { transform: scale(0.97); }
+
+  #resultat-melding {
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    min-height: 1.5em;
+  }
+
+  /* ── Glass crack overlay ── */
+  #glass-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    pointer-events: none;
+  }
+
+  /* ── Football canvas ── */
+  #konfetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="header-scene">
+    <span class="flying-ball">⚽</span>
+    <header>
+      <h1>Lesetrening:<br><span>Hvem knuste vinduet?</span></h1>
+    </header>
+  </div>
+
+  <div class="instruksjon">
+    Tre ungdommer argumenterer for at det ikke er deres feil at et vindu er knust. Les diskusjonen og svar på spørsmålene til høyre.<br>
+    Du kan ikke sjekke svarene før alle 8 spørsmål er besvart.
+  </div>
+
+  <div class="tokolonner">
+    <div class="tekst-boks">
+      <p><span class="navn kevin">Kevin:</span> Ich war es definitiv nicht! Ich habe zwar heute Fußball gespielt, aber mein Ball ist doch noch hier – schau mal! Außerdem war ich auf der anderen Seite des Gartens, als das Fenster zu Bruch ging. Den Knall habe ich genau gehört, aber ich war weit weg. Ich glaube, es war der Wind, der einen Ast gegen das Fenster geworfen hat. So etwas passiert doch manchmal!</p>
+      <p><span class="navn mia">Mia:</span> Warum schaut ihr mich so an? Ich habe gar keinen Ball! Ich war die ganze Zeit auf der Terrasse und habe Musik gehört – das kann meine Schwester bestätigen. Und ehrlich gesagt finde ich es unfair, dass ich immer schuld sein soll, nur weil ich in der Nähe war. Ich schlage vor, dass wir gemeinsam nachschauen, woher der Ball eigentlich kommt.</p>
+      <p><span class="navn leon">Leon:</span> Okay, ich hatte einen Ball, aber ich habe ihn schon vor einer Stunde weggelegt. Ich habe danach nur noch auf meinem Handy gespielt – das sieht man am Zeitstempel meiner Nachrichten. Außerdem bin ich sicher, dass Kevin kurz vor dem Knall in Richtung Fenster geschossen hat. Ich will niemanden beschuldigen, aber ich habe gesehen, was ich gesehen habe.</p>
+    </div>
+
+    <div class="sporsmal-boks" id="sporsmalListe"></div>
+  </div>
+
+  <div class="bunn">
+    <button id="sjekkBtn">Sjekk svarene!</button>
+    <div id="resultat-melding"></div>
+  </div>
+
+</div>
+
+<!-- Glass crack overlay (SVG drawn via JS) -->
+<canvas id="glass-overlay"></canvas>
+<canvas id="konfetti-canvas"></canvas>
+
+<script>
+const alleFasit = [
+  { spm: "Hvem hevder å ha hørt at vinduet knuste?",              svar: "Kevin" },
+  { spm: "Hvem sier at de spilte på mobilen etterpå?",            svar: "Leon"  },
+  { spm: "Hvem foreslår at de undersøker hvor ballen kommer fra?", svar: "Mia"  },
+  { spm: "Hvem påstår å ha sett hvem som skjøt mot vinduet?",     svar: "Leon"  },
+  { spm: "Hvem sier at søsteren kan bekrefte alibiet?",           svar: "Mia"   },
+  { spm: "Hvem mener det kan ha vært vinden som knuste vinduet?", svar: "Kevin" },
+  { spm: "Hvem synes det er urettferdig alltid å få skylden?",    svar: "Mia"   },
+  { spm: "Hvem la fra seg ballen for en time siden?",             svar: "Leon"  }
+];
+
+const navn = ["Kevin","Mia","Leon"];
+const liste   = document.getElementById("sporsmalListe");
+const btn     = document.getElementById("sjekkBtn");
+const melding = document.getElementById("resultat-melding");
+
+alleFasit.forEach((q, i) => {
+  const rad = document.createElement("div");
+  rad.className = "sporsmal-rad";
+  const tekst = document.createElement("div");
+  tekst.className = "sporsmal-tekst";
+  tekst.textContent = (i+1) + ". " + q.spm;
+  const svarRad = document.createElement("div");
+  svarRad.className = "svar-rad";
+  const sel = document.createElement("select");
+  sel.id = "q" + i;
+  const blank = document.createElement("option");
+  blank.value = ""; blank.textContent = "— Velg navn —";
+  sel.appendChild(blank);
+  navn.forEach(n => {
+    const opt = document.createElement("option");
+    opt.value = n; opt.textContent = n;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener("change", sjekkKlar);
+  const ikon = document.createElement("span");
+  ikon.className = "status-ikon";
+  ikon.id = "ikon" + i;
+  svarRad.appendChild(sel);
+  svarRad.appendChild(ikon);
+  rad.appendChild(tekst);
+  rad.appendChild(svarRad);
+  liste.appendChild(rad);
+});
+
+function sjekkKlar() {
+  const alle = alleFasit.every((_, i) => document.getElementById("q"+i).value !== "");
+  btn.classList.toggle("aktiv", alle);
+}
+
+btn.addEventListener("click", () => {
+  let feil = 0;
+  alleFasit.forEach((q, i) => {
+    const sel  = document.getElementById("q"+i);
+    const ikon = document.getElementById("ikon"+i);
+    if (sel.value === q.svar) {
+      ikon.textContent = "✅"; sel.className = "rett";
+    } else {
+      ikon.textContent = "❌"; sel.className = "feil"; feil++;
+    }
+  });
+  if (feil === 0) {
+    melding.textContent = "🎉 Alle svar er riktige! Fantastisk jobbet! 🎉";
+    melding.style.color = "#4A7C6F";
+    startFootballs();
+  } else {
+    melding.textContent = feil + " svar er feil. Prøv igjen – fasit gis ikke!";
+    melding.style.color = "#A64B6B";
+    showGlassCrack();
+  }
+});
+
+/* ── Glass crack effect ── */
+function showGlassCrack() {
+  const canvas = document.getElementById("glass-overlay");
+  canvas.style.display = "block";
+  canvas.style.position = "fixed";
+  canvas.style.inset = "0";
+  canvas.style.zIndex = "9998";
+  canvas.style.pointerEvents = "none";
+  canvas.style.opacity = "1";
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext("2d");
+
+  const cx = canvas.width  * (0.35 + Math.random() * 0.3);
+  const cy = canvas.height * (0.3  + Math.random() * 0.3);
+
+  // Draw radial cracks from impact point
+  const numCracks = 14;
+  ctx.strokeStyle = "rgba(180,210,240,0.75)";
+  ctx.lineWidth = 2;
+  ctx.shadowColor = "rgba(200,230,255,0.9)";
+  ctx.shadowBlur = 6;
+
+  for (let i = 0; i < numCracks; i++) {
+    const angle = (i / numCracks) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+    const len   = 120 + Math.random() * 220;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    let x = cx, y = cy;
+    // Jagged line with branches
+    const steps = 4 + Math.floor(Math.random() * 4);
+    for (let s = 1; s <= steps; s++) {
+      const jitter = (Math.random() - 0.5) * 0.35;
+      x = cx + Math.cos(angle + jitter) * (len * s / steps);
+      y = cy + Math.sin(angle + jitter) * (len * s / steps);
+      ctx.lineTo(x, y);
+      // Occasional branch
+      if (s === 2 && Math.random() > 0.5) {
+        const bAngle = angle + (Math.random() - 0.5) * 1.2;
+        const bLen   = 40 + Math.random() * 80;
+        ctx.moveTo(x, y);
+        ctx.lineTo(
+          x + Math.cos(bAngle) * bLen,
+          y + Math.sin(bAngle) * bLen
+        );
+        ctx.moveTo(x, y);
+      }
+    }
+    ctx.stroke();
+  }
+
+  // Concentric arc rings around impact
+  ctx.shadowBlur = 3;
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "rgba(180,220,255,0.4)";
+  [30, 60, 100].forEach(r => {
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.stroke();
+  });
+
+  // Impact centre glow
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 28);
+  grad.addColorStop(0,   "rgba(255,255,255,0.7)");
+  grad.addColorStop(0.4, "rgba(200,230,255,0.3)");
+  grad.addColorStop(1,   "rgba(200,230,255,0)");
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(cx, cy, 28, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Fade out after 2.5s
+  let opacity = 1;
+  const fade = setInterval(() => {
+    opacity -= 0.03;
+    canvas.style.opacity = Math.max(0, opacity);
+    if (opacity <= 0) {
+      clearInterval(fade);
+      canvas.style.display = "none";
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }, 40);
+}
+
+/* ── Football celebration ── */
+function startFootballs() {
+  const canvas = document.getElementById("konfetti-canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const balls = Array.from({length: 18}, () => {
+    const fromLeft = Math.random() > 0.5;
+    return {
+      x:   fromLeft ? -40 : canvas.width + 40,
+      y:   Math.random() * canvas.height,
+      vx:  (fromLeft ? 1 : -1) * (6 + Math.random() * 12),
+      vy:  (Math.random() - 0.5) * 8,
+      size: 22 + Math.random() * 22,
+      rot: Math.random() * Math.PI * 2,
+      drot: (Math.random() - 0.5) * 0.18,
+      emoji: "⚽"
+    };
+  });
+
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    balls.forEach(b => {
+      ctx.save();
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.rot);
+      ctx.font = `${Math.round(b.size)}px serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(b.emoji, 0, 0);
+      ctx.restore();
+      b.x   += b.vx;
+      b.y   += b.vy;
+      b.rot += b.drot;
+      // Bounce off top/bottom
+      if (b.y < 0 || b.y > canvas.height) b.vy *= -1;
+    });
+    frame++;
+    if (frame < 260) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+</script>
+</body>
+</html>

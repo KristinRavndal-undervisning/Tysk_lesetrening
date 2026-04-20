@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesetrening: Reisedrømmer</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --terracotta: #B5563A;
+    --olive:      #6B7A3A;
+    --slate:      #4A5568;
+    --gold:       #8B6914;
+    --cream:      #F8F4EE;
+    --warm-gray:  #E8E2D8;
+    --dark:       #2D2D2D;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle, rgba(139,105,20,0.07) 3px, transparent 3px),
+      radial-gradient(circle, rgba(74,85,104,0.05) 2px, transparent 2px);
+    background-size: 65px 65px, 38px 38px;
+    background-position: 0 0, 22px 22px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
+  }
+
+  /* ── Globe/passport header ── */
+  .header-scene {
+    position: relative;
+    text-align: center;
+    padding: 2.5rem 1rem 1.8rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #2D2D2D, #4A5568);
+    overflow: hidden;
+  }
+
+  /* Floating destination icons */
+  .dest-icon {
+    position: absolute;
+    font-size: 1.6rem;
+    opacity: 0.18;
+    pointer-events: none;
+    animation: float-icon 6s ease-in-out infinite;
+  }
+  .dest-icon:nth-child(1)  { top: 10%; left:  5%; animation-delay: 0s; }
+  .dest-icon:nth-child(2)  { top: 60%; left: 12%; animation-delay: 1s; }
+  .dest-icon:nth-child(3)  { top: 20%; left: 88%; animation-delay: 2s; }
+  .dest-icon:nth-child(4)  { top: 70%; left: 82%; animation-delay: 0.5s; }
+  .dest-icon:nth-child(5)  { top: 45%; left: 48%; animation-delay: 1.5s; }
+  .dest-icon:nth-child(6)  { top:  8%; left: 55%; animation-delay: 2.5s; }
+  .dest-icon:nth-child(7)  { top: 75%; left: 35%; animation-delay: 3s; }
+  .dest-icon:nth-child(8)  { top: 30%; left: 28%; animation-delay: 0.8s; }
+
+  @keyframes float-icon {
+    0%,100% { transform: translateY(0) rotate(-5deg); }
+    50%     { transform: translateY(-10px) rotate(5deg); }
+  }
+
+  header {
+    position: relative;
+    z-index: 1;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+    color: white;
+    letter-spacing: 0.5px;
+    line-height: 1.15;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  }
+  header h1 span { color: #E8C97A; }
+
+  /* ── Instruksjon ── */
+  .instruksjon {
+    background: var(--warm-gray);
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
+    color: var(--dark);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(139,105,20,0.12);
+  }
+
+  /* ── Two-column layout ── */
+  .tokolonner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+    margin-bottom: 1.75rem;
+  }
+  @media (max-width: 680px) { .tokolonner { grid-template-columns: 1fr; } }
+
+  /* ── Text box ── */
+  .tekst-boks {
+    background: white;
+    border: 2px solid var(--slate);
+    border-radius: 14px;
+    padding: 1.5rem;
+    line-height: 1.8;
+    font-size: 0.92rem;
+    box-shadow: 4px 4px 0 rgba(74,85,104,0.12);
+    position: relative;
+  }
+  .tekst-boks::before {
+    content: '🌍';
+    position: absolute;
+    top: -16px; left: 16px;
+    font-size: 1.5rem;
+    background: white;
+    padding: 0 4px;
+  }
+  .tekst-boks p { margin-bottom: 1rem; color: #2a2a2a; }
+  .tekst-boks p:last-child { margin-bottom: 0; }
+
+  .navn { font-weight: 900; font-size: 1rem; }
+  .navn.mia   { color: var(--terracotta); }
+  .navn.ben   { color: var(--slate); }
+  .navn.clara { color: var(--olive); }
+  .navn.luca  { color: var(--gold); }
+
+  /* ── Questions box ── */
+  .sporsmal-boks {
+    background: white;
+    border: 2px solid var(--terracotta);
+    border-radius: 14px;
+    padding: 1.5rem;
+    box-shadow: 4px 4px 0 rgba(181,86,58,0.12);
+    position: relative;
+  }
+  .sporsmal-boks::before {
+    content: '✏️';
+    position: absolute;
+    top: -16px; left: 16px;
+    font-size: 1.5rem;
+    background: white;
+    padding: 0 4px;
+  }
+  .sporsmal-rad { margin-bottom: 1rem; }
+  .sporsmal-rad:last-child { margin-bottom: 0; }
+  .sporsmal-tekst {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #2a2a2a;
+    margin-bottom: 5px;
+    line-height: 1.35;
+  }
+  .svar-rad { display: flex; align-items: center; gap: 8px; }
+
+  select {
+    flex: 1;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1.5px solid #ccc;
+    background: #fafafa;
+    color: #2a2a2a;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  select:focus { outline: none; border-color: var(--slate); }
+  select.rett  { border-color: var(--olive); background: #f4f7f0; }
+  select.feil  { border-color: var(--terracotta); background: #fdf3f0; }
+  .status-ikon { font-size: 1.2rem; min-width: 22px; text-align: center; }
+
+  /* ── Bottom ── */
+  .bunn { text-align: center; }
+
+  @keyframes pulse-btn {
+    0%,100% { box-shadow: 0 5px 18px rgba(45,45,45,0.25); }
+    50%     { box-shadow: 0 5px 26px rgba(181,86,58,0.35); }
+  }
+
+  #sjekkBtn {
+    font-family: 'Lato', sans-serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 13px 44px;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(135deg, var(--dark), var(--slate));
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 5px 18px rgba(45,45,45,0.25);
+    transition: transform 0.2s, box-shadow 0.2s;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  #sjekkBtn.aktiv {
+    opacity: 1;
+    pointer-events: auto;
+    animation: pulse-btn 2s ease-in-out infinite;
+  }
+  #sjekkBtn.aktiv:hover  { transform: scale(1.04) translateY(-2px); }
+  #sjekkBtn.aktiv:active { transform: scale(0.97); }
+
+  #resultat-melding {
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    min-height: 1.5em;
+  }
+
+  #konfetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="header-scene">
+    <span class="dest-icon">✈️</span>
+    <span class="dest-icon">🗺️</span>
+    <span class="dest-icon">🏔️</span>
+    <span class="dest-icon">🌏</span>
+    <span class="dest-icon">🧳</span>
+    <span class="dest-icon">🗼</span>
+    <span class="dest-icon">🏝️</span>
+    <span class="dest-icon">🌐</span>
+    <header>
+      <h1>Lesetrening:<br><span>Reisedrømmer</span></h1>
+    </header>
+  </div>
+
+  <div class="instruksjon">
+    Les teksten og svar på spørsmålene til høyre.<br>
+    Du kan ikke sjekke svarene før alle 10 spørsmål er besvart.
+  </div>
+
+  <div class="tokolonner">
+    <div class="tekst-boks">
+      <p><span class="navn mia">Mia:</span> Australien war lange mein Traum, aber ehrlich gesagt habe ich das inzwischen aufgegeben – zu weit, zu teuer, und irgendwie zieht es mich nicht mehr hin. Stattdessen war ich letzten Sommer in Japan, und das war absolut richtig. Kyoto am frühen Morgen, wenn noch keine Touristen da sind – unvergesslich. Und das Essen! Irgendwann möchte ich noch durch Argentinien und Chile reisen. Südamerika fasziniert mich schon lange.</p>
+      <p><span class="navn ben">Ben:</span> Marrakesch steht ganz oben auf meiner Reiseliste – ich habe so viel darüber gelesen, dass ich es kaum erwarten kann. Märkte, Gewürze, diese ganz andere Atmosphäre. New York kenne ich schon gut, war zweimal dort und würde jederzeit wieder hinfahren – aber das ist eher ein Kurztrip als ein richtiges Abenteuer. Skandinavien interessiert mich dagegen wenig. Zu dunkel, zu kalt, und ich brauche Sonne im Urlaub. Übrigens finde ich Mias Idee mit Südamerika gar nicht schlecht – Argentinien könnte ich mir auch vorstellen, aber das hat bei mir keine Priorität.</p>
+      <p><span class="navn clara">Clara:</span> Ich habe Mia ein bisschen beneidet, als sie von Japan erzählte – aber ich bereue meine Reise nach Neuseeland überhaupt nicht. Es war eines der schönsten Erlebnisse meines Lebens. Diese Landschaft – man hat wirklich das Gefühl, am Ende der Welt zu sein. Als nächstes plane ich eine Reise nach Vietnam. Die Küche und die Geschichte faszinieren mich schon lange. Nord-Afrika reizt mich auch – vielleicht Marokko oder Tunesien, irgendwann. Russland steht bei mir gerade nicht auf der Liste – was dort politisch passiert, lässt mich nicht kalt.</p>
+      <p><span class="navn luca">Luca:</span> Island – das ist mein nächstes Ziel. Nordlichter sehen, das ist seit Jahren mein Traum. Ich empfehle Marokko übrigens jedem – drei Wochen in Fes und Marrakesch, und die Medina in Fes war wie eine andere Welt. Massentourismus ist einfach nichts für mich, deshalb bleibt Mallorca definitiv außen vor. Mia schwärmt ja von Südamerika, und ich verstehe das – aber für mich hat Island gerade Vorrang.</p>
+    </div>
+
+    <div class="sporsmal-boks" id="sporsmalListe"></div>
+  </div>
+
+  <div class="bunn">
+    <button id="sjekkBtn">Sjekk svarene!</button>
+    <div id="resultat-melding"></div>
+  </div>
+
+</div>
+
+<canvas id="konfetti-canvas"></canvas>
+
+<script>
+const alleFasit = [
+  {
+    spm: "Hvem har vært i Japan?",
+    alt: ["Mia","Ben","Clara","Luca"],
+    svar: "Mia"
+  },
+  {
+    spm: "Hvorfor ønsker Clara å besøke Vietnam?",
+    alt: ["På grunn av naturen og fjellandskapet","På grunn av maten og historien","På grunn av strendene og varmen","På grunn av arkitekturen og kunsten"],
+    svar: "På grunn av maten og historien"
+  },
+  {
+    spm: "Hvem drømmer om å se nordlyset?",
+    alt: ["Mia","Ben","Clara","Luca"],
+    svar: "Luca"
+  },
+  {
+    spm: "Hvor mange av dem har vært i Sør-Amerika?",
+    alt: ["Ingen","Én","To","Tre"],
+    svar: "Ingen"
+  },
+  {
+    spm: "Hvem har vært i Marokko?",
+    alt: ["Mia","Ben","Clara","Luca"],
+    svar: "Luca"
+  },
+  {
+    spm: "Hvem drømmer om å besøke Sør-Amerika?",
+    alt: ["Mia","Ben","Clara","Luca"],
+    svar: "Mia"
+  },
+  {
+    spm: "Hvem er <em>ikke</em> interessert i Mallorca?",
+    alt: ["Mia","Ben","Clara","Luca"],
+    svar: "Luca"
+  },
+  {
+    spm: "Hvor mange ganger har Ben vært i New York?",
+    alt: ["Én gang","To ganger","Tre ganger","Han har aldri vært der"],
+    svar: "To ganger"
+  },
+  {
+    spm: "Hvorfor vil ikke Ben reise til Skandinavia?",
+    alt: ["Det er for dyrt","Han foretrekker storbyturisme","Han trenger sol på ferien","Han har allerede vært der mange ganger"],
+    svar: "Han trenger sol på ferien"
+  },
+  {
+    spm: "Hvorfor vil ikke Clara reise til Russland?",
+    alt: ["Fordi det er for kaldt","Fordi det er for dyrt","På grunn av den politiske situasjonen","Fordi hun er redd for å reise alene"],
+    svar: "På grunn av den politiske situasjonen"
+  }
+];
+
+const liste   = document.getElementById("sporsmalListe");
+const btn     = document.getElementById("sjekkBtn");
+const melding = document.getElementById("resultat-melding");
+
+alleFasit.forEach((q, i) => {
+  const rad = document.createElement("div");
+  rad.className = "sporsmal-rad";
+
+  const tekst = document.createElement("div");
+  tekst.className = "sporsmal-tekst";
+  tekst.innerHTML = (i+1) + ". " + q.spm;
+
+  const svarRad = document.createElement("div");
+  svarRad.className = "svar-rad";
+
+  const sel = document.createElement("select");
+  sel.id = "q" + i;
+  const blank = document.createElement("option");
+  blank.value = ""; blank.textContent = "— Velg svar —";
+  sel.appendChild(blank);
+  q.alt.forEach(a => {
+    const opt = document.createElement("option");
+    opt.value = a; opt.textContent = a;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener("change", sjekkKlar);
+
+  const ikon = document.createElement("span");
+  ikon.className = "status-ikon";
+  ikon.id = "ikon" + i;
+
+  svarRad.appendChild(sel);
+  svarRad.appendChild(ikon);
+  rad.appendChild(tekst);
+  rad.appendChild(svarRad);
+  liste.appendChild(rad);
+});
+
+function sjekkKlar() {
+  const alle = alleFasit.every((_, i) => document.getElementById("q"+i).value !== "");
+  btn.classList.toggle("aktiv", alle);
+}
+
+btn.addEventListener("click", () => {
+  let feil = 0;
+  alleFasit.forEach((q, i) => {
+    const sel  = document.getElementById("q"+i);
+    const ikon = document.getElementById("ikon"+i);
+    if (sel.value === q.svar) {
+      ikon.textContent = "✅"; sel.className = "rett";
+    } else {
+      ikon.textContent = "❌"; sel.className = "feil"; feil++;
+    }
+  });
+  if (feil === 0) {
+    melding.textContent = "🎉 Alle svar er riktige! Fantastisk jobbet! 🎉";
+    melding.style.color = "#6B7A3A";
+    startCelebration();
+  } else {
+    melding.textContent = feil + (feil === 1 ? " svar er feil." : " svar er feil.") + " Prøv igjen – fasit gis ikke!";
+    melding.style.color = "#B5563A";
+  }
+});
+
+function startCelebration() {
+  const canvas = document.getElementById("konfetti-canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const emojis = ["✈️","🌍","🗺️","🧳","🏔️","🌏","🗼","🏝️","⭐","🌐"];
+  const items = Array.from({length: 24}, () => {
+    const fromLeft = Math.random() > 0.5;
+    return {
+      x:    fromLeft ? -50 : canvas.width + 50,
+      y:    Math.random() * canvas.height,
+      vx:   (fromLeft ? 1 : -1) * (5 + Math.random() * 10),
+      vy:   (Math.random() - 0.5) * 5,
+      size: 20 + Math.random() * 24,
+      rot:  Math.random() * Math.PI * 2,
+      drot: (Math.random() - 0.5) * 0.12,
+      emoji: emojis[Math.floor(Math.random() * emojis.length)]
+    };
+  });
+
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    items.forEach(b => {
+      ctx.save();
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.rot);
+      ctx.font = `${Math.round(b.size)}px serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(b.emoji, 0, 0);
+      ctx.restore();
+      b.x   += b.vx;
+      b.y   += b.vy;
+      b.rot += b.drot;
+      if (b.y < 0 || b.y > canvas.height) b.vy *= -1;
+    });
+    frame++;
+    if (frame < 280) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+</script>
+</body>
+</html>
