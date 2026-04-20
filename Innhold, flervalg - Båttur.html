@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesetrening: En dag på sjøen</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:    #1B3A52;
+    --ocean:   #2E7DA6;
+    --sky:     #7AB8D4;
+    --foam:    #C8E6F0;
+    --sand:    #E8DCC8;
+    --rust:    #A0522D;
+    --light:   #F0F6FA;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--light);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle, rgba(46,125,166,0.07) 3px, transparent 3px),
+      radial-gradient(circle, rgba(27,58,82,0.05) 2px, transparent 2px);
+    background-size: 60px 60px, 35px 35px;
+    background-position: 0 0, 20px 20px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem 3rem;
+  }
+
+  /* ── Wave header ── */
+  .header-scene {
+    position: relative;
+    text-align: center;
+    padding: 2.5rem 0 1.8rem;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
+
+  /* SVG wave background */
+  .wave-bg {
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wave1 { animation: wave-move 4s linear infinite; }
+  .wave2 { animation: wave-move 6s linear infinite reverse; opacity: 0.6; }
+  .wave3 { animation: wave-move 5s linear infinite; opacity: 0.4; }
+
+  @keyframes wave-move {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  header {
+    position: relative;
+    z-index: 1;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+    color: white;
+    letter-spacing: 0.5px;
+    line-height: 1.15;
+    text-shadow: 0 2px 8px rgba(27,58,82,0.5);
+  }
+  header h1 span { color: var(--sand); }
+
+  /* ── Instruksjon ── */
+  .instruksjon {
+    background: linear-gradient(135deg, #deeef7, #cce3f0);
+    border: 2px solid var(--ocean);
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    font-size: 0.95rem;
+    color: var(--navy);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(46,125,166,0.15);
+  }
+
+  /* ── Two-column layout ── */
+  .tokolonner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    align-items: start;
+    margin-bottom: 1.75rem;
+  }
+  @media (max-width: 680px) { .tokolonner { grid-template-columns: 1fr; } }
+
+  /* ── Text box ── */
+  .tekst-boks {
+    background: white;
+    border: 2px solid var(--ocean);
+    border-radius: 14px;
+    padding: 1.5rem;
+    line-height: 1.8;
+    font-size: 0.92rem;
+    box-shadow: 4px 4px 0 rgba(46,125,166,0.14);
+    position: relative;
+  }
+  .tekst-boks::before {
+    content: '⛵';
+    position: absolute;
+    top: -16px; left: 16px;
+    font-size: 1.5rem;
+    background: white;
+    padding: 0 4px;
+  }
+  .tekst-boks p { margin-bottom: 1rem; color: #2a2a2a; }
+  .tekst-boks p:last-child { margin-bottom: 0; }
+
+  .navn { font-weight: 900; font-size: 1rem; }
+  .navn.jonas  { color: var(--navy); }
+  .navn.lena   { color: var(--ocean); }
+  .navn.markus { color: var(--rust); }
+  .navn.sofia  { color: #5A7A5A; }
+
+  /* ── Questions box ── */
+  .sporsmal-boks {
+    background: white;
+    border: 2px solid var(--navy);
+    border-radius: 14px;
+    padding: 1.5rem;
+    box-shadow: 4px 4px 0 rgba(27,58,82,0.14);
+    position: relative;
+  }
+  .sporsmal-boks::before {
+    content: '✏️';
+    position: absolute;
+    top: -16px; left: 16px;
+    font-size: 1.5rem;
+    background: white;
+    padding: 0 4px;
+  }
+  .sporsmal-rad { margin-bottom: 1rem; }
+  .sporsmal-rad:last-child { margin-bottom: 0; }
+  .sporsmal-tekst {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #2a2a2a;
+    margin-bottom: 5px;
+    line-height: 1.35;
+  }
+  .svar-rad { display: flex; align-items: center; gap: 8px; }
+
+  select {
+    flex: 1;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1.5px solid #ccc;
+    background: #fafafa;
+    color: #2a2a2a;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  select:focus  { outline: none; border-color: var(--navy); }
+  select.rett   { border-color: #4A7C6F; background: #f0f7f5; }
+  select.feil   { border-color: #A64B6B; background: #fdf2f5; }
+  .status-ikon  { font-size: 1.2rem; min-width: 22px; text-align: center; }
+
+  /* ── Bottom ── */
+  .bunn { text-align: center; }
+
+  @keyframes pulse-btn {
+    0%,100% { box-shadow: 0 5px 18px rgba(27,58,82,0.3); }
+    50%     { box-shadow: 0 5px 26px rgba(46,125,166,0.5); }
+  }
+
+  #sjekkBtn {
+    font-family: 'Lato', sans-serif;
+    font-weight: 900;
+    font-size: 1.1rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 13px 44px;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(135deg, var(--navy), var(--ocean));
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 5px 18px rgba(27,58,82,0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  #sjekkBtn.aktiv {
+    opacity: 1;
+    pointer-events: auto;
+    animation: pulse-btn 2s ease-in-out infinite;
+  }
+  #sjekkBtn.aktiv:hover  { transform: scale(1.04) translateY(-2px); }
+  #sjekkBtn.aktiv:active { transform: scale(0.97); }
+
+  #resultat-melding {
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 700;
+    min-height: 1.5em;
+  }
+
+  /* ── Overlays ── */
+  #glass-overlay, #konfetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+  #glass-overlay { display: none; z-index: 9998; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="header-scene">
+    <!-- Animated SVG waves -->
+    <svg class="wave-bg" viewBox="0 0 1200 160" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="seaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1B3A52"/>
+          <stop offset="100%" stop-color="#2E7DA6"/>
+        </linearGradient>
+      </defs>
+      <rect width="1200" height="160" fill="url(#seaGrad)"/>
+      <!-- Wave 1 -->
+      <g class="wave1">
+        <path d="M0,80 C150,50 300,110 450,80 C600,50 750,110 900,80 C1050,50 1200,110 1350,80 C1500,50 1650,110 1800,80 C1950,50 2100,110 2250,80 L2250,160 L0,160 Z" fill="rgba(122,184,212,0.35)"/>
+      </g>
+      <!-- Wave 2 -->
+      <g class="wave2">
+        <path d="M0,95 C200,65 400,120 600,95 C800,65 1000,120 1200,95 C1400,65 1600,120 1800,95 C2000,65 2200,120 2400,95 L2400,160 L0,160 Z" fill="rgba(200,230,240,0.25)"/>
+      </g>
+      <!-- Wave 3 -->
+      <g class="wave3">
+        <path d="M0,110 C180,85 360,130 540,110 C720,85 900,130 1080,110 C1260,85 1440,130 1620,110 C1800,85 1980,130 2160,110 L2160,160 L0,160 Z" fill="rgba(255,255,255,0.12)"/>
+      </g>
+    </svg>
+
+    <header>
+      <h1>Lesetrening:<br><span>En dag på sjøen</span></h1>
+    </header>
+  </div>
+
+  <div class="instruksjon">
+    En vennegjeng drar på båttur en sommerdag. Les fortellingen og svar på spørsmålene til høyre.<br>
+    Du kan ikke sjekke svarene før alle 8 spørsmål er besvart.
+  </div>
+
+  <div class="tokolonner">
+    <div class="tekst-boks">
+      <p>Eine Gruppe von Freunden – <span class="navn jonas">Jonas</span>, <span class="navn lena">Lena</span>, <span class="navn markus">Markus</span> und <span class="navn sofia">Sofia</span> – verbrachte einen wunderschönen Sommertag auf dem Wasser. <span class="navn jonas">Jonas</span> hatte das Boot für den Tag gemietet und übernahm auch das Steuer, da er als einziger einen Bootsführerschein hatte. <span class="navn lena">Lena</span> hatte sich im Voraus um die Rettungswesten gekümmert und darauf bestanden, dass alle sie am Anfang anlegen sollten. <span class="navn markus">Markus</span> war für das Essen zuständig und hatte eine große Kühlbox mit Sandwiches, Obst und kalten Getränken vorbereitet. <span class="navn sofia">Sofia</span> hatte Sonnencreme für alle dabei, aber <span class="navn markus">Markus</span> vergaß, sie aufzutragen – und bereute das später sehr, denn er bekam einen kräftigen Sonnenbrand auf den Schultern.</p>
+      <p>Das Wetter war zunächst herrlich – strahlender Sonnenschein und fast kein Wind. Nach ein paar Stunden zogen jedoch einige Wolken auf, und die Wellen wurden etwas höher. <span class="navn jonas">Jonas</span> hielt den Kurs ruhig und sicher, obwohl <span class="navn lena">Lena</span> ein bisschen nervös wurde. Sie ankerten in einer geschützten Bucht, wo <span class="navn markus">Markus</span> und <span class="navn sofia">Sofia</span> ins Wasser sprangen und eine Runde schwammen. <span class="navn jonas">Jonas</span> blieb lieber im Boot und beobachtete die anderen. <span class="navn lena">Lena</span> zögerte zunächst, sprang aber schließlich auch ins Wasser – und bereute es nicht.</p>
+      <p>An Bord hatten sie auch einige Spiele dabei. <span class="navn sofia">Sofia</span> hatte Karten mitgebracht und gewann jede Runde, was die anderen ein bisschen frustrierte. Als sie in der Bucht lagen, spielten sie am Strand Federball. Am Ende des Tages waren alle einig: Es war einer der schönsten Tage des Sommers.</p>
+    </div>
+
+    <div class="sporsmal-boks" id="sporsmalListe"></div>
+  </div>
+
+  <div class="bunn">
+    <button id="sjekkBtn">Sjekk svarene!</button>
+    <div id="resultat-melding"></div>
+  </div>
+
+</div>
+
+<canvas id="glass-overlay"></canvas>
+<canvas id="konfetti-canvas"></canvas>
+
+<script>
+const alleFasit = [
+  {
+    spm: "Hvem styrte båten?",
+    alt: ["Jonas","Lena","Markus","Sofia"],
+    svar: "Jonas"
+  },
+  {
+    spm: "Hva var <em>ikke</em> med i kjøleboksen?",
+    alt: ["Sandwicher","Frukt","Pølser","Kalde drikker"],
+    svar: "Pølser"
+  },
+  {
+    spm: "Hvem ble solbrent?",
+    alt: ["Jonas","Lena","Markus","Sofia"],
+    svar: "Markus"
+  },
+  {
+    spm: "Hvem hoppet <em>ikke</em> i vannet?",
+    alt: ["Jonas","Lena","Markus","Sofia"],
+    svar: "Jonas"
+  },
+  {
+    spm: "Hvordan var været i starten av turen?",
+    alt: ["Solskinn og nesten ingen vind","Solskinn med kraftig vind","Lett overskyet og litt kjølig","Grått og overskyet"],
+    svar: "Solskinn og nesten ingen vind"
+  },
+  {
+    spm: "Hvem sørget for redningsvester?",
+    alt: ["Jonas","Lena","Markus","Sofia"],
+    svar: "Lena"
+  },
+  {
+    spm: "Hvem hadde med kort?",
+    alt: ["Jonas","Lena","Markus","Sofia"],
+    svar: "Sofia"
+  },
+  {
+    spm: "Hva synes de andre om at Sofia vant alle rundene i kortspillet?",
+    alt: ["De ble litt frustrerte","De lo og syntes det var morsomt","De nektet å spille mer","De mistenkte henne for å jukse"],
+    svar: "De ble litt frustrerte"
+  }
+];
+
+const liste   = document.getElementById("sporsmalListe");
+const btn     = document.getElementById("sjekkBtn");
+const melding = document.getElementById("resultat-melding");
+
+alleFasit.forEach((q, i) => {
+  const rad = document.createElement("div");
+  rad.className = "sporsmal-rad";
+
+  const tekst = document.createElement("div");
+  tekst.className = "sporsmal-tekst";
+  tekst.innerHTML = (i+1) + ". " + q.spm;
+
+  const svarRad = document.createElement("div");
+  svarRad.className = "svar-rad";
+
+  const sel = document.createElement("select");
+  sel.id = "q" + i;
+  const blank = document.createElement("option");
+  blank.value = ""; blank.textContent = "— Velg svar —";
+  sel.appendChild(blank);
+  q.alt.forEach(a => {
+    const opt = document.createElement("option");
+    opt.value = a; opt.textContent = a;
+    sel.appendChild(opt);
+  });
+  sel.addEventListener("change", sjekkKlar);
+
+  const ikon = document.createElement("span");
+  ikon.className = "status-ikon";
+  ikon.id = "ikon" + i;
+
+  svarRad.appendChild(sel);
+  svarRad.appendChild(ikon);
+  rad.appendChild(tekst);
+  rad.appendChild(svarRad);
+  liste.appendChild(rad);
+});
+
+function sjekkKlar() {
+  const alle = alleFasit.every((_, i) => document.getElementById("q"+i).value !== "");
+  btn.classList.toggle("aktiv", alle);
+}
+
+btn.addEventListener("click", () => {
+  let feil = 0;
+  alleFasit.forEach((q, i) => {
+    const sel  = document.getElementById("q"+i);
+    const ikon = document.getElementById("ikon"+i);
+    if (sel.value === q.svar) {
+      ikon.textContent = "✅"; sel.className = "rett";
+    } else {
+      ikon.textContent = "❌"; sel.className = "feil"; feil++;
+    }
+  });
+  if (feil === 0) {
+    melding.textContent = "🎉 Alle svar er riktige! Fantastisk jobbet! 🎉";
+    melding.style.color = "#2E7DA6";
+    startWaves();
+  } else {
+    melding.textContent = feil + " svar er feil. Prøv igjen – fasit gis ikke!";
+    melding.style.color = "#A64B6B";
+  }
+});
+
+/* ── Glass crack (wrong answers) ── */
+function showGlassCrack() {
+  const canvas = document.getElementById("glass-overlay");
+  canvas.style.display = "block";
+  canvas.style.opacity = "1";
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext("2d");
+  const cx = canvas.width  * (0.35 + Math.random() * 0.3);
+  const cy = canvas.height * (0.3  + Math.random() * 0.3);
+  const numCracks = 14;
+  ctx.strokeStyle = "rgba(180,210,240,0.75)";
+  ctx.lineWidth = 2;
+  ctx.shadowColor = "rgba(200,230,255,0.9)";
+  ctx.shadowBlur = 6;
+  for (let i = 0; i < numCracks; i++) {
+    const angle = (i / numCracks) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
+    const len   = 120 + Math.random() * 220;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    let x = cx, y = cy;
+    const steps = 4 + Math.floor(Math.random() * 4);
+    for (let s = 1; s <= steps; s++) {
+      const jitter = (Math.random() - 0.5) * 0.35;
+      x = cx + Math.cos(angle + jitter) * (len * s / steps);
+      y = cy + Math.sin(angle + jitter) * (len * s / steps);
+      ctx.lineTo(x, y);
+      if (s === 2 && Math.random() > 0.5) {
+        const bAngle = angle + (Math.random() - 0.5) * 1.2;
+        const bLen   = 40 + Math.random() * 80;
+        ctx.moveTo(x, y);
+        ctx.lineTo(x + Math.cos(bAngle) * bLen, y + Math.sin(bAngle) * bLen);
+        ctx.moveTo(x, y);
+      }
+    }
+    ctx.stroke();
+  }
+  ctx.shadowBlur = 3;
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = "rgba(180,220,255,0.4)";
+  [30, 60, 100].forEach(r => {
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.stroke();
+  });
+  const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 28);
+  grad.addColorStop(0,   "rgba(255,255,255,0.7)");
+  grad.addColorStop(0.4, "rgba(200,230,255,0.3)");
+  grad.addColorStop(1,   "rgba(200,230,255,0)");
+  ctx.fillStyle = grad;
+  ctx.beginPath(); ctx.arc(cx, cy, 28, 0, Math.PI * 2); ctx.fill();
+  let opacity = 1;
+  const fade = setInterval(() => {
+    opacity -= 0.03;
+    canvas.style.opacity = Math.max(0, opacity);
+    if (opacity <= 0) {
+      clearInterval(fade);
+      canvas.style.display = "none";
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }, 40);
+}
+
+/* ── Wave/boat celebration (correct answers) ── */
+function startWaves() {
+  const canvas = document.getElementById("konfetti-canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const emojis = ["⛵","🌊","⚓","🐚","🦀","🐠","🌊","⛵"];
+  const items = Array.from({length: 22}, () => {
+    const fromLeft = Math.random() > 0.5;
+    return {
+      x:    fromLeft ? -50 : canvas.width + 50,
+      y:    Math.random() * canvas.height,
+      vx:   (fromLeft ? 1 : -1) * (5 + Math.random() * 10),
+      vy:   (Math.random() - 0.5) * 5,
+      size: 20 + Math.random() * 24,
+      rot:  Math.random() * Math.PI * 2,
+      drot: (Math.random() - 0.5) * 0.12,
+      emoji: emojis[Math.floor(Math.random() * emojis.length)]
+    };
+  });
+
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    items.forEach(b => {
+      ctx.save();
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.rot);
+      ctx.font = `${Math.round(b.size)}px serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(b.emoji, 0, 0);
+      ctx.restore();
+      b.x   += b.vx;
+      b.y   += b.vy;
+      b.rot += b.drot;
+      if (b.y < 0 || b.y > canvas.height) b.vy *= -1;
+    });
+    frame++;
+    if (frame < 280) requestAnimationFrame(draw);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  draw();
+}
+</script>
+</body>
+</html>
