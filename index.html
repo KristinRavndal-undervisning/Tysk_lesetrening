@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lesetrening for tysk</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -14,16 +15,10 @@
       min-height: 100vh;
     }
 
-    .page { max-width: 620px; margin: 0 auto; padding: 0 1.25rem 3rem; }
+    .page { max-width: 1100px; margin: 0 auto; padding: 0 1.5rem 3rem; }
 
     /* ---- hero ---- */
-    .hero { text-align: center; padding: 2.5rem 1rem 1.75rem; }
-
-    .flag { display: flex; justify-content: center; margin-bottom: 1.5rem; }
-    .flag span { width: 44px; height: 14px; display: inline-block; }
-    .flag .f1 { background: #1a1a1a; border-radius: 4px 0 0 4px; }
-    .flag .f2 { background: #DD0000; }
-    .flag .f3 { background: #FFCE00; border-radius: 0 4px 4px 0; }
+    .hero { text-align: center; padding: 1.25rem 1rem 1.75rem; }
 
     /* ---- animated book scene ---- */
     .scene {
@@ -33,108 +28,93 @@
       display: flex; align-items: flex-end; justify-content: center;
     }
 
-    .table-top   { position:absolute; bottom:28px; left:0; right:0; height:10px; background:#c8a96e; border-radius:3px; }
-    .table-edge  { position:absolute; bottom:18px; left:0; right:0; height:10px; background:#a8894e; border-radius:0 0 3px 3px; }
-    .table-shadow{ position:absolute; bottom:15px; left:20px; right:20px; height:6px; background:rgba(0,0,0,0.10); border-radius:50%; }
+    .table-top    { position:absolute; bottom:28px; left:0; right:0; height:10px; background:#c8a96e; border-radius:3px; }
+    .table-edge   { position:absolute; bottom:18px; left:0; right:0; height:10px; background:#a8894e; border-radius:0 0 3px 3px; }
+    .table-shadow { position:absolute; bottom:15px; left:20px; right:20px; height:6px; background:rgba(0,0,0,0.10); border-radius:50%; }
 
-    .book-wrap {
-      position: absolute;
-      bottom: 37px;
-      left: 50%; transform: translateX(-50%);
-    }
-    .book-shadow {
-      position: absolute;
-      bottom: -4px; left: 50%; transform: translateX(-50%);
-      width: 110px; height: 8px;
-      background: rgba(0,0,0,0.13);
-      border-radius: 50%;
-    }
+    .book-wrap { position:absolute; bottom:37px; left:50%; transform:translateX(-50%); }
+    .book-shadow { position:absolute; bottom:-4px; left:50%; transform:translateX(-50%); width:110px; height:8px; background:rgba(0,0,0,0.13); border-radius:50%; }
+    .open-book { display:flex; align-items:flex-end; transform:perspective(400px) rotateX(28deg); transform-origin:bottom center; }
+    .page-left { width:52px; height:64px; background:#fffdf0; border-radius:5px 0 0 1px; border:1px solid #e0d8be; transform:perspective(300px) rotateY(18deg); transform-origin:right bottom; position:relative; }
+    .page-right { width:52px; height:64px; background:#faf6e4; border-radius:0 5px 1px 0; border:1px solid #e0d8be; transform:perspective(300px) rotateY(-18deg); transform-origin:left bottom; position:relative; }
+    .spine-center { width:10px; height:64px; background:#DD0000; flex-shrink:0; border-radius:1px; }
+    .cover-left { position:absolute; bottom:-7px; left:-4px; right:-1px; height:9px; background:#DD0000; border-radius:3px 0 0 3px; transform:perspective(300px) rotateY(18deg); transform-origin:right bottom; }
+    .cover-right { position:absolute; bottom:-7px; left:-1px; right:-4px; height:9px; background:#c40000; border-radius:0 3px 3px 0; transform:perspective(300px) rotateY(-18deg); transform-origin:left bottom; }
+    .pl { height:2px; background:#ddd; border-radius:1px; margin:8px 6px 0; }
+    .pl.s { width:55%; }
+    .pl.m { width:75%; }
 
-    .open-book {
-      display: flex; align-items: flex-end;
-      transform: perspective(400px) rotateX(28deg);
-      transform-origin: bottom center;
-    }
-
-    .page-left {
-      width: 52px; height: 64px;
-      background: #fffdf0;
-      border-radius: 5px 0 0 1px;
-      border: 1px solid #e0d8be;
-      transform: perspective(300px) rotateY(18deg);
-      transform-origin: right bottom;
-      position: relative;
-    }
-    .page-right {
-      width: 52px; height: 64px;
-      background: #faf6e4;
-      border-radius: 0 5px 1px 0;
-      border: 1px solid #e0d8be;
-      transform: perspective(300px) rotateY(-18deg);
-      transform-origin: left bottom;
-      position: relative;
-    }
-    .spine-center {
-      width: 10px; height: 64px;
-      background: #DD0000;
-      flex-shrink: 0;
-      border-radius: 1px;
-    }
-    .cover-left {
-      position: absolute; bottom: -7px; left: -4px; right: -1px; height: 9px;
-      background: #DD0000; border-radius: 3px 0 0 3px;
-      transform: perspective(300px) rotateY(18deg); transform-origin: right bottom;
-    }
-    .cover-right {
-      position: absolute; bottom: -7px; left: -1px; right: -4px; height: 9px;
-      background: #c40000; border-radius: 0 3px 3px 0;
-      transform: perspective(300px) rotateY(-18deg); transform-origin: left bottom;
-    }
-
-    .pl { height: 2px; background: #ddd; border-radius: 1px; margin: 8px 6px 0; }
-    .pl.s { width: 55%; }
-    .pl.m { width: 75%; }
-
-    /* Stars */
-    .star {
-      position: absolute;
-      clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
-      background: #FFCE00;
-      opacity: 0;
-      animation: rise linear infinite;
-    }
-    .s1 { width:11px;height:11px; left:62px;  bottom:60px; animation-duration:2.2s; animation-delay:0s;   --dx: 5px;  }
+    .star { position:absolute; clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%); background:#FFCE00; opacity:0; animation:rise linear infinite; }
+    .s1 { width:11px;height:11px; left:62px;  bottom:60px; animation-duration:2.2s; animation-delay:0s;   --dx:5px;   }
     .s2 { width:7px; height:7px;  left:78px;  bottom:60px; animation-duration:2.7s; animation-delay:0.5s; --dx:-8px;  }
-    .s3 { width:13px;height:13px; left:95px;  bottom:60px; animation-duration:2.0s; animation-delay:1.0s; --dx: 3px;  }
+    .s3 { width:13px;height:13px; left:95px;  bottom:60px; animation-duration:2.0s; animation-delay:1.0s; --dx:3px;   }
     .s4 { width:6px; height:6px;  left:112px; bottom:60px; animation-duration:2.9s; animation-delay:0.3s; --dx:-5px;  }
-    .s5 { width:9px; height:9px;  left:70px;  bottom:60px; animation-duration:2.4s; animation-delay:1.4s; --dx: 11px; }
+    .s5 { width:9px; height:9px;  left:70px;  bottom:60px; animation-duration:2.4s; animation-delay:1.4s; --dx:11px;  }
     .s6 { width:7px; height:7px;  left:104px; bottom:60px; animation-duration:2.1s; animation-delay:1.8s; --dx:-10px; }
-    .s7 { width:10px;height:10px; left:86px;  bottom:60px; animation-duration:2.6s; animation-delay:0.8s; --dx: 7px;  }
+    .s7 { width:10px;height:10px; left:86px;  bottom:60px; animation-duration:2.6s; animation-delay:0.8s; --dx:7px;   }
 
     @keyframes rise {
       0%   { opacity:0;   transform:translateY(0)     translateX(0)              rotate(0deg)  scale(0.5); }
       15%  { opacity:1; }
       85%  { opacity:0.6; }
-      100% { opacity:0;   transform:translateY(-85px) translateX(var(--dx, 6px)) rotate(35deg) scale(1.1); }
+      100% { opacity:0;   transform:translateY(-85px) translateX(var(--dx,6px))  rotate(35deg) scale(1.1); }
     }
 
-    /* ---- tittel ---- */
-    h1 { font-size: 24px; font-weight: 500; color: #1a1a1a; margin-bottom: 6px; }
+    /* ---- gradient title ---- */
+    h1 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 42px;
+      background: linear-gradient(to right, #1a1a1a 0%, #DD0000 50%, #FFCE00 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+      line-height: 1.15;
+    }
     .hero-sub { font-size: 14px; color: #555; }
+
+    /* ---- tag-filter ---- */
+    .filter-bar { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin:2rem 0 1rem; }
+
+    .tag-btn {
+      font-size: 12px; font-weight: 500;
+      padding: 4px 12px; border-radius: 20px;
+      border: 1.5px solid #ddd;
+      background: #fff; color: #555;
+      cursor: pointer; transition: all .15s;
+      white-space: nowrap;
+    }
+    .tag-btn:hover { border-color: #DD0000; color: #DD0000; }
+    .tag-btn.active { background: #DD0000; border-color: #DD0000; color: #fff; }
+
+    .reset-btn {
+      font-size: 12px; font-weight: 500;
+      padding: 4px 12px; border-radius: 20px;
+      border: 1.5px solid #1a1a1a;
+      background: transparent; color: #1a1a1a;
+      cursor: pointer; transition: all .15s;
+      display: none;
+    }
+    .reset-btn.visible { display: inline-block; }
+    .reset-btn:hover { background: #1a1a1a; color: #fff; }
+
+    .result-count { font-size: 11px; color: #999; margin-left: auto; white-space: nowrap; }
 
     /* ---- oppgaveliste ---- */
     .section-label {
       font-size: 11px; font-weight: 600; color: #888;
       letter-spacing: .08em; text-transform: uppercase;
-      margin: 2rem 0 10px;
+      margin-bottom: 10px;
     }
 
-    .task-list { display: flex; flex-direction: column; gap: 8px; }
+    .task-grid { display:grid; grid-template-columns:1fr; gap:8px; }
+    @media (min-width: 768px) { .task-grid { grid-template-columns:1fr 1fr; } }
 
+    /* Alternating border colors: black, red, gold cycling */
     .task-card {
       background: #fff;
       border: 1px solid #e5e5e5;
-      border-left: 4px solid #DD0000;
       border-radius: 0 10px 10px 0;
       padding: 1rem 1.1rem;
       text-decoration: none;
@@ -145,75 +125,71 @@
       gap: 1rem;
       transition: background .15s, border-color .15s;
     }
-    .task-card:hover { background: #fafaf8; border-color: #ccc; border-left-color: #DD0000; }
+    .task-card:hover { background: #fafaf8; border-color: #ccc; }
+    .task-card.accent-black { border-left: 4px solid #1a1a1a; }
+    .task-card.accent-red   { border-left: 4px solid #DD0000; }
+    .task-card.accent-gold  { border-left: 4px solid #FFCE00; }
+    .task-card.accent-black:hover { border-left-color: #1a1a1a; }
+    .task-card.accent-red:hover   { border-left-color: #DD0000; }
+    .task-card.accent-gold:hover  { border-left-color: #FFCE00; }
 
-    .task-text { flex: 1; }
-    .task-title { font-size: 15px; font-weight: 500; color: #1a1a1a; margin-bottom: 3px; }
-    .task-desc  { font-size: 13px; color: #666; line-height: 1.4; }
-    .task-arrow { color: #bbb; font-size: 20px; flex-shrink: 0; line-height: 1; }
+    .task-text { flex:1; min-width:0; }
+    .task-title { font-size:15px; font-weight:500; color:#1a1a1a; margin-bottom:3px; }
+    .task-desc  { font-size:13px; color:#666; line-height:1.4; }
+
+    .card-tags { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
+    .card-tag { font-size:11px; padding:2px 8px; background:#f0ede6; color:#888; border-radius:10px; }
+
+    .task-arrow { color:#bbb; font-size:20px; flex-shrink:0; line-height:1; }
+
+    .no-results { grid-column:1/-1; text-align:center; padding:2rem; color:#999; font-size:14px; display:none; }
 
     /* ---- footer ---- */
-    footer {
-      text-align: center; margin-top: 2.5rem; color: #999; font-size: 12px;
-      display: flex; align-items: center; justify-content: center; gap: 6px;
-    }
-    .flag-mini span { width: 10px; height: 6px; display: inline-block; }
-    .flag-mini .f1 { background: #1a1a1a; border-radius: 2px 0 0 2px; }
-    .flag-mini .f2 { background: #DD0000; }
-    .flag-mini .f3 { background: #FFCE00; border-radius: 0 2px 2px 0; }
+    footer { text-align:center; margin-top:2.5rem; color:#999; font-size:12px; display:flex; align-items:center; justify-content:center; gap:6px; }
+    .flag-mini span { width:10px; height:6px; display:inline-block; }
+    .flag-mini .f1 { background:#1a1a1a; border-radius:2px 0 0 2px; }
+    .flag-mini .f2 { background:#DD0000; }
+    .flag-mini .f3 { background:#FFCE00; border-radius:0 2px 2px 0; }
   </style>
 </head>
 <body>
 <div class="page">
 
   <div class="hero">
-    <div class="flag">
-      <span class="f1"></span><span class="f2"></span><span class="f3"></span>
-    </div>
-
     <div class="scene">
-      <div class="star s1"></div>
-      <div class="star s2"></div>
-      <div class="star s3"></div>
-      <div class="star s4"></div>
-      <div class="star s5"></div>
-      <div class="star s6"></div>
+      <div class="star s1"></div><div class="star s2"></div><div class="star s3"></div>
+      <div class="star s4"></div><div class="star s5"></div><div class="star s6"></div>
       <div class="star s7"></div>
-
       <div class="book-wrap">
         <div class="book-shadow"></div>
         <div class="open-book">
           <div class="page-left">
-            <div class="pl"></div>
-            <div class="pl s"></div>
-            <div class="pl m"></div>
-            <div class="pl s"></div>
-            <div class="pl"></div>
+            <div class="pl"></div><div class="pl s"></div><div class="pl m"></div>
+            <div class="pl s"></div><div class="pl"></div>
           </div>
           <div class="spine-center"></div>
           <div class="page-right">
-            <div class="pl m"></div>
-            <div class="pl"></div>
-            <div class="pl s"></div>
-            <div class="pl m"></div>
-            <div class="pl s"></div>
+            <div class="pl m"></div><div class="pl"></div><div class="pl s"></div>
+            <div class="pl m"></div><div class="pl s"></div>
           </div>
           <div class="cover-left"></div>
           <div class="cover-right"></div>
         </div>
       </div>
-
       <div class="table-top"></div>
       <div class="table-edge"></div>
       <div class="table-shadow"></div>
     </div>
-
     <h1>Tysk lesetrening</h1>
     <p class="hero-sub">Øv på ulike leseoppgaver til du føler deg trygg - og litt til!</p>
   </div>
 
+  <div class="filter-bar" id="filterBar"></div>
+
   <p class="section-label">Oppgaver</p>
-  <div class="task-list" id="taskList"></div>
+  <div class="task-grid" id="taskGrid">
+    <p class="no-results" id="noResults">Ingen oppgaver matcher valgte tags.</p>
+  </div>
 
   <footer>
     <div class="flag-mini">
@@ -225,59 +201,107 @@
 </div>
 <script>
   /* ============================================================
+     TAGS – legg til eller endre her
+  ============================================================ */
+  const tags = ["Oppgavesett", "Innholdsforståelse", "Luketekst", "Ord fra lister"];
+
+  /* ============================================================
      LEGG TIL ELLER ENDRE OPPGAVER HER
      ============================================================
-     Hvert objekt har:
-       title  – navn på oppgaven
-       desc   – kort beskrivelse av hva eleven skal gjøre
-       href   – filnavn til oppgavesiden
-
      VIKTIG: Ikke endre href etter at undersiden er opprettet.
-     Tittelen kan du endre fritt uten at lenken brekker.
-
      Slik legger du til en ny oppgave:
-       1. Kopier én av linjene nedenfor
-       2. Lim inn etter siste oppgave (før ];)
-       3. Gi den neste ledige nummer, f.eks. "oppgave-04.html"
-       4. Endre title og desc
+       1. Kopier én linje og lim inn før ];
+       2. Gi den neste ledige nummer i href
+       3. Endre title, desc og tags
   ============================================================ */
   const tasks = [
-    { title: "Eksamensprep, 5 ulike oppgaver", desc: "Jobb med ulike oppgavetyper og se hvor mange rette svar du får.",  href: "Lesing-eksamensprep-5oppg.html" },
-    { title: "Innholdsforståelse: En dag på sjøen", desc: "8 flervalgsspørsmål",  href: "Innhold-flervalg-Baattur.html" },
-    { title: "Innholdsforståelse: Reisedrømmer", desc: "10 flervalgsspørsmål",  href: "Innhold-flervalg-Reising.html" },
-    { title: "Innholdsforståelse: Penger og vennskap", desc: "8 flervalgsspørsmål",  href: "Innhold-flervalg-PengerOgVennskap.html" },
-    { title: "Innholdsforståelse: Middagsdiskusjon", desc: "8 flervalgsspørsmål",  href: "Innhold-flervalg-Middagsdiskusjon.html" },
-    { title: "Innholdsforståelse: Låst ute", desc: "8 flervalgsspørsmål",  href: "Innhold-flervalg-LaastUte.html" },
-    { title: "Innholdsforståelse: Klasseturpengene", desc: "8 flervalgsspørsmål",  href: "Innhold-flervalg-Klasseturpengene.html" },
-    { title: "Innholdsforståelse: Knust vindu", desc: "8 flervalgsspørsmål",  href: "Innhold-flervalg-KnustVindu.html" },
-    { title: "Luketekst: Karneval", desc: "Dra og slipp: 4 luker og 1 ord til overs",  href: "Luketekst-4-1-Karneval.html" },
-    { title: "Luketekst: Middag og TV", desc: "Dra og slipp: 4 luker og 1 ord til overs",  href: "Luketekst-4-1-MiddagOgTV.html" },
-    { title: "Luketekst: Norsk påske", desc: "Dra og slipp: 4 luker og 1 ord til overs",  href: "Luketekst-4-1-NorskPaaske.html" },
-    { title: "Luketekst: Barnehagelærer", desc: "Dra og slipp: 4 luker og 1 ord til overs - gjentatt i 5 avsnitt",  href: "Luketekst-4-1-x5avsnitt-Barnehagelaerer.html" },
-    { title: "Luketekst: Fremmedspråk", desc: "Dra og slipp: 4 luker og 2 ord til overs",  href: "Luketekst-4-2-Fremmedspraak.html" },
-    { title: "Luketekst: Katt eller hund", desc: "Dra og slipp: 4 luker og 2 ord til overs",  href: "Luketekst-4-2-KattEllerHund.html" },
-    { title: "Luketekst: Lykke", desc: "Dra og slipp: 4 luker og 2 ord til overs",  href: "Luketekst-4-2-Lykke.html" },
-    { title: "Luketekst: Sosiale medier", desc: "Dra og slipp: 4 luker og 2 ord til overs",  href: "Luketekst-4-2-SosialeMedier.html" },
-    { title: "Luketekst: Skoleteater", desc: "Dra og slipp: 4 luker og 2 ord til overs - gjentatt i 5 avsnitt",  href: "Luketekst-4-2-x5avsnitt-Skoleteater.html" },
-    { title: "Luketekst: Miljø", desc: "Dra og slipp: 10 luker og 3 ord til overs",  href: "Luketekst-10-3-Miljoe.html" },
-    { title: "Luketekst: Sommerjobb", desc: "Dra og slipp: 10 luker og 3 ord til overs",  href: "Luketekst-10-3-Sommerjobb.html" },
-    { title: "Ordvalg i tekst: Natur", desc: "10 ukjente ord, rullegardinvalg",  href: "Flervalg-i-tekst-Natur.html" },
-    { title: "Ordvalg i tekst: Prøveforberedelse", desc: "10 ukjente ord, rullegardinvalg",  href: "Flervalg-i-tekst-Proeveforberedelse.html" },
-    { title: "Ordvalg i tekst: Skoledag", desc: "10 ukjente ord, rullegardinvalg",  href: "Flervalg-i-tekst-Skoledag.html" },
-    { title: "Ordvalg i tekst: Søvnproblemer", desc: "10 ukjente ord, rullegardinvalg",  href: "Flervalg-i-tekst-Soevnproblemer.html" },
-  
+    { title: "Eksamensprep, 5 ulike oppgaver",          desc: "Jobb med ulike oppgavetyper og se hvor mange rette svar du får.",         href: "Lesing-eksamensprep-5oppg.html",                tags: ["Oppgavesett"] },
+    { title: "Innholdsforståelse: En dag på sjøen",     desc: "8 flervalgsspørsmål",                                                      href: "Innhold-flervalg-Baattur.html",                 tags: ["Innholdsforståelse"] },
+    { title: "Innholdsforståelse: Reisedrømmer",        desc: "10 flervalgsspørsmål",                                                     href: "Innhold-flervalg-Reising.html",                 tags: ["Innholdsforståelse"] },
+    { title: "Innholdsforståelse: Penger og vennskap",  desc: "8 flervalgsspørsmål",                                                      href: "Innhold-flervalg-PengerOgVennskap.html",        tags: ["Innholdsforståelse"] },
+    { title: "Innholdsforståelse: Middagsdiskusjon",    desc: "8 flervalgsspørsmål",                                                      href: "Innhold-flervalg-Middagsdiskusjon.html",        tags: ["Innholdsforståelse"] },
+    { title: "Innholdsforståelse: Låst ute",            desc: "8 flervalgsspørsmål",                                                      href: "Innhold-flervalg-LaastUte.html",                tags: ["Innholdsforståelse"] },
+    { title: "Innholdsforståelse: Klasseturpengene",    desc: "8 flervalgsspørsmål",                                                      href: "Innhold-flervalg-Klasseturpengene.html",        tags: ["Innholdsforståelse"] },
+    { title: "Innholdsforståelse: Knust vindu",         desc: "8 flervalgsspørsmål",                                                      href: "Innhold-flervalg-KnustVindu.html",              tags: ["Innholdsforståelse"] },
+    { title: "Luketekst: Karneval",                     desc: "Dra og slipp: 4 luker og 1 ord til overs",                                 href: "Luketekst-4-1-Karneval.html",                   tags: ["Luketekst"] },
+    { title: "Luketekst: Middag og TV",                 desc: "Dra og slipp: 4 luker og 1 ord til overs",                                 href: "Luketekst-4-1-MiddagOgTV.html",                 tags: ["Luketekst"] },
+    { title: "Luketekst: Norsk påske",                  desc: "Dra og slipp: 4 luker og 1 ord til overs",                                 href: "Luketekst-4-1-NorskPaaske.html",                tags: ["Luketekst"] },
+    { title: "Luketekst: Barnehagelærer",               desc: "Dra og slipp: 4 luker og 1 ord til overs - gjentatt i 5 avsnitt",         href: "Luketekst-4-1-x5avsnitt-Barnehagelaerer.html",  tags: ["Luketekst"] },
+    { title: "Luketekst: Fremmedspråk",                 desc: "Dra og slipp: 4 luker og 2 ord til overs",                                 href: "Luketekst-4-2-Fremmedspraak.html",              tags: ["Luketekst"] },
+    { title: "Luketekst: Katt eller hund",              desc: "Dra og slipp: 4 luker og 2 ord til overs",                                 href: "Luketekst-4-2-KattEllerHund.html",              tags: ["Luketekst"] },
+    { title: "Luketekst: Lykke",                        desc: "Dra og slipp: 4 luker og 2 ord til overs",                                 href: "Luketekst-4-2-Lykke.html",                      tags: ["Luketekst"] },
+    { title: "Luketekst: Sosiale medier",               desc: "Dra og slipp: 4 luker og 2 ord til overs",                                 href: "Luketekst-4-2-SosialeMedier.html",              tags: ["Luketekst"] },
+    { title: "Luketekst: Skoleteater",                  desc: "Dra og slipp: 4 luker og 2 ord til overs - gjentatt i 5 avsnitt",         href: "Luketekst-4-2-x5avsnitt-Skoleteater.html",      tags: ["Luketekst"] },
+    { title: "Luketekst: Miljø",                        desc: "Dra og slipp: 10 luker og 3 ord til overs",                                href: "Luketekst-10-3-Miljoe.html",                    tags: ["Luketekst"] },
+    { title: "Luketekst: Sommerjobb",                   desc: "Dra og slipp: 10 luker og 3 ord til overs",                                href: "Luketekst-10-3-Sommerjobb.html",                tags: ["Luketekst"] },
+    { title: "Ordvalg i tekst: Natur",                  desc: "10 ukjente ord, rullegardinvalg",                                          href: "Flervalg-i-tekst-Natur.html",                   tags: ["Ord fra lister"] },
+    { title: "Ordvalg i tekst: Prøveforberedelse",      desc: "10 ukjente ord, rullegardinvalg",                                          href: "Flervalg-i-tekst-Proeveforberedelse.html",      tags: ["Ord fra lister"] },
+    { title: "Ordvalg i tekst: Skoledag",               desc: "10 ukjente ord, rullegardinvalg",                                          href: "Flervalg-i-tekst-Skoledag.html",                tags: ["Ord fra lister"] },
+    { title: "Ordvalg i tekst: Søvnproblemer",          desc: "10 ukjente ord, rullegardinvalg",                                          href: "Flervalg-i-tekst-Soevnproblemer.html",          tags: ["Ord fra lister"] },
   ];
   /* ============================================================ */
 
-  document.getElementById('taskList').innerHTML = tasks.map(t => `
-    <a class="task-card" href="${t.href}">
-      <div class="task-text">
-        <p class="task-title">${t.title}</p>
-        <p class="task-desc">${t.desc}</p>
-      </div>
-      <span class="task-arrow">›</span>
-    </a>
-  `).join('');
+  const accents = ['accent-black', 'accent-red', 'accent-gold'];
+  let activeTags = [];
+
+  function buildFilterBar() {
+    const bar = document.getElementById('filterBar');
+    bar.innerHTML = '';
+    tags.forEach(tag => {
+      const btn = document.createElement('button');
+      btn.className = 'tag-btn' + (activeTags.includes(tag) ? ' active' : '');
+      btn.textContent = tag;
+      btn.onclick = () => toggleTag(tag);
+      bar.appendChild(btn);
+    });
+    const reset = document.createElement('button');
+    reset.className = 'reset-btn' + (activeTags.length > 0 ? ' visible' : '');
+    reset.textContent = '✕ Vis alle';
+    reset.onclick = () => { activeTags = []; render(); };
+    bar.appendChild(reset);
+    const count = document.createElement('span');
+    count.className = 'result-count';
+    count.textContent = tasks.filter(matches).length + ' av ' + tasks.length + ' oppgaver';
+    bar.appendChild(count);
+  }
+
+  function toggleTag(tag) {
+    activeTags.includes(tag) ? activeTags = activeTags.filter(t => t !== tag) : activeTags.push(tag);
+    render();
+  }
+
+  function matches(task) {
+    if (activeTags.length === 0) return true;
+    return activeTags.every(tag => task.tags && task.tags.includes(tag));
+  }
+
+  function render() {
+    buildFilterBar();
+    const grid = document.getElementById('taskGrid');
+    const noResults = document.getElementById('noResults');
+    grid.querySelectorAll('.task-card').forEach(el => el.remove());
+    const filtered = tasks.filter(matches);
+    noResults.style.display = filtered.length === 0 ? 'block' : 'none';
+    filtered.forEach((t, i) => {
+      const a = document.createElement('a');
+      a.className = 'task-card ' + accents[i % 3];
+      a.href = t.href;
+      const cardTags = (t.tags && t.tags.length)
+        ? `<div class="card-tags">${t.tags.map(tag => `<span class="card-tag">${tag}</span>`).join('')}</div>`
+        : '';
+      a.innerHTML = `
+        <div class="task-text">
+          <p class="task-title">${t.title}</p>
+          <p class="task-desc">${t.desc}</p>
+          ${cardTags}
+        </div>
+        <span class="task-arrow">›</span>
+      `;
+      grid.appendChild(a);
+    });
+  }
+
+  render();
 </script>
 </body>
 </html>
