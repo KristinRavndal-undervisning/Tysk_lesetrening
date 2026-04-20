@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wenn der Schlaf nicht kommt</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Georgia, 'Times New Roman', serif; background: #e8e4f0; min-height: 100vh; padding: 2rem 1rem; }
+canvas#bgCanvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+canvas#glitterCanvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+.ex-inner { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; width: 100%; }
+.subtitle { font-size: 14px; color: #554e6a; margin-bottom: 1rem; font-family: Georgia, serif; }
+.text-box { background: #faf9fc; border: 1px solid #c8c0dc; border-radius: 12px; padding: 1.4rem 1.6rem; line-height: 2.3; margin-bottom: 1rem; font-size: 16px; color: #1a1a2e; font-family: Georgia, serif; }
+.text-box h2 { font-size: 18px; font-weight: bold; margin-bottom: 0.75rem; border-bottom: 1px solid #dcd8ec; padding-bottom: 0.5rem; font-family: Georgia, serif; }
+.gap-wrap { display: inline-block; margin: 0 1px; vertical-align: middle; }
+.gap-wrap select { font-size: 15px; font-family: Georgia, serif; color: #1a1a2e; background: #faf9fc url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E") no-repeat right 7px center; border: 1.5px solid #b0a8cc; border-radius: 6px; padding: 2px 28px 2px 8px; cursor: pointer; appearance: none; -webkit-appearance: none; height: 32px; }
+.gap-wrap select.correct { border-color: #1D9E75; background-color: #E1F5EE; color: #0F6E56; }
+.gap-wrap select.wrong { border-color: #E24B4A; background-color: #FCEBEB; color: #A32D2D; }
+.gap-wrap select:focus { outline: none; box-shadow: 0 0 0 2px #b0a8cc; }
+.btn-row { display: flex; gap: 10px; margin-bottom: 0.75rem; }
+button { font-size: 14px; font-family: Georgia, serif; background: #faf9fc; border: 1px solid #b0a8cc; border-radius: 8px; padding: 8px 18px; cursor: pointer; color: #1a1a2e; }
+button:hover { background: #f0eef8; }
+button:active { transform: scale(0.98); }
+button:disabled { opacity: 0.38; cursor: not-allowed; transform: none; }
+.result-bar { background: #faf9fc; border: 1px solid #c8c0dc; border-radius: 12px; padding: 1rem 1.25rem; font-size: 14px; font-family: Georgia, serif; display: none; }
+.result-bar.visible { display: block; }
+.score-num { font-size: 22px; font-weight: bold; display: block; margin-bottom: 0.5rem; }
+.fb-item { padding: 5px 0; border-top: 1px solid #e8e4f0; font-size: 13px; color: #554e6a; }
+.fb-item .lbl { font-weight: bold; color: #1a1a2e; }
+.warn-msg { font-size: 13px; min-height: 18px; margin-bottom: 0.6rem; color: transparent; font-family: Georgia, serif; }
+.warn-msg.show { color: #BA7517; }
+</style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<canvas id="glitterCanvas"></canvas>
+<div class="ex-inner">
+  <h1 style="font-size:22px;font-weight:bold;margin-bottom:0.5rem;color:#1a1a2e;font-family:Georgia,serif;">Tekstforståelse: velg riktig ord</h1>
+  <p class="subtitle">Velg riktig ord i hver rullgardin. Alle lukene må besvares før du kan sjekke svarene.</p>
+  <div class="text-box">
+    <h2>Wenn der Schlaf nicht kommt</h2>
+    <div id="text-container"></div>
+  </div>
+  <p class="warn-msg" id="warn-msg"></p>
+  <div class="btn-row">
+    <button id="btn-check" onclick="checkAnswers()" disabled>Sjekk svar</button>
+    <button onclick="resetAll()">Prøv igjen</button>
+  </div>
+  <div class="result-bar" id="result-bar">
+    <span class="score-num" id="score-text"></span>
+    <div id="feedback-list"></div>
+  </div>
+</div>
+
+<script>
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const gapDefs = [
+  { id: 1, options: ["heutzutage","neulich","damals"], correct: "heutzutage",
+    hint: "\"heutzutage\" = i dag/i vår tid (generell nåtid). \"neulich\" = nylig (konkret fortidstilfelle). \"damals\" = den gang (fortid)." },
+  { id: 2, options: ["wach","weg","nach"], correct: "wach",
+    hint: "\"lange wach liegen\" = ligge lenge våken. \"weg\" = borte/vekk. \"nach\" = etter/mot – begge gir ingen mening her." },
+  { id: 3, options: ["wird","bekommt","bleibt"], correct: "wird",
+    hint: "\"wird müde\" = blir trøtt (werden = å bli). \"bekommt\" = mottar/får. \"bleibt\" = forblir/blir værende – hun forblir ikke trøtt, hun blir det ikke." },
+  { id: 4, options: ["großes","kleines","interessantes"], correct: "großes",
+    hint: "Teksten handler om at skjermbruk er et alvorlig problem. \"kleines\" og \"interessantes\" gir feil mening i kontekst." },
+  { id: 5, options: ["aktiv","müde","ruhig"], correct: "aktiv",
+    hint: "Blått lys gjør hjernen aktiv – det er nettopp derfor man ikke sovner. \"müde\" og \"ruhig\" er det motsatte av det teksten forklarer." },
+  { id: 6, options: ["wegzulegen","anzufangen","aufzumachen"], correct: "wegzulegen",
+    hint: "\"das Handy weglegen\" = legge vekk telefonen. \"anfangen\" = begynne. \"aufmachen\" = åpne – begge er feil i sammenhengen." },
+  { id: 7, options: ["gleichen","guten","anderen"], correct: "gleichen",
+    hint: "\"zur gleichen Zeit\" = til samme tid. \"guten\" = gode. \"anderen\" = andre/ulike – da ville rådet bety noe helt annet." },
+  { id: 8, options: ["befolgen","vergessen","bekommen"], correct: "befolgen",
+    hint: "\"Tipps befolgen\" = følge råd. \"vergessen\" = glemme – motsatt. \"bekommen\" = motta – man mottar ikke råd på denne måten på tysk." },
+  { id: 9, options: ["merkt","schläft","erfindet"], correct: "merkt",
+    hint: "\"merken, dass\" = legge merke til / oppdage at. \"schläft\" = sover – passer ikke med \"dass\"-setningen. \"erfindet\" = oppfinner – helt feil." },
+  { id: 10, options: ["ausgeruhter","müder","schläfriger"], correct: "ausgeruhter",
+    hint: "Hun sover bedre og føler seg derfor mer uthvilt om morgenen. \"müder\" og \"schläfriger\" er det motsatte av hva teksten forteller." }
+];
+
+const textParts = [
+  { type: "text", text: "Viele Jugendliche schlafen " },
+  { type: "gap", id: 1 },
+  { type: "text", text: " zu wenig. Manchmal liegt man lange " },
+  { type: "gap", id: 2 },
+  { type: "text", text: " und kann einfach nicht einschlafen, obwohl man müde ist. Das kennen die meisten. Lara ist sechzehn Jahre alt und hat seit einigen Wochen Schlafprobleme. Abends " },
+  { type: "gap", id: 3 },
+  { type: "text", text: " sie nicht müde, obwohl sie den ganzen Tag in der Schule war. Sie liegt im Bett und denkt an alles Mögliche – die Prüfung morgen, ein Gespräch mit einer Freundin, Pläne für das Wochenende. Ihr Arzt sagt, dass Bildschirme vor dem Schlafengehen ein " },
+  { type: "gap", id: 4 },
+  { type: "text", text: " Problem werden können. Das blaue Licht macht das Gehirn " },
+  { type: "gap", id: 5 },
+  { type: "text", text: ", sodass man schwerer einschläft. Er empfiehlt, das Handy mindestens eine Stunde vor dem Schlafengehen " },
+  { type: "gap", id: 6 },
+  { type: "text", text: ". Außerdem ist es wichtig, jeden Abend zur " },
+  { type: "gap", id: 7 },
+  { type: "text", text: " Zeit ins Bett zu gehen. Lara versucht, diese Tipps zu " },
+  { type: "gap", id: 8 },
+  { type: "text", text: ". Es ist nicht leicht, aber nach ein paar Tagen " },
+  { type: "gap", id: 9 },
+  { type: "text", text: " sie, dass es besser wird. Sie schläft schneller ein und fühlt sich morgens " },
+  { type: "gap", id: 10 },
+  { type: "text", text: ". Manchmal braucht man nur kleine Veränderungen, um wieder gut zu schlafen." }
+];
+
+function buildText() {
+  const container = document.getElementById("text-container");
+  container.innerHTML = "";
+  textParts.forEach(part => {
+    if (part.type === "text") {
+      container.appendChild(document.createTextNode(part.text));
+    } else {
+      const def = gapDefs.find(g => g.id === part.id);
+      const shuffled = shuffle(def.options);
+      const wrap = document.createElement("span");
+      wrap.className = "gap-wrap";
+      const sel = document.createElement("select");
+      sel.id = "gap-" + def.id;
+      const ph = document.createElement("option");
+      ph.value = ""; ph.textContent = "– –"; ph.disabled = true; ph.selected = true;
+      sel.appendChild(ph);
+      shuffled.forEach(opt => {
+        const o = document.createElement("option");
+        o.value = opt; o.textContent = opt;
+        sel.appendChild(o);
+      });
+      const labelWidth = Math.max(...shuffled.map(o => o.length)) * 8 + 50;
+      sel.style.minWidth = labelWidth + "px";
+      sel.addEventListener("change", onSelectChange);
+      wrap.appendChild(sel);
+      container.appendChild(wrap);
+    }
+  });
+  updateCheckButton();
+}
+
+function onSelectChange() {
+  updateCheckButton();
+  const w = document.getElementById("warn-msg");
+  w.classList.remove("show"); w.textContent = "";
+}
+
+function updateCheckButton() {
+  const allAnswered = gapDefs.every(g => {
+    const el = document.getElementById("gap-" + g.id);
+    return el && el.value !== "";
+  });
+  document.getElementById("btn-check").disabled = !allAnswered;
+}
+
+function checkAnswers() {
+  const unanswered = gapDefs.filter(g => {
+    const el = document.getElementById("gap-" + g.id);
+    return !el || el.value === "";
+  });
+  if (unanswered.length > 0) {
+    const w = document.getElementById("warn-msg");
+    w.textContent = "Svar på alle lukene først (" + unanswered.length + " gjenstår).";
+    w.classList.add("show");
+    return;
+  }
+  let correct = 0;
+  const errors = [];
+  gapDefs.forEach(def => {
+    const sel = document.getElementById("gap-" + def.id);
+    sel.classList.remove("correct","wrong");
+    if (sel.value === def.correct) {
+      sel.classList.add("correct"); correct++;
+    } else {
+      sel.classList.add("wrong");
+      errors.push({ id: def.id, hint: def.hint, answer: def.correct });
+    }
+  });
+  const bar = document.getElementById("result-bar");
+  bar.classList.add("visible");
+  document.getElementById("score-text").textContent = correct + " av " + gapDefs.length + " riktige";
+  const fl = document.getElementById("feedback-list");
+  fl.innerHTML = "";
+  if (errors.length === 0) {
+    fl.innerHTML = "<div style='color:#0F6E56;font-weight:bold;font-size:13px;font-family:Georgia,serif;'>Perfekt! Alle svar er riktige.</div>";
+    launchZzzs();
+  } else {
+    errors.forEach(e => {
+      const d = document.createElement("div");
+      d.className = "fb-item";
+      d.innerHTML = "<span class='lbl'>Luke " + e.id + ":</span> " + e.hint + " <em>Riktig: " + e.answer + "</em>";
+      fl.appendChild(d);
+    });
+  }
+}
+
+function resetAll() {
+  document.getElementById("result-bar").classList.remove("visible");
+  const w = document.getElementById("warn-msg");
+  w.classList.remove("show"); w.textContent = "";
+  stopZzzs();
+  buildText();
+}
+
+let zzzAnim = null;
+let zzzActive = false;
+
+function launchZzzs() {
+  const canvas = document.getElementById("glitterCanvas");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext("2d");
+
+  const streams = [];
+  const colors = ["#9b8ec4","#7b6fa8","#b8aede","#c4b8e8","#8878b8","#d4cce8","#6b5fa0"];
+
+  function makeStream(startX, startY) {
+    const count = 3 + Math.floor(Math.random() * 3);
+    const zs = [];
+    const baseSize = 22 + Math.random() * 14;
+    const angle = -0.3 + Math.random() * 0.2;
+    const speed = 0.6 + Math.random() * 0.5;
+    const wobbleFreq = 0.04 + Math.random() * 0.03;
+    const wobbleAmp = 18 + Math.random() * 12;
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    for (let i = 0; i < count; i++) {
+      zs.push({
+        x: startX,
+        y: startY,
+        offsetX: 0,
+        t: -(i * 18),
+        size: baseSize * Math.pow(0.65, i),
+        alpha: 0,
+        targetAlpha: 0.9 - i * 0.15,
+        delay: i * 22,
+        frame: 0,
+        color,
+        angle,
+        speed,
+        wobbleFreq,
+        wobbleAmp
+      });
+    }
+    streams.push({ zs, done: false });
+  }
+
+  const spawnPoints = [
+    [0.12, 0.7],[0.22, 0.5],[0.35, 0.65],[0.48, 0.45],
+    [0.58, 0.68],[0.7, 0.48],[0.8, 0.62],[0.9, 0.42],
+    [0.15, 0.35],[0.55, 0.3],[0.75, 0.25],[0.4, 0.28]
+  ];
+  let si = 0;
+  function scheduleStreams() {
+    if (si >= spawnPoints.length) return;
+    const [rx, ry] = spawnPoints[si++];
+    makeStream(rx * canvas.width, ry * canvas.height);
+    if (si < spawnPoints.length) setTimeout(scheduleStreams, 120 + Math.random() * 100);
+  }
+  scheduleStreams();
+
+  zzzActive = true;
+
+  function frame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let anyAlive = false;
+
+    streams.forEach(stream => {
+      stream.zs.forEach(z => {
+        z.frame++;
+        if (z.frame < z.delay) return;
+
+        const localFrame = z.frame - z.delay;
+        z.x += Math.cos(z.angle) * z.speed;
+        z.y += Math.sin(z.angle) * z.speed - z.speed * 0.8;
+        z.offsetX = Math.sin(localFrame * z.wobbleFreq) * z.wobbleAmp;
+
+        if (localFrame < 12) {
+          z.alpha = Math.min(z.targetAlpha, (localFrame / 12) * z.targetAlpha);
+        } else if (localFrame > 80) {
+          z.alpha = Math.max(0, z.targetAlpha * (1 - (localFrame - 80) / 60));
+        }
+
+        if (z.alpha <= 0 && localFrame > 80) return;
+        anyAlive = true;
+
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, z.alpha);
+        ctx.font = `bold ${z.size}px Georgia, serif`;
+        ctx.fillStyle = z.color;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.translate(z.x + z.offsetX, z.y);
+        ctx.rotate(-0.15);
+        ctx.fillText("Z", 0, 0);
+        ctx.restore();
+      });
+    });
+
+    ctx.globalAlpha = 1;
+    if (anyAlive && zzzActive) { zzzAnim = requestAnimationFrame(frame); }
+    else { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+  }
+
+  if (zzzAnim) cancelAnimationFrame(zzzAnim);
+  zzzAnim = requestAnimationFrame(frame);
+}
+
+function stopZzzs() {
+  zzzActive = false;
+  if (zzzAnim) cancelAnimationFrame(zzzAnim);
+  const canvas = document.getElementById("glitterCanvas");
+  canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function initBg() {
+  const canvas = document.getElementById("bgCanvas");
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const ctx = canvas.getContext("2d");
+  const colors = ["#b8aede","#9b8ec4","#d4cce8","#c4b8e8","#a898d0","#dcd8ec"];
+  const dots = Array.from({length: 36}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 5 + 2,
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: (Math.random() - 0.5) * 0.3,
+    alpha: Math.random() * 0.18 + 0.06,
+    color: colors[Math.floor(Math.random() * colors.length)]
+  }));
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    dots.forEach(d => {
+      d.x += d.vx; d.y += d.vy;
+      if (d.x < 0 || d.x > canvas.width) d.vx *= -1;
+      if (d.y < 0 || d.y > canvas.height) d.vy *= -1;
+      ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+      ctx.fillStyle = d.color; ctx.globalAlpha = d.alpha; ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+  window.addEventListener("resize", () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+}
+
+buildText();
+initBg();
+</script>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Die Freude an der Natur</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, sans-serif; background: #e8f0e0; min-height: 100vh; padding: 2rem 1rem; }
+canvas#bgCanvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+canvas#glitterCanvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 10; }
+.ex-inner { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; width: 100%; }
+.subtitle { font-size: 14px; color: #555; margin-bottom: 1rem; }
+.text-box { background: #fff; border: 1px solid #c8ddb8; border-radius: 12px; padding: 1.4rem 1.6rem; line-height: 2.3; margin-bottom: 1rem; font-size: 15px; color: #1a1a1a; }
+.text-box h2 { font-size: 17px; font-weight: 600; margin-bottom: 0.75rem; border-bottom: 1px solid #ddeece; padding-bottom: 0.5rem; }
+.gap-wrap { display: inline-block; margin: 0 1px; vertical-align: middle; }
+.gap-wrap select { font-size: 14px; color: #1a1a1a; background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23888'/%3E%3C/svg%3E") no-repeat right 7px center; border: 1.5px solid #aac898; border-radius: 6px; padding: 2px 28px 2px 8px; cursor: pointer; appearance: none; -webkit-appearance: none; height: 30px; }
+.gap-wrap select.correct { border-color: #1D9E75; background-color: #E1F5EE; color: #0F6E56; }
+.gap-wrap select.wrong { border-color: #E24B4A; background-color: #FCEBEB; color: #A32D2D; }
+.gap-wrap select:focus { outline: none; box-shadow: 0 0 0 2px #5DCAA5; }
+.btn-row { display: flex; gap: 10px; margin-bottom: 0.75rem; }
+button { font-size: 14px; background: #fff; border: 1px solid #aac898; border-radius: 8px; padding: 8px 18px; cursor: pointer; color: #1a1a1a; }
+button:hover { background: #f0f7ea; }
+button:active { transform: scale(0.98); }
+button:disabled { opacity: 0.38; cursor: not-allowed; transform: none; }
+.result-bar { background: #fff; border: 1px solid #c8ddb8; border-radius: 12px; padding: 1rem 1.25rem; font-size: 14px; display: none; }
+.result-bar.visible { display: block; }
+.score-num { font-size: 22px; font-weight: 600; display: block; margin-bottom: 0.5rem; }
+.fb-item { padding: 5px 0; border-top: 1px solid #eef5e8; font-size: 13px; color: #555; }
+.fb-item .lbl { font-weight: 600; color: #1a1a1a; }
+.warn-msg { font-size: 13px; min-height: 18px; margin-bottom: 0.6rem; color: transparent; }
+.warn-msg.show { color: #BA7517; }
+</style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<canvas id="glitterCanvas"></canvas>
+<div class="ex-inner">
+  <h1 style="font-size:22px;font-weight:600;margin-bottom:0.5rem;color:#1a1a1a;">Tekstforståelse: velg riktig ord</h1>
+  <p class="subtitle">Velg riktig ord i hver rullgardin. Alle lukene må besvares før du kan sjekke svarene.</p>
+  <div class="text-box">
+    <h2>Die Freude an der Natur</h2>
+    <div id="text-container"></div>
+  </div>
+  <p class="warn-msg" id="warn-msg"></p>
+  <div class="btn-row">
+    <button id="btn-check" onclick="checkAnswers()" disabled>Sjekk svar</button>
+    <button onclick="resetAll()">Prøv igjen</button>
+  </div>
+  <div class="result-bar" id="result-bar">
+    <span class="score-num" id="score-text"></span>
+    <div id="feedback-list"></div>
+  </div>
+</div>
+
+<script>
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const gapDefs = [
+  { id: 1, options: ["gern","wirklich","sehr"], correct: "gern",
+    hint: "\"gern\" = gjerne/med glede (fast uttrykk: etwas gern tun). \"sehr\" forsterker adjektiv/adverb, ikke verb alene. \"wirklich\" = virkelig." },
+  { id: 2, options: ["liebsten","lieber","größten"], correct: "liebsten",
+    hint: "\"am liebsten\" = aller helst (superlativ av gern). \"lieber\" er komparativ (heller). \"am größten\" betyr noe helt annet." },
+  { id: 3, options: ["draußen","außen","drinnen"], correct: "draußen",
+    hint: "\"draußen\" = ute (i det fri). \"außen\" = på utsiden av noe (f.eks. en bygning). \"drinnen\" = inne – det motsatte." },
+  { id: 4, options: ["Obwohl","Trotzdem","Weil"], correct: "Obwohl",
+    hint: "\"Obwohl\" er konjunksjon og innleder bisetning (verbet sist). \"Trotzdem\" er adverb og innleder hovedsetning. \"Weil\" = fordi – motsatt betydning." },
+  { id: 5, options: ["dass","ob","wenn"], correct: "dass",
+    hint: "\"dass\" innleder en påstandssetning. \"ob\" brukes ved indirekte ja/nei-spørsmål. \"wenn\" = når/hvis – ikke etter \"finden\"." },
+  { id: 6, options: ["Als","Wenn","Wann"], correct: "Als",
+    hint: "\"Als\" brukes om ett enkelt avsluttet tilfelle i fortid. \"Wenn\" brukes om gjentatte situasjoner eller nåtid/fremtid. \"Wann\" er spørreord." },
+  { id: 7, options: ["Heute","Gestern","Damals"], correct: "Heute",
+    hint: "Teksten forteller om noe som skjer nå. \"Gestern\" = i går. \"Damals\" = den gang/på den tiden (brukes om fortiden)." },
+  { id: 8, options: ["sich","ihr","ihm"], correct: "sich",
+    hint: "\"sich freuen über\" krever refleksivt pronomen \"sich\" i 3. person. \"ihr\" og \"ihm\" er dativobjekt, ikke refleksive." },
+  { id: 9, options: ["wenn","als","wann"], correct: "wenn",
+    hint: "\"wenn\" brukes om gjentatte situasjoner i nåtid/fremtid. \"als\" brukes om ett enkelt tilfelle i fortid. \"wann\" er spørreord." },
+  { id: 10, options: ["nur","auch","noch"], correct: "nur",
+    hint: "\"nicht nur im Sommer\" = ikke bare om sommeren. \"auch\" = også. \"noch\" = ennå/fortsatt – begge gir annen betydning." }
+];
+
+const textParts = [
+  { type: "text", text: "Maria geht seit ihrer Kindheit " },
+  { type: "gap", id: 1 },
+  { type: "text", text: " in die Natur. Am " },
+  { type: "gap", id: 2 },
+  { type: "text", text: " geht sie in den Wald, weil es dort ruhig und grün ist. Wenn sie " },
+  { type: "gap", id: 3 },
+  { type: "text", text: " ist, vergisst sie den Stress des Alltags. Die frische Luft und das Vogelgezwitscher tun ihr gut. " },
+  { type: "gap", id: 4 },
+  { type: "text", text: " es manchmal regnet, geht sie sehr gern spazieren. Sie findet, " },
+  { type: "gap", id: 5 },
+  { type: "text", text: " man in der Natur viel klarer denken kann. " },
+  { type: "gap", id: 6 },
+  { type: "text", text: " sie jung war, hat ihre Großmutter ihr beigebracht, Pflanzen zu erkennen. Was ihre Großmutter ihr gezeigt hat, hat sie bis heute nicht vergessen. " },
+  { type: "gap", id: 7 },
+  { type: "text", text: " ist sie wieder draußen und freut " },
+  { type: "gap", id: 8 },
+  { type: "text", text: " über die Ruhe und die Farben des Herbstes. Sie ist überzeugt, dass man glücklicher wird, " },
+  { type: "gap", id: 9 },
+  { type: "text", text: " man regelmäßig draußen ist – und das nicht " },
+  { type: "gap", id: 10 },
+  { type: "text", text: " im Sommer." }
+];
+
+function buildText() {
+  const container = document.getElementById("text-container");
+  container.innerHTML = "";
+  textParts.forEach(part => {
+    if (part.type === "text") {
+      container.appendChild(document.createTextNode(part.text));
+    } else {
+      const def = gapDefs.find(g => g.id === part.id);
+      const shuffled = shuffle(def.options);
+      const wrap = document.createElement("span");
+      wrap.className = "gap-wrap";
+      const sel = document.createElement("select");
+      sel.id = "gap-" + def.id;
+      const ph = document.createElement("option");
+      ph.value = ""; ph.textContent = "– –"; ph.disabled = true; ph.selected = true;
+      sel.appendChild(ph);
+      shuffled.forEach(opt => {
+        const o = document.createElement("option");
+        o.value = opt; o.textContent = opt;
+        sel.appendChild(o);
+      });
+      const labelWidth = Math.max(...shuffled.map(o => o.length)) * 8 + 50;
+      sel.style.minWidth = labelWidth + "px";
+      sel.addEventListener("change", onSelectChange);
+      wrap.appendChild(sel);
+      container.appendChild(wrap);
+    }
+  });
+  updateCheckButton();
+}
+
+function onSelectChange() {
+  updateCheckButton();
+  const w = document.getElementById("warn-msg");
+  w.classList.remove("show"); w.textContent = "";
+}
+
+function updateCheckButton() {
+  const allAnswered = gapDefs.every(g => {
+    const el = document.getElementById("gap-" + g.id);
+    return el && el.value !== "";
+  });
+  document.getElementById("btn-check").disabled = !allAnswered;
+}
+
+function checkAnswers() {
+  const unanswered = gapDefs.filter(g => {
+    const el = document.getElementById("gap-" + g.id);
+    return !el || el.value === "";
+  });
+  if (unanswered.length > 0) {
+    const w = document.getElementById("warn-msg");
+    w.textContent = "Svar på alle lukene først (" + unanswered.length + " gjenstår).";
+    w.classList.add("show");
+    return;
+  }
+  let correct = 0;
+  const errors = [];
+  gapDefs.forEach(def => {
+    const sel = document.getElementById("gap-" + def.id);
+    sel.classList.remove("correct","wrong");
+    if (sel.value === def.correct) {
+      sel.classList.add("correct"); correct++;
+    } else {
+      sel.classList.add("wrong");
+      errors.push({ id: def.id, hint: def.hint, answer: def.correct });
+    }
+  });
+  const bar = document.getElementById("result-bar");
+  bar.classList.add("visible");
+  document.getElementById("score-text").textContent = correct + " av " + gapDefs.length + " riktige";
+  const fl = document.getElementById("feedback-list");
+  fl.innerHTML = "";
+  if (errors.length === 0) {
+    fl.innerHTML = "<div style='color:#0F6E56;font-weight:600;font-size:13px;'>Perfekt! Alle svar er riktige.</div>";
+    launchLeaves();
+  } else {
+    errors.forEach(e => {
+      const d = document.createElement("div");
+      d.className = "fb-item";
+      d.innerHTML = "<span class='lbl'>Luke " + e.id + ":</span> " + e.hint + " <em>Riktig: " + e.answer + "</em>";
+      fl.appendChild(d);
+    });
+  }
+}
+
+function resetAll() {
+  document.getElementById("result-bar").classList.remove("visible");
+  const w = document.getElementById("warn-msg");
+  w.classList.remove("show"); w.textContent = "";
+  stopLeaves();
+  buildText();
+}
+
+let leafAnim = null;
+let leafActive = false;
+
+function drawLeaf(ctx, x, y, size, angle, color) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.moveTo(0, -size);
+  ctx.bezierCurveTo(size * 0.8, -size * 0.5, size * 0.8, size * 0.5, 0, size);
+  ctx.bezierCurveTo(-size * 0.8, size * 0.5, -size * 0.8, -size * 0.5, 0, -size);
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(0, -size);
+  ctx.lineTo(0, size);
+  ctx.strokeStyle = "rgba(255,255,255,0.35)";
+  ctx.lineWidth = 0.8;
+  ctx.stroke();
+  ctx.restore();
+}
+
+function launchLeaves() {
+  const canvas = document.getElementById("glitterCanvas");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const ctx = canvas.getContext("2d");
+  const colors = ["#3B6D11","#639922","#97C459","#C0DD97","#1D9E75","#5DCAA5","#27500A","#4a8c1c","#76b82a"];
+  const bursts = [];
+
+  function makeBurst(cx, cy) {
+    const count = 18 + Math.floor(Math.random() * 10);
+    const particles = [];
+    for (let i = 0; i < count; i++) {
+      const angle = (Math.PI * 2 / count) * i + (Math.random() - 0.5) * 0.4;
+      const speed = Math.random() * 4.5 + 1.5;
+      particles.push({
+        x: cx, y: cy,
+        vx: Math.cos(angle) * speed,
+        vy: Math.sin(angle) * speed - Math.random() * 1.5,
+        alpha: 1,
+        size: Math.random() * 7 + 4,
+        angle: Math.random() * Math.PI * 2,
+        spin: (Math.random() - 0.5) * 0.12,
+        wobble: Math.random() * 0.04,
+        wobbleOffset: Math.random() * Math.PI * 2,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        t: 0
+      });
+    }
+    bursts.push({ particles });
+  }
+
+  const positions = [[0.15,0.2],[0.45,0.12],[0.75,0.2],[0.3,0.38],[0.6,0.32],[0.85,0.42],[0.2,0.52],[0.55,0.48]];
+  let bi = 0;
+  function scheduleBursts() {
+    if (bi >= positions.length) return;
+    const [rx, ry] = positions[bi++];
+    makeBurst(rx * canvas.width, ry * canvas.height);
+    if (bi < positions.length) setTimeout(scheduleBursts, 200 + Math.random() * 130);
+  }
+  scheduleBursts();
+
+  leafActive = true;
+  function frame() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let anyAlive = false;
+    bursts.forEach(burst => {
+      burst.particles.forEach(p => {
+        if (p.alpha <= 0) return;
+        p.t += 0.05;
+        p.x += p.vx + Math.sin(p.t + p.wobbleOffset) * p.wobble * 8;
+        p.y += p.vy;
+        p.vy += 0.07;
+        p.vx *= 0.99;
+        p.angle += p.spin;
+        p.alpha -= 0.018;
+        anyAlive = true;
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        drawLeaf(ctx, p.x, p.y, p.size, p.angle, p.color);
+      });
+    });
+    ctx.globalAlpha = 1;
+    if (anyAlive && leafActive) { leafAnim = requestAnimationFrame(frame); }
+    else { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+  }
+  if (leafAnim) cancelAnimationFrame(leafAnim);
+  leafAnim = requestAnimationFrame(frame);
+}
+
+function stopLeaves() {
+  leafActive = false;
+  if (leafAnim) cancelAnimationFrame(leafAnim);
+  const canvas = document.getElementById("glitterCanvas");
+  canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function initBg() {
+  const canvas = document.getElementById("bgCanvas");
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  const ctx = canvas.getContext("2d");
+  const colors = ["#5DCAA5","#97C459","#C0DD97","#3B6D11","#1D9E75","#76b82a"];
+  const dots = Array.from({length: 36}, () => ({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    r: Math.random() * 5 + 2,
+    vx: (Math.random() - 0.5) * 0.35,
+    vy: (Math.random() - 0.5) * 0.35,
+    alpha: Math.random() * 0.2 + 0.07,
+    color: colors[Math.floor(Math.random() * colors.length)]
+  }));
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    dots.forEach(d => {
+      d.x += d.vx; d.y += d.vy;
+      if (d.x < 0 || d.x > canvas.width) d.vx *= -1;
+      if (d.y < 0 || d.y > canvas.height) d.vy *= -1;
+      ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+      ctx.fillStyle = d.color; ctx.globalAlpha = d.alpha; ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+  draw();
+  window.addEventListener("resize", () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+}
+
+buildText();
+initBg();
+</script>
+</body>
+</html>
