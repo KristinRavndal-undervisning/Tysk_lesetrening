@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Umweltmaßnahmen im Alltag – Lückentext</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500&display=swap');
+
+  :root {
+    --bg: #F2FAD8;
+    --border: #97C459;
+    --green: #3B6D11;
+    --green-light: #EAF3DE;
+    --green-mid: #97C459;
+    --green-dark: #27500A;
+    --green-vivid: #639922;
+    --yellow: #BA7517;
+    --yellow-light: #FAEEDA;
+    --yellow-mid: #EF9F27;
+    --yellow-dark: #412402;
+    --teal: #1D9E75;
+    --teal-light: #E1F5EE;
+    --slot-bg: #EAF3DE;
+    --slot-border: #639922;
+    --slot-text: #27500A;
+    --correct-bg: #EAF3DE;
+    --correct-border: #3B6D11;
+    --correct-text: #27500A;
+    --wrong-bg: #FCEBEB;
+    --wrong-border: #A32D2D;
+    --wrong-text: #A32D2D;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 3rem 2rem;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: var(--radius-xl);
+    border: 0.5px solid var(--border);
+    padding: 2.5rem 3rem;
+    max-width: 960px;
+    width: 100%;
+  }
+
+  .header {
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .instr-title { font-size: 16px; font-weight: 500; color: var(--green-dark); margin-bottom: 0.25rem; }
+  .instr-sub { font-size: 13px; color: var(--green-vivid); margin-bottom: 0.2rem; }
+  .instr-note { font-size: 13px; color: var(--green-vivid); font-style: italic; }
+
+  .word-bank {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    background: #F7FAE8;
+    border-radius: var(--radius-lg);
+    border: 0.5px solid var(--green-mid);
+  }
+
+  .word-chip {
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: grab;
+    user-select: none;
+    background: #fff;
+    transition: opacity 0.15s, transform 0.1s, background 0.15s;
+  }
+
+  .word-chip:nth-child(13n+1)  { border: 1.5px solid var(--green-vivid); color: var(--green-dark); }
+  .word-chip:nth-child(13n+2)  { border: 1.5px solid var(--yellow-mid); color: var(--yellow-dark); }
+  .word-chip:nth-child(13n+3)  { border: 1.5px solid var(--teal); color: #085041; }
+  .word-chip:nth-child(13n+4)  { border: 1.5px solid #97C459; color: #27500A; }
+  .word-chip:nth-child(13n+5)  { border: 1.5px solid var(--yellow); color: var(--yellow-dark); }
+  .word-chip:nth-child(13n+6)  { border: 1.5px solid #5DCAA5; color: #0F6E56; }
+  .word-chip:nth-child(13n+7)  { border: 1.5px solid #C0DD97; color: #27500A; }
+  .word-chip:nth-child(13n+8)  { border: 1.5px solid var(--green); color: var(--green-dark); }
+  .word-chip:nth-child(13n+9)  { border: 1.5px solid var(--yellow-mid); color: var(--yellow-dark); }
+  .word-chip:nth-child(13n+10) { border: 1.5px solid var(--teal); color: #085041; }
+  .word-chip:nth-child(13n+11) { border: 1.5px solid var(--green-mid); color: #173404; }
+  .word-chip:nth-child(13n+12) { border: 1.5px solid var(--yellow); color: var(--yellow-dark); }
+  .word-chip:nth-child(13n+13) { border: 1.5px solid #9FE1CB; color: #0F6E56; }
+
+  .word-chip:hover { background: var(--green-light); }
+  .word-chip:active { transform: scale(0.96); }
+  .word-chip.used { opacity: 0.3; cursor: default; pointer-events: none; }
+  .word-chip.dragging { opacity: 0.5; }
+
+  .text-box {
+    background: #FAFFF3;
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 2rem;
+    font-size: 15px;
+    line-height: 2.2;
+    color: #173404;
+    margin-bottom: 1.25rem;
+  }
+
+  .text-title {
+    font-family: 'Source Serif 4', serif;
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--green-dark);
+    margin-bottom: 0.85rem;
+    display: block;
+  }
+
+  .para { margin-bottom: 0.75rem; }
+  .para:last-child { margin-bottom: 0; }
+
+  .drop-slot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 96px;
+    height: 30px;
+    border-radius: 6px;
+    border: 1.5px dashed var(--slot-border);
+    background: var(--slot-bg);
+    color: var(--slot-text);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    vertical-align: middle;
+    margin: 0 3px;
+    padding: 0 10px;
+  }
+
+  .drop-slot.over { background: var(--green-mid); border-color: var(--green-dark); }
+  .drop-slot.filled { border-style: solid; border-color: var(--green-vivid); background: var(--green-light); color: var(--green-dark); cursor: pointer; }
+  .drop-slot.correct { border-color: var(--correct-border); background: var(--correct-bg); color: var(--correct-text); pointer-events: none; }
+  .drop-slot.wrong { border-color: var(--wrong-border); background: var(--wrong-bg); color: var(--wrong-text); }
+
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 20px;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--green-vivid);
+    background: #fff;
+    color: var(--green-dark);
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .btn:hover { background: var(--green-light); }
+  .btn:active { transform: scale(0.98); }
+
+  .result-msg { font-size: 14px; font-weight: 500; margin-top: 1rem; color: var(--green-dark); min-height: 20px; }
+
+  .solution-note {
+    font-size: 12px;
+    color: var(--green-vivid);
+    margin-top: 1.25rem;
+    border-top: 0.5px solid var(--border);
+    padding-top: 0.75rem;
+  }
+
+  #confetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  @media (max-width: 700px) {
+    .card { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<div class="card">
+  <div class="header">
+    <p class="instr-title">Fyll inn de manglende ordene.</p>
+    <p class="instr-sub">Dra det riktige ordet til riktig plass i teksten. Klikk på et ord i teksten for å fjerne det igjen.</p>
+    <p class="instr-note">OBS: Tre ord blir til overs.</p>
+  </div>
+
+  <div class="word-bank" id="wordBank"></div>
+  <div class="text-box" id="textBox"></div>
+
+  <div class="btn-row">
+    <button class="btn" onclick="checkAnswers()">Sjekk svar ↗</button>
+    <button class="btn" onclick="resetAll()">Start på nytt</button>
+    <button class="btn" onclick="showSolution()">Vis løsning</button>
+  </div>
+  <div class="result-msg" id="resultMsg"></div>
+  <div class="solution-note" id="solutionNote"></div>
+</div>
+
+<script>
+const PARAS = [
+  [
+    "Viele Menschen möchten etwas für die Umwelt tun, wissen aber nicht, wo sie anfangen sollen. Dabei gibt es viele einfache ",
+    { id: "s1", answer: "Maßnahmen" },
+    ", die man im Alltag umsetzen kann, ohne viel Zeit oder Geld aufzuwenden."
+  ],
+  [
+    "Einer der wichtigsten Bereiche ist der ",
+    { id: "s2", answer: "Konsum" },
+    ". Wer weniger kauft, weniger wegwirft und gebrauchte Produkte bevorzugt, ",
+    { id: "s3", answer: "reduziert" },
+    " seinen ökologischen Fußabdruck deutlich. ",
+    { id: "s4", answer: "Auch" },
+    " beim Einkaufen hilft es, regionale und saisonale Lebensmittel zu wählen, denn lange ",
+    { id: "s5", answer: "Transportwege" },
+    " belasten die Umwelt stark."
+  ],
+  [
+    "Im Haushalt kann man ebenfalls viel Energie ",
+    { id: "s6", answer: "sparen" },
+    " – zum Beispiel durch kürzere Duschen, das Ausschalten von Geräten im Standby-Modus und das Nutzen von Energiesparlampen. Wer die Möglichkeit hat, sollte außerdem auf ",
+    { id: "s7", answer: "erneuerbare" },
+    " Energiequellen umsteigen."
+  ],
+  [
+    "Auch beim Transport gibt es Alternativen. Statt mit dem Auto zu fahren, kann man das Fahrrad nehmen, öffentliche Verkehrsmittel ",
+    { id: "s8", answer: "nutzen" },
+    " oder kurze Strecken zu Fuß gehen. Das spart nicht nur CO₂, sondern ist oft auch ",
+    { id: "s9", answer: "günstiger" },
+    " und gesünder."
+  ],
+  [
+    "Kleine Schritte zählen – wenn viele Menschen bewusster leben, hat das zusammen eine große ",
+    { id: "s10", answer: "Wirkung" },
+    ". Umweltschutz muss keine große Belastung sein: Es geht darum, gute Gewohnheiten zu entwickeln und sie in den Alltag zu integrieren."
+  ]
+];
+
+const ALL_PARTS = PARAS.flat();
+
+function shuffle(arr) {
+  let a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+const WORDS = shuffle(["Maßnahmen","Konsum","reduziert","Auch","Transportwege","sparen","erneuerbare","nutzen","günstiger","Wirkung","recyceln","Wasser","nachhaltig"]);
+
+let slotValues = {};
+let checked = false;
+
+function buildText() {
+  const box = document.getElementById("textBox");
+  box.innerHTML = "";
+  const title = document.createElement("span");
+  title.className = "text-title";
+  title.textContent = "Umweltmaßnahmen im Alltag";
+  box.appendChild(title);
+
+  PARAS.forEach(para => {
+    const p = document.createElement("p");
+    p.className = "para";
+    para.forEach(part => {
+      if (typeof part === "string") {
+        p.appendChild(document.createTextNode(part));
+      } else {
+        const slot = document.createElement("span");
+        slot.className = "drop-slot" + (slotValues[part.id] ? " filled" : "");
+        slot.id = "slot-" + part.id;
+        slot.dataset.answer = part.answer;
+        slot.textContent = slotValues[part.id] || "___";
+        slot.addEventListener("dragover", e => { e.preventDefault(); slot.classList.add("over"); });
+        slot.addEventListener("dragleave", () => slot.classList.remove("over"));
+        slot.addEventListener("drop", e => {
+          e.preventDefault();
+          slot.classList.remove("over");
+          const word = e.dataTransfer.getData("text/plain");
+          if (!word) return;
+          const prev = slotValues[part.id];
+          slotValues[part.id] = word;
+          if (prev) returnWord(prev);
+          markWordUsed(word);
+          checked = false;
+          buildText();
+        });
+        slot.addEventListener("click", () => {
+          const w = slotValues[part.id];
+          if (w) { returnWord(w); delete slotValues[part.id]; checked = false; buildText(); }
+        });
+        p.appendChild(slot);
+      }
+    });
+    box.appendChild(p);
+  });
+
+  if (checked) applyColors();
+}
+
+function buildBank() {
+  const bank = document.getElementById("wordBank");
+  bank.innerHTML = "";
+  WORDS.forEach(w => {
+    const chip = document.createElement("span");
+    chip.className = "word-chip" + (Object.values(slotValues).includes(w) ? " used" : "");
+    chip.id = "chip-" + w;
+    chip.textContent = w;
+    chip.draggable = true;
+    chip.addEventListener("dragstart", e => { e.dataTransfer.setData("text/plain", w); chip.classList.add("dragging"); });
+    chip.addEventListener("dragend", () => chip.classList.remove("dragging"));
+    bank.appendChild(chip);
+  });
+}
+
+function markWordUsed(w) { const c = document.getElementById("chip-" + w); if (c) c.classList.add("used"); }
+function returnWord(w) { const c = document.getElementById("chip-" + w); if (c) c.classList.remove("used"); }
+
+function applyColors() {
+  ALL_PARTS.filter(p => typeof p === "object").forEach(p => {
+    const slot = document.getElementById("slot-" + p.id);
+    if (!slot) return;
+    slot.classList.remove("correct", "wrong", "filled");
+    if (slotValues[p.id] === p.answer) slot.classList.add("correct");
+    else if (slotValues[p.id]) slot.classList.add("wrong");
+  });
+}
+
+function checkAnswers() {
+  const slots = ALL_PARTS.filter(p => typeof p === "object");
+  const filled = slots.filter(p => slotValues[p.id]);
+  if (filled.length < slots.length) {
+    document.getElementById("resultMsg").textContent = "Fyll inn alle lukene før du sjekker.";
+    return;
+  }
+  checked = true;
+  applyColors();
+  const correct = slots.filter(p => slotValues[p.id] === p.answer).length;
+  if (correct === slots.length) {
+    document.getElementById("resultMsg").textContent = "Sehr gut! Alle svar er riktige.";
+    launchCelebration();
+  } else {
+    document.getElementById("resultMsg").textContent = correct + " av " + slots.length + " riktige. Prøv igjen!";
+  }
+}
+
+function resetAll() {
+  slotValues = {};
+  checked = false;
+  document.getElementById("resultMsg").textContent = "";
+  document.getElementById("solutionNote").textContent = "";
+  buildBank();
+  buildText();
+}
+
+function showSolution() {
+  ALL_PARTS.filter(p => typeof p === "object").forEach(p => { slotValues[p.id] = p.answer; });
+  WORDS.forEach(markWordUsed);
+  checked = true;
+  buildText();
+  document.getElementById("resultMsg").textContent = "";
+  document.getElementById("solutionNote").textContent = "Løsning: Maßnahmen · Konsum · reduziert · Auch · Transportwege · sparen · erneuerbare · nutzen · günstiger · Wirkung — Distraktører: recyceln · Wasser · nachhaltig";
+}
+
+function launchCelebration() {
+  const canvas = document.getElementById("confetti-canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const wingPairs = [
+    ["#639922","#C0DD97"],
+    ["#EF9F27","#FAEEDA"],
+    ["#1D9E75","#9FE1CB"],
+    ["#97C459","#EAF3DE"],
+    ["#BA7517","#FAC775"],
+    ["#5DCAA5","#E1F5EE"],
+  ];
+  const heartColors = ["#639922","#EF9F27","#1D9E75","#97C459","#FAC775","#9FE1CB","#C0DD97"];
+
+  const particles = [];
+  for (let i = 0; i < 75; i++) {
+    const isButterfly = Math.random() < 0.55;
+    const wc = wingPairs[Math.floor(Math.random() * wingPairs.length)];
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * 200,
+      type: isButterfly ? "butterfly" : "heart",
+      wingColor: wc[0],
+      wingLight: wc[1],
+      heartColor: heartColors[Math.floor(Math.random() * heartColors.length)],
+      speed: 1.5 + Math.random() * 2.5,
+      drift: (Math.random() - 0.5) * 1.2,
+      rot: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.1,
+      flapFrame: Math.random() * Math.PI * 2,
+      flapSpeed: 0.18 + Math.random() * 0.15,
+      scale: 0.7 + Math.random() * 0.55
+    });
+  }
+
+  function drawButterfly(ctx, p) {
+    const flap = Math.cos(p.flapFrame) * 0.7;
+    [-1, 1].forEach(side => {
+      ctx.save();
+      ctx.scale(side * flap, 1);
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(side * 2, -10, side * 14, -12, side * 13, -2);
+      ctx.bezierCurveTo(side * 14, 4, side * 4, 6, 0, 0);
+      ctx.fillStyle = p.wingColor;
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(side * 2, 4, side * 10, 10, side * 9, 4);
+      ctx.bezierCurveTo(side * 10, -1, side * 3, 2, 0, 0);
+      ctx.fillStyle = p.wingLight;
+      ctx.fill();
+      ctx.restore();
+    });
+    ctx.beginPath();
+    ctx.ellipse(0, -1, 1.5, 7, 0, 0, Math.PI * 2);
+    ctx.fillStyle = "#2C2C2A";
+    ctx.fill();
+  }
+
+  function drawHeart(ctx, p) {
+    const s = 9;
+    ctx.beginPath();
+    ctx.moveTo(0, s * 0.3);
+    ctx.bezierCurveTo(-s, -s * 0.2, -s, -s * 0.9, 0, -s * 0.4);
+    ctx.bezierCurveTo(s, -s * 0.9, s, -s * 0.2, 0, s * 0.3);
+    ctx.closePath();
+    ctx.fillStyle = p.heartColor;
+    ctx.fill();
+  }
+
+  let frame = 0;
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const fade = frame > 120 ? 1 - (frame - 120) / 60 : 1;
+    particles.forEach(p => {
+      p.y += p.speed;
+      p.x += p.drift;
+      p.rot += p.rotSpeed;
+      p.flapFrame += p.flapSpeed;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.scale(p.scale, p.scale);
+      ctx.globalAlpha = fade;
+      if (p.type === "butterfly") drawButterfly(ctx, p);
+      else drawHeart(ctx, p);
+      ctx.restore();
+    });
+    frame++;
+    if (frame < 180) requestAnimationFrame(animate);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  animate();
+}
+
+buildBank();
+buildText();
+</script>
+</body>
+</html>
