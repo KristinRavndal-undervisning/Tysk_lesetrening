@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Der Coding-Star</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #1a1a2e;
+    --bg2: #16213e;
+    --bg3: #0f3460;
+    --yellow: #f5c400;
+    --cyan: #00f5d4;
+    --pink: #ff4d6d;
+    --green: #39ff14;
+    --white: #f0f0f0;
+    --muted: #a0a8c0;
+    --border: 3px solid var(--yellow);
+  }
+
+  html { font-size: 16px; image-rendering: pixelated; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--bg3);
+    border-bottom: 4px solid var(--yellow);
+    padding: 1.5rem 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    text-align: center;
+    image-rendering: pixelated;
+  }
+
+  header h1 {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 1.6rem;
+    color: var(--yellow);
+    letter-spacing: 2px;
+    text-shadow: 4px 4px 0 var(--pink);
+  }
+
+  header p {
+    font-size: 1.1rem;
+    color: var(--cyan);
+    letter-spacing: 1px;
+  }
+
+  main {
+    display: grid;
+    grid-template-columns: 60fr 40fr;
+    min-height: calc(100vh - 90px);
+  }
+
+  .text-col {
+    padding: 2rem 4rem 3rem 4rem;
+    border-right: 4px solid var(--bg3);
+    background: var(--bg);
+  }
+
+  .q-col {
+    padding: 2rem 3.5rem 3rem 3.5rem;
+    background: var(--bg2);
+  }
+
+  .part {
+    margin-bottom: 2rem;
+  }
+
+  .part-label {
+    display: inline-block;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.55rem;
+    color: var(--bg);
+    background: var(--cyan);
+    padding: 4px 10px;
+    margin-bottom: 0.75rem;
+    image-rendering: pixelated;
+    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+  }
+
+  .text-block {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--white);
+    background: var(--bg2);
+    border-left: 4px solid var(--cyan);
+    border-bottom: 4px solid var(--bg3);
+    border-right: 4px solid var(--bg3);
+    padding: 1rem 1.25rem;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  .text-block p { margin-bottom: 0.85rem; }
+  .text-block p:last-child { margin-bottom: 0; }
+
+  .text-block strong {
+    color: var(--yellow);
+    font-weight: 400;
+  }
+
+  .q-heading {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.7rem;
+    color: var(--yellow);
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+  }
+
+  .q-instr {
+    font-size: 1rem;
+    color: var(--muted);
+    margin-bottom: 1.25rem;
+    line-height: 1.5;
+  }
+
+  .q-item {
+    background: var(--bg);
+    border: 2px solid #2a2a4a;
+    padding: 0.7rem 0.9rem;
+    margin-bottom: 0.6rem;
+    transition: border-color 0.15s;
+  }
+
+  .q-item.correct { border-color: var(--green); background: #0d2010; }
+  .q-item.wrong { border-color: var(--pink); background: #2a0a10; }
+
+  .q-text {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  .q-num {
+    color: var(--cyan);
+    margin-right: 5px;
+  }
+
+  .opts { display: flex; gap: 6px; }
+
+  .opt {
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.5rem;
+    padding: 6px 10px;
+    border: 2px solid #3a3a6a;
+    background: var(--bg3);
+    color: var(--white);
+    cursor: pointer;
+    transition: all 0.1s;
+    image-rendering: pixelated;
+  }
+
+  .opt:hover {
+    background: var(--cyan);
+    border-color: var(--cyan);
+    color: var(--bg);
+  }
+
+  .opt.selected {
+    background: var(--yellow);
+    border-color: var(--yellow);
+    color: var(--bg);
+  }
+
+  .opt.correct-final {
+    background: var(--green);
+    border-color: var(--green);
+    color: var(--bg);
+  }
+
+  .opt.wrong-final {
+    background: var(--pink);
+    border-color: var(--pink);
+    color: var(--bg);
+  }
+
+  .check-btn {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 0.85rem;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.6rem;
+    border: 3px solid #3a3a6a;
+    background: #2a2a4a;
+    color: #4a4a7a;
+    cursor: not-allowed;
+    letter-spacing: 1px;
+    transition: all 0.15s;
+    image-rendering: pixelated;
+  }
+
+  .check-btn.active {
+    background: var(--yellow);
+    border-color: var(--yellow);
+    color: var(--bg);
+    cursor: pointer;
+    box-shadow: 4px 4px 0 var(--pink);
+  }
+
+  .check-btn.active:hover {
+    background: var(--cyan);
+    border-color: var(--cyan);
+    box-shadow: 4px 4px 0 var(--yellow);
+  }
+
+  .result-msg {
+    margin-top: 0.75rem;
+    font-size: 1.1rem;
+    text-align: center;
+    color: var(--muted);
+    min-height: 1.4rem;
+  }
+
+  .result-msg.perfect { color: var(--green); font-size: 1.3rem; }
+  .result-msg.partial { color: var(--yellow); }
+
+  #confetti-wrap {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 999;
+  }
+
+  .pixel-divider {
+    height: 4px;
+    background: repeating-linear-gradient(90deg, var(--yellow) 0px, var(--yellow) 8px, transparent 8px, transparent 16px);
+    margin-bottom: 2rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Der Coding-Star</h1>
+  <p>Les teksten og avgjør hvilken del hvert utsagn hører til.</p>
+</header>
+
+<div id="confetti-wrap"></div>
+
+<main>
+  <div class="text-col">
+
+    <div class="part">
+      <div class="part-label">DEL 1</div>
+      <div class="text-block">
+        <p>Lena Hoffmann ist 16 Jahre alt und hat schon mehr als 200.000 Follower auf TikTok. Aber sie postet keine Tanzvideos – sie erklärt, wie man programmiert.</p>
+        <p><strong>Lena, wie bist du auf die Idee gekommen, Coding-Videos zu machen?</strong> Lena Hoffmann: Ich habe mit zwölf Jahren angefangen zu programmieren, weil mein Bruder mir gezeigt hat, wie man einfache Spiele baut. Ich fand das sofort super spannend. In der Schule gab es kein Informatikfach, und ich habe alles selbst gelernt. Irgendwann dachte ich: Warum erkläre ich es nicht einfach anderen? Mein erstes Video habe ich vor zwei Jahren gepostet. Am Anfang hatte ich nur dreißig Follower – alle aus meiner Klasse.</p>
+        <p><strong>Verdienst du schon Geld damit?</strong> Ja, ein bisschen. Ich bekomme Geld durch Werbung und manchmal bezahlen Firmen mich, wenn ich ihre Apps erwähne. Es ist nicht viel, aber als Taschengeld reicht es gut.</p>
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-label">DEL 2</div>
+      <div class="text-block">
+        <p><strong>Was für Videos machst du genau?</strong> Meistens erkläre ich einfache Konzepte – zum Beispiel, was eine Variable ist, oder wie eine Schleife funktioniert. Ich versuche, alles so einfach wie möglich zu erklären, weil viele Leute denken, dass Programmieren nur für Genies ist. Das stimmt nicht! Jeder kann programmieren lernen, wenn man es Schritt für Schritt macht. Meine Videos sind kurz – meistens unter zwei Minuten.</p>
+        <p><strong>Hast du auch negative Erfahrungen gemacht?</strong> Ja, leider. Manche Leute schreiben Kommentare wie „Du bist doch noch ein Kind, was weißt du schon?" Das ist manchmal frustrierend. Aber ich habe gelernt, solche Kommentare zu ignorieren. Meine Fans motivieren mich viel mehr als die negativen Stimmen mich stören.</p>
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-label">DEL 3</div>
+      <div class="text-block">
+        <p><strong>Wie reagieren deine Lehrer und Eltern auf deinen Erfolg?</strong> Meine Eltern sind stolz, aber sie machen sich auch ein bisschen Sorgen. Sie wollen, dass die Schule immer noch Priorität hat. Mein Informatiklehrer findet es cool – er hat mich sogar gebeten, der Klasse etwas zu erklären. Das war ein ziemlich merkwürdiges Gefühl, vor dem Lehrer zu stehen und ihm etwas beizubringen!</p>
+        <p><strong>Was sind deine Pläne für die Zukunft?</strong> Ich möchte auf jeden Fall Informatik studieren. Und ich träume davon, eine App zu entwickeln, die Kindern das Programmieren beibringt – auf Deutsch, weil es so wenig gutes deutschsprachiges Material gibt. TikTok ist toll, aber eine eigene App wäre noch besser.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="q-col">
+    <div class="q-heading">I HVILKEN DEL<br>FINNER DU DETTE?</div>
+    <p class="q-instr">Velg Del 1, 2 eller 3 for hvert utsagn. Når alle utsagn er besvart, kan du sjekke svarene.</p>
+    <div id="questions"></div>
+    <button class="check-btn" id="checkBtn" disabled onclick="checkAnswers()">SJEKK SVARENE</button>
+    <div class="result-msg" id="resultMsg"></div>
+  </div>
+</main>
+
+<script>
+const questions = [
+  { text: "Læreren hennes har bedt henne om å undervise klassen.", answer: "3" },
+  { text: "Hun startet med å lage videoer for to år siden.", answer: "1" },
+  { text: "Foreldrene er positive, men minner henne på at skolen kommer først.", answer: "3" },
+  { text: "Hun mener programmering ikke bare er for spesielt begavede.", answer: "2" },
+  { text: "Det var broren som introduserte henne for koding.", answer: "1" },
+  { text: "Hun drømmer om å lage noe som gjør det lettere å lære koding på tysk.", answer: "3" },
+  { text: "Hun takler negative kommentarer greit.", answer: "2" },
+  { text: "Inntektene hennes kommer fra reklame og samarbeid med bedrifter.", answer: "1" }
+];
+
+const selected = {};
+const container = document.getElementById('questions');
+
+questions.forEach((q, i) => {
+  const div = document.createElement('div');
+  div.className = 'q-item';
+  div.id = 'q' + i;
+  div.innerHTML = `<div class="q-text"><span class="q-num">${i+1}.</span>${q.text}</div>
+    <div class="opts">
+      <button class="opt" onclick="pick(${i},'1',this)">DEL 1</button>
+      <button class="opt" onclick="pick(${i},'2',this)">DEL 2</button>
+      <button class="opt" onclick="pick(${i},'3',this)">DEL 3</button>
+    </div>`;
+  container.appendChild(div);
+});
+
+function pick(i, val, btn) {
+  btn.parentElement.querySelectorAll('.opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selected[i] = val;
+  if (Object.keys(selected).length === questions.length) {
+    const cb = document.getElementById('checkBtn');
+    cb.classList.add('active');
+    cb.disabled = false;
+  }
+}
+
+function checkAnswers() {
+  let correct = 0;
+  questions.forEach((q, i) => {
+    const item = document.getElementById('q' + i);
+    item.querySelectorAll('.opt').forEach(b => {
+      const v = b.textContent.replace('DEL ', '');
+      if (v === q.answer) b.classList.add('correct-final');
+      if (v === selected[i] && selected[i] !== q.answer) b.classList.add('wrong-final');
+    });
+    if (selected[i] === q.answer) { correct++; item.classList.add('correct'); }
+    else item.classList.add('wrong');
+  });
+  const msg = document.getElementById('resultMsg');
+  if (correct === questions.length) {
+    msg.textContent = '>> PERFEKT! ALLE RIKTIGE! <<';
+    msg.className = 'result-msg perfect';
+    launchConfetti();
+  } else {
+    msg.textContent = correct + ' / ' + questions.length + ' RIKTIGE';
+    msg.className = 'result-msg partial';
+  }
+  document.getElementById('checkBtn').disabled = true;
+}
+
+function launchConfetti() {
+  const colors = ['#f5c400','#00f5d4','#ff4d6d','#39ff14','#ffffff'];
+  const wrap = document.getElementById('confetti-wrap');
+  for (let i = 0; i < 120; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      const size = 6 + Math.floor(Math.random() * 3) * 4;
+      el.style.cssText = `position:absolute;width:${size}px;height:${size}px;left:${Math.random()*100}%;top:-12px;background:${colors[Math.floor(Math.random()*colors.length)]};image-rendering:pixelated;`;
+      wrap.appendChild(el);
+      let top = -12, vel = 3 + Math.random() * 4, drift = (Math.random() - 0.5) * 1.5, opacity = 1;
+      let left = parseFloat(el.style.left);
+      const tick = setInterval(() => {
+        top += vel; left += drift; opacity -= 0.006;
+        el.style.top = top + 'px';
+        el.style.left = left + '%';
+        el.style.opacity = opacity;
+        if (top > window.innerHeight + 20 || opacity <= 0) { clearInterval(tick); el.remove(); }
+      }, 16);
+    }, i * 20);
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Die Sprachenlernerin</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --purple-pale: #f0ebfa;
+    --purple-light: #e0d4f5;
+    --purple-mid: #b392d8;
+    --purple-dark: #4a3570;
+    --purple-muted: #7a6490;
+    --teal-pale: #e8f5f2;
+    --peach-pale: #faf0eb;
+    --mint-pale: #ebf5ee;
+    --text: #2d2540;
+    --text-muted: #6b5d80;
+    --border: #ddd4f0;
+    --white: #ffffff;
+    --correct: #7ab86a;
+    --correct-bg: #f2faee;
+    --correct-border: #9dc88a;
+    --wrong: #e06858;
+    --wrong-bg: #fdf0ee;
+    --wrong-border: #e8a090;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    background: #faf8fd;
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  #bubble-canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    background: var(--purple-light);
+    border-bottom: 2px solid var(--border);
+    padding: 1.75rem 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  header h1 {
+    font-family: 'Lora', serif;
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--purple-dark);
+    letter-spacing: 0.2px;
+  }
+
+  header p {
+    font-size: 0.95rem;
+    color: var(--purple-muted);
+  }
+
+  main {
+    display: grid;
+    grid-template-columns: 60fr 40fr;
+    min-height: calc(100vh - 90px);
+    position: relative;
+    z-index: 1;
+  }
+
+  .text-col {
+    padding: 2.5rem 4rem 3rem 4rem;
+    border-right: 1px solid var(--border);
+  }
+
+  .q-col {
+    padding: 2.5rem 3.5rem 3rem 3.5rem;
+    background: var(--purple-pale);
+  }
+
+  .part {
+    margin-bottom: 2rem;
+  }
+
+  .part-label {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--purple-mid);
+    padding: 4px 14px 4px 12px;
+    border-radius: 20px 20px 20px 4px;
+    margin-bottom: 0.6rem;
+    position: relative;
+  }
+
+  .part-label::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 10px;
+    width: 0; height: 0;
+    border-left: 6px solid transparent;
+    border-right: 2px solid transparent;
+    border-top: 6px solid var(--purple-mid);
+  }
+
+  .text-block {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--text);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 0 18px 18px 18px;
+    padding: 1.1rem 1.4rem;
+  }
+
+  .q-heading {
+    font-family: 'Lora', serif;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--purple-dark);
+    margin-bottom: 0.3rem;
+  }
+
+  .q-instr {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+    line-height: 1.55;
+  }
+
+  .q-item {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.6rem;
+    transition: border-color 0.15s;
+  }
+
+  .q-item.correct { border-color: var(--correct-border); background: var(--correct-bg); }
+  .q-item.wrong { border-color: var(--wrong-border); background: var(--wrong-bg); }
+
+  .q-text {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .q-num {
+    color: var(--purple-mid);
+    font-weight: 700;
+    margin-right: 5px;
+  }
+
+  .opts { display: flex; gap: 6px; }
+
+  .opt {
+    font-size: 0.78rem;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: var(--purple-pale);
+    color: var(--purple-dark);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .opt:hover { background: var(--purple-light); border-color: var(--purple-mid); }
+  .opt.selected { background: var(--purple-mid); border-color: var(--purple-dark); color: #fff; }
+  .opt.correct-final { background: var(--correct); border-color: #5a9850; color: #fff; }
+  .opt.wrong-final { background: var(--wrong); border-color: #c04840; color: #fff; }
+
+  .check-btn {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
+    border-radius: 24px;
+    border: 1px solid var(--border);
+    background: var(--purple-light);
+    color: #b0a0c8;
+    cursor: not-allowed;
+    transition: all 0.2s;
+    letter-spacing: 0.2px;
+  }
+
+  .check-btn.active {
+    background: var(--purple-mid);
+    border-color: var(--purple-dark);
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .check-btn.active:hover { background: var(--purple-dark); }
+
+  .result-msg {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    text-align: center;
+    color: var(--text-muted);
+    min-height: 1.2rem;
+  }
+
+  .result-msg.perfect { color: var(--purple-dark); font-weight: 700; font-size: 1rem; }
+  .result-msg.partial { color: #c87a40; font-weight: 600; }
+
+  #confetti-wrap {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 999;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bubble-canvas"></canvas>
+<div id="confetti-wrap"></div>
+
+<header>
+  <h1>Die Sprachenlernerin</h1>
+  <p>Les teksten og avgjør hvilken del hvert utsagn hører til.</p>
+</header>
+
+<main>
+  <div class="text-col">
+
+    <div class="part">
+      <div class="part-label">Del 1</div>
+      <div class="text-block">
+        Ich heiße Anna und ich bin 17 Jahre alt. Vor zwei Jahren konnte ich kaum ein Wort Englisch sprechen, zumindest nicht richtig. In der Schule hatten wir natürlich Englischunterricht, aber irgendwie hat es nie wirklich geklappt. Die Grammatikübungen waren langweilig, und ich hatte immer das Gefühl, dass ich die Sprache lernte, ohne sie wirklich zu verstehen. Dann kam der Sommer, in dem alles anders wurde. Ich war mit meinen Eltern im Urlaub, und als Touristen uns auf Englisch ansprachen, wollte ich antworten, aber mir fiel einfach nichts ein. Dieses peinliche Gefühl hat mich motiviert, endlich ernsthaft Englisch zu lernen.
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-label">Del 2</div>
+      <div class="text-block">
+        Ich habe mit einer Serie angefangen, die ich schon auf Deutsch kannte. So konnte ich die Handlung verfolgen, auch wenn ich nicht alles verstand. Nach zwei Wochen habe ich die deutschen Untertitel ausgeschaltet und nur noch englische benutzt. Das war am Anfang anstrengend, aber ich habe gemerkt, dass ich immer mehr verstand. Dann habe ich angefangen, Videospiele auf Englisch zu spielen. In einem Online-Spiel musste ich mit anderen Spielern aus Amerika und England kommunizieren, auf Englisch natürlich. Ich hatte keine Wahl, also habe ich einfach geschrieben. Die anderen Spieler haben meine Fehler einfach ignoriert. Das hat mir sehr geholfen, weil ich keine Angst mehr vor Fehlern hatte.
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-label">Del 3</div>
+      <div class="text-block">
+        Heute, zwei Jahre später, schaue ich fast alles auf Englisch: Serien, YouTube-Videos, sogar Nachrichten. Mein Englischlehrer hat letzte Woche gesagt, mein Aufsatz klinge wie der eines Muttersprachlers. Das hat mich sehr gefreut. Aber das Beste ist nicht die Note. Das Beste ist, dass ich jetzt echte Verbindungen zu Menschen auf der ganzen Welt habe. Im Spiel habe ich eine Freundin aus Australien kennengelernt, mit der ich jeden Tag schreibe. Wenn ich an den langweiligen Grammatikunterricht denke, kann ich kaum glauben, wie weit ich gekommen bin.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="q-col">
+    <p class="q-heading">I hvilken del finner du dette?</p>
+    <p class="q-instr">Velg Del 1, 2 eller 3 for hvert utsagn. Når alle utsagn er besvart, kan du sjekke svarene.</p>
+    <div id="questions"></div>
+    <button class="check-btn" id="checkBtn" disabled onclick="checkAnswers()">Sjekk svarene</button>
+    <div class="result-msg" id="resultMsg"></div>
+  </div>
+</main>
+
+<script>
+const questions = [
+  { text: "Anna opplevde at skoleundervisningen ikke ga henne en reell forståelse av språket.", answer: "1" },
+  { text: "Hun ble gradvis tryggere fordi ingen reagerte på feilene hun gjorde.", answer: "2" },
+  { text: "Hun ble flau da hun ikke klarte å kommunisere på engelsk.", answer: "1" },
+  { text: "I dag har hun fått venner hun aldri hadde møtt uten engelsken sin.", answer: "3" },
+  { text: "Hun brukte kjent innhold som et hjelpemiddel i begynnelsen.", answer: "2" },
+  { text: "Læreren hennes har lagt merke til hvor langt hun har kommet.", answer: "3" },
+  { text: "Hun gikk gradvis over til å klare seg uten støtte på tysk.", answer: "2" },
+  { text: "Hun bruker engelsk daglig, ikke bare i skolesammenheng.", answer: "3" }
+];
+
+const selected = {};
+const container = document.getElementById('questions');
+
+questions.forEach((q, i) => {
+  const div = document.createElement('div');
+  div.className = 'q-item';
+  div.id = 'q' + i;
+  div.innerHTML = `<div class="q-text"><span class="q-num">${i+1}.</span>${q.text}</div>
+    <div class="opts">
+      <button class="opt" onclick="pick(${i},'1',this)">Del 1</button>
+      <button class="opt" onclick="pick(${i},'2',this)">Del 2</button>
+      <button class="opt" onclick="pick(${i},'3',this)">Del 3</button>
+    </div>`;
+  container.appendChild(div);
+});
+
+function pick(i, val, btn) {
+  btn.parentElement.querySelectorAll('.opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selected[i] = val;
+  if (Object.keys(selected).length === questions.length) {
+    const cb = document.getElementById('checkBtn');
+    cb.classList.add('active');
+    cb.disabled = false;
+  }
+}
+
+function checkAnswers() {
+  let correct = 0;
+  questions.forEach((q, i) => {
+    const item = document.getElementById('q' + i);
+    item.querySelectorAll('.opt').forEach(b => {
+      const v = b.textContent.replace('Del ', '');
+      if (v === q.answer) b.classList.add('correct-final');
+      if (v === selected[i] && selected[i] !== q.answer) b.classList.add('wrong-final');
+    });
+    if (selected[i] === q.answer) { correct++; item.classList.add('correct'); }
+    else item.classList.add('wrong');
+  });
+  const msg = document.getElementById('resultMsg');
+  if (correct === questions.length) {
+    msg.textContent = 'Perfekt! Alle riktige!';
+    msg.className = 'result-msg perfect';
+    launchBubbleConfetti();
+  } else {
+    msg.textContent = correct + ' av ' + questions.length + ' riktige. Riktige svar er markert i grønt.';
+    msg.className = 'result-msg partial';
+  }
+  document.getElementById('checkBtn').disabled = true;
+}
+
+const canvas = document.getElementById('bubble-canvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = document.body.scrollHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', () => { resizeCanvas(); drawBubbles(); });
+
+const bubbleColors = ['#e8dff5','#dff0f8','#f5ebe0','#dff5ea','#f5dff0','#f0f5df'];
+const bubbles = [];
+for (let i = 0; i < 28; i++) {
+  bubbles.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * 2000,
+    r: 14 + Math.random() * 28,
+    color: bubbleColors[Math.floor(Math.random() * bubbleColors.length)],
+    tail: Math.random() > 0.5 ? 1 : -1
+  });
+}
+
+function drawSpeechBubble(x, y, r, color, tail) {
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(x + tail * r * 0.35, y + r * 0.65);
+  ctx.lineTo(x + tail * r * 0.95, y + r * 1.35);
+  ctx.lineTo(x + tail * r * 0.05, y + r * 0.88);
+  ctx.closePath();
+  ctx.fillStyle = color;
+  ctx.fill();
+}
+
+function drawBubbles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  bubbles.forEach(b => drawSpeechBubble(b.x, b.y, b.r, b.color, b.tail));
+}
+drawBubbles();
+
+function launchBubbleConfetti() {
+  const wrap = document.getElementById('confetti-wrap');
+  const colors = ['#c9a8e8','#a8d4e8','#e8c8a0','#a8e8c0','#e8a8c8','#c8e8a8'];
+  for (let i = 0; i < 50; i++) {
+    setTimeout(() => {
+      const r = 10 + Math.floor(Math.random() * 3) * 6;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const tail = Math.random() > 0.5 ? 1 : -1;
+      const el = document.createElement('div');
+      el.style.cssText = `position:absolute;width:${r*2+r}px;height:${r*2+r}px;left:${Math.random()*100}%;top:-40px;`;
+      el.innerHTML = `<svg width="${r*2+r}" height="${r*2+r}" viewBox="0 0 ${r*2+r} ${r*2+r}" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="${r+r*0.5}" cy="${r}" r="${r}" fill="${color}"/>
+        <polygon points="${r+r*0.5+tail*r*0.35},${r+r*0.65} ${r+r*0.5+tail*r*0.95},${r+r*1.35} ${r+r*0.5+tail*r*0.05},${r+r*0.88}" fill="${color}"/>
+      </svg>`;
+      wrap.appendChild(el);
+      let top = -40, vel = 2.5 + Math.random() * 3, drift = (Math.random()-0.5)*1.5, opacity = 1;
+      let left = parseFloat(el.style.left);
+      const tick = setInterval(() => {
+        top += vel; left += drift; opacity -= 0.006;
+        el.style.top = top + 'px';
+        el.style.left = left + '%';
+        el.style.opacity = opacity;
+        if (top > window.innerHeight + 50 || opacity <= 0) { clearInterval(tick); el.remove(); }
+      }, 16);
+    }, i * 35);
+  }
+}
+</script>
+</body>
+</html>

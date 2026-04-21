@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Liechtenstein</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue-dark:  #002B7F;
+    --blue-mid:   #1a4aa0;
+    --blue-light: #d0daf5;
+    --blue-pale:  #edf1fc;
+    --red-dark:   #8B0000;
+    --red-mid:    #C0392B;
+    --red-light:  #f5d0d0;
+    --red-pale:   #fdf0f0;
+    --gold:       #D4AF37;
+    --gold-light: #f5e89a;
+    --gold-pale:  #fdf9e8;
+    --text:       #0d1a3a;
+    --text-muted: #3a5080;
+    --white:      #ffffff;
+    --correct-bg: #eaf5e0;
+    --correct-br: #7ab86a;
+    --wrong-bg:   #fdf0ee;
+    --wrong-br:   #e8a090;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    background: var(--blue-pale);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  #bg-canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    background: var(--blue-dark);
+    border-bottom: 4px solid var(--gold);
+    padding: 1.75rem 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  header h1 {
+    font-family: 'Lora', serif;
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--gold);
+    letter-spacing: 0.5px;
+  }
+
+  header p {
+    font-size: 0.95rem;
+    color: var(--blue-light);
+  }
+
+  main {
+    display: grid;
+    grid-template-columns: 60fr 40fr;
+    min-height: calc(100vh - 94px);
+    position: relative;
+    z-index: 1;
+  }
+
+  .text-col {
+    padding: 2.5rem 4rem 3rem 4rem;
+    border-right: 1px solid var(--blue-light);
+  }
+
+  .q-col {
+    padding: 2.5rem 3.5rem 3rem 3.5rem;
+    background: #f5f0fb;
+    border-left: 1px solid var(--blue-light);
+  }
+
+  .part { margin-bottom: 2rem; }
+
+  .part-label {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: var(--blue-dark);
+    border: 1px solid var(--gold);
+    padding: 4px 14px;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+  }
+
+  .text-block {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--text);
+    background: var(--white);
+    border: 1px solid var(--blue-light);
+    border-top: 3px solid var(--blue-mid);
+    border-radius: 0 0 8px 8px;
+    padding: 1.1rem 1.4rem;
+  }
+
+  .q-heading {
+    font-family: 'Lora', serif;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--blue-dark);
+    margin-bottom: 0.3rem;
+  }
+
+  .q-instr {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+    line-height: 1.55;
+  }
+
+  .q-item {
+    background: var(--white);
+    border: 1px solid var(--blue-light);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.6rem;
+    transition: border-color 0.15s;
+  }
+
+  .q-item.correct { border-color: var(--correct-br); background: var(--correct-bg); }
+  .q-item.wrong   { border-color: var(--wrong-br);   background: var(--wrong-bg); }
+
+  .q-text {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .q-num { color: var(--gold); font-weight: 700; margin-right: 5px; }
+
+  .opts { display: flex; gap: 6px; flex-wrap: wrap; }
+
+  .opt {
+    font-size: 0.78rem;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--blue-light);
+    background: var(--blue-pale);
+    color: var(--blue-dark);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .opt:hover { background: var(--blue-light); border-color: var(--blue-mid); }
+  .opt.selected { background: var(--blue-dark); border-color: var(--blue-dark); color: var(--gold); }
+  .opt.correct-final { background: #5a9850; border-color: #3a7030; color: #fff; }
+  .opt.wrong-final   { background: var(--red-mid); border-color: var(--red-dark); color: #fff; }
+
+  .check-btn {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
+    border-radius: 6px;
+    border: 1px solid var(--blue-light);
+    background: var(--blue-pale);
+    color: #a0b0d0;
+    cursor: not-allowed;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .check-btn.active {
+    background: var(--blue-dark);
+    border-color: var(--gold);
+    color: var(--gold);
+    cursor: pointer;
+  }
+
+  .check-btn.active:hover { background: var(--blue-mid); }
+
+  .result-msg {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    text-align: center;
+    color: var(--text-muted);
+    min-height: 1.2rem;
+  }
+
+  .result-msg.perfect { color: var(--blue-dark); font-weight: 700; font-size: 1rem; }
+  .result-msg.partial { color: var(--red-mid); font-weight: 600; }
+
+  #confetti-wrap {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 999;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div id="confetti-wrap"></div>
+
+<header>
+  <h1>Liechtenstein</h1>
+  <p>Les teksten og avgjør hvilken del hvert utsagn hører til.</p>
+</header>
+
+<main>
+  <div class="text-col">
+
+    <div class="part">
+      <div class="part-label">Del 1</div>
+      <div class="text-block">
+        Liechtenstein ist einer der kleinsten Staaten der Welt. Das Land liegt zwischen der Schweiz und Österreich und hat eine Fläche von nur 160 Quadratkilometern – kleiner als viele deutsche Städte. Trotzdem ist Liechtenstein kein unbedeutendes Land. Mit rund 39.000 Einwohnern hat es eine der höchsten Bevölkerungsdichten Europas, und das Bruttoinlandsprodukt pro Kopf gehört zu den höchsten weltweit. Das Land wird seit Jahrhunderten von der Fürstenfamilie Liechtenstein regiert. Sie gab dem Staat nicht nur seinen Namen, sondern auch ein ungewöhnliches politisches System. Der regierende Fürst hat weitreichende Machtbefugnisse – er kann zum Beispiel das Parlament auflösen und Gesetze per Veto blockieren. Gleichzeitig haben die Bürger das Recht, den Fürsten durch eine Volksabstimmung abzusetzen, was Liechtenstein zu einer außergewöhnlichen Mischung aus Monarchie und direkter Demokratie macht.
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-label">Del 2</div>
+      <div class="text-block">
+        Obwohl Liechtenstein so klein ist, hat es eine bemerkenswert starke Wirtschaft. Das Land ist vor allem für seine Finanzdienstleistungen bekannt – viele internationale Unternehmen haben hier ihren Sitz, unter anderem wegen der niedrigen Steuern und der politischen Stabilität. Daneben spielt die Industrie eine wichtige Rolle: Liechtenstein exportiert hochwertige Produkte wie Präzisionsmaschinen, Zahntechnik und Spezialwerkzeuge in die ganze Welt. Interessanterweise hat das Land keine eigene Armee mehr – diese wurde 1868 nach einem Krieg abgeschafft, an dem Liechtenstein zwar teilgenommen, aber keine Verluste erlitten hat. Alle 80 Soldaten kehrten zurück – und brachten sogar einen zusätzlichen Mann mit, der sich ihnen unterwegs angeschlossen hatte.
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-label">Del 3</div>
+      <div class="text-block">
+        Im Alltag unterscheidet sich Liechtenstein in mancher Hinsicht von seinen Nachbarländern. Die Amtssprache ist Deutsch, genauer gesagt ein alemannischer Dialekt, der dem Schweizerdeutschen ähnelt. Das Land hat keine eigene Währung – es verwendet den Schweizer Franken – und ist zwar Mitglied des Europäischen Wirtschaftsraums, aber nicht der Europäischen Union. Kulturell ist Liechtenstein stolz auf seine Kunstsammlung: Das Fürstenhaus besitzt eine der bedeutendsten Privatsammlungen Europas mit Werken von Rubens, van Dyck und Raffael. Für Touristen ist das Land vor allem wegen seiner Berglandschaft, mittelalterlichen Burgen und dem entspannten Lebensstil attraktiv. Wer das Land besucht, braucht übrigens keinen Grenzstempel im Pass – sowohl die Grenze zur Schweiz als auch die zu Österreich sind offen.
+      </div>
+    </div>
+
+  </div>
+
+  <div class="q-col">
+    <p class="q-heading">I hvilken del finner du dette?</p>
+    <p class="q-instr">Velg Del 1, 2 eller 3 for hvert utsagn. Når alle utsagn er besvart, kan du sjekke svarene.</p>
+    <div id="questions"></div>
+    <button class="check-btn" id="checkBtn" disabled onclick="checkAnswers()">Sjekk svarene</button>
+    <div class="result-msg" id="resultMsg"></div>
+  </div>
+</main>
+
+<script>
+const questions = [
+  { text: "Til tross for sin størrelse er Liechtenstein et velstående land.", answer: "1" },
+  { text: "Landets militære historie er ikke særlig blodig.", answer: "2" },
+  { text: "Liechtenstein har tette bånd til Sveits når det gjelder penger.", answer: "3" },
+  { text: "På hver sine måter har både fyrsten og folket betydelig makt.", answer: "1" },
+  { text: "Landet eksporterer avanserte industriprodukter til hele verden.", answer: "2" },
+  { text: "Liechtenstein deltar i europeisk økonomi, men har holdt seg utenfor EU.", answer: "3" },
+  { text: "Landets politiske system er vanskelig å plassere i én bestemt kategori.", answer: "1" },
+  { text: "Mange utenlandske selskaper har valgt Liechtenstein som base av praktiske årsaker.", answer: "2" },
+  { text: "Kunstinteresserte kan bli imponert over hva fyrstefamilien eier.", answer: "3" },
+  { text: "Det er enkelt å reise inn og ut av landet uten formaliteter.", answer: "3" }
+];
+
+const selected = {};
+const container = document.getElementById('questions');
+
+questions.forEach((q, i) => {
+  const div = document.createElement('div');
+  div.className = 'q-item';
+  div.id = 'q' + i;
+  div.innerHTML = `<div class="q-text"><span class="q-num">${i+1}.</span>${q.text}</div>
+    <div class="opts">
+      <button class="opt" onclick="pick(${i},'1',this)">Del 1</button>
+      <button class="opt" onclick="pick(${i},'2',this)">Del 2</button>
+      <button class="opt" onclick="pick(${i},'3',this)">Del 3</button>
+    </div>`;
+  container.appendChild(div);
+});
+
+function pick(i, val, btn) {
+  btn.parentElement.querySelectorAll('.opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selected[i] = val;
+  if (Object.keys(selected).length === questions.length) {
+    const cb = document.getElementById('checkBtn');
+    cb.classList.add('active');
+    cb.disabled = false;
+  }
+}
+
+function checkAnswers() {
+  let correct = 0;
+  questions.forEach((q, i) => {
+    const item = document.getElementById('q' + i);
+    item.querySelectorAll('.opt').forEach(b => {
+      const v = b.textContent.replace('Del ', '');
+      if (v === q.answer) b.classList.add('correct-final');
+      if (v === selected[i] && selected[i] !== q.answer) b.classList.add('wrong-final');
+    });
+    if (selected[i] === q.answer) { correct++; item.classList.add('correct'); }
+    else item.classList.add('wrong');
+  });
+  const msg = document.getElementById('resultMsg');
+  if (correct === questions.length) {
+    msg.textContent = 'Perfekt! Alle riktige!';
+    msg.className = 'result-msg perfect';
+    launchCrowns();
+  } else {
+    msg.textContent = correct + ' av ' + questions.length + ' riktige. Riktige svar er markert i grønt.';
+    msg.className = 'result-msg partial';
+  }
+  document.getElementById('checkBtn').disabled = true;
+}
+
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = document.body.scrollHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', () => { resizeCanvas(); drawBg(); });
+
+function drawCrown(x, y, w, col) {
+  const h = w * 0.7;
+  ctx.fillStyle = col;
+  ctx.beginPath();
+  ctx.moveTo(x, y + h);
+  ctx.lineTo(x, y + h * 0.45);
+  ctx.lineTo(x + w * 0.2, y + h * 0.7);
+  ctx.lineTo(x + w * 0.35, y);
+  ctx.lineTo(x + w * 0.5, y + h * 0.55);
+  ctx.lineTo(x + w * 0.65, y);
+  ctx.lineTo(x + w * 0.8, y + h * 0.7);
+  ctx.lineTo(x + w, y + h * 0.45);
+  ctx.lineTo(x + w, y + h);
+  ctx.closePath();
+  ctx.fill();
+}
+
+const bgCrowns = [];
+const bgColors = ['#d0daf5','#f5d0d0','#f5e89a','#c8d8f0','#f0c8c8'];
+for (let i = 0; i < 20; i++) {
+  bgCrowns.push({
+    x: Math.random() * 1600,
+    y: Math.random() * 2400,
+    w: 18 + Math.random() * 24,
+    col: bgColors[Math.floor(Math.random() * bgColors.length)]
+  });
+}
+
+function drawBg() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  bgCrowns.forEach(c => drawCrown(c.x, c.y, c.w, c.col));
+}
+drawBg();
+
+function crownSVG(size, color) {
+  const w = size, h = size * 0.7;
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="0,${h} 0,${h*0.45} ${w*0.2},${h*0.7} ${w*0.35},0 ${w*0.5},${h*0.55} ${w*0.65},0 ${w*0.8},${h*0.7} ${w},${h*0.45} ${w},${h}" fill="${color}"/>
+  </svg>`;
+}
+
+function launchCrowns() {
+  const wrap = document.getElementById('confetti-wrap');
+  const colors = ['#D4AF37','#002B7F','#C0392B','#f5e89a','#a0b8e8','#f0a0a0','#fff7cc'];
+  for (let i = 0; i < 55; i++) {
+    setTimeout(() => {
+      const size = 16 + Math.floor(Math.random() * 4) * 6;
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const el = document.createElement('div');
+      el.style.cssText = `position:absolute;left:${Math.random()*100}%;top:-${size}px;width:${size}px;height:${size*0.7}px;`;
+      el.innerHTML = crownSVG(size, color);
+      wrap.appendChild(el);
+      let top = -size, vel = 2.5 + Math.random() * 3;
+      let drift = (Math.random() - 0.5) * 1.8;
+      let opacity = 1, rot = Math.random() * 30 - 15, rotV = (Math.random()-0.5)*2;
+      let left = parseFloat(el.style.left);
+      const tick = setInterval(() => {
+        top += vel; left += drift; opacity -= 0.006; rot += rotV;
+        el.style.top = top + 'px';
+        el.style.left = left + '%';
+        el.style.opacity = opacity;
+        el.style.transform = `rotate(${rot}deg)`;
+        if (top > window.innerHeight + size || opacity <= 0) { clearInterval(tick); el.remove(); }
+      }, 16);
+    }, i * 30);
+  }
+}
+</script>
+</body>
+</html>

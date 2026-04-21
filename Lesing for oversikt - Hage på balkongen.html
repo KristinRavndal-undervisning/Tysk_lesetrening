@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auf dem Balkon</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-pale: #f0f7ee;
+    --green-light: #d8efd4;
+    --green-mid: #7ab86a;
+    --green-dark: #3a6b2a;
+    --green-muted: #6a8f60;
+    --lav-pale: #f3f0fa;
+    --lav-light: #e2d9f5;
+    --lav-mid: #b392d8;
+    --lav-dark: #4a3570;
+    --lav-muted: #7a6490;
+    --text: #2a3520;
+    --text-muted: #5a6e50;
+    --border-green: #c2ddb8;
+    --border-lav: #d8cff0;
+    --white: #ffffff;
+    --correct: #7ab86a;
+    --correct-bg: #f2faee;
+    --correct-border: #9dc88a;
+    --wrong: #e06858;
+    --wrong-bg: #fdf0ee;
+    --wrong-border: #e8a090;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    background: #f5f9f3;
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    position: relative;
+  }
+
+  #bg-canvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    background: var(--green-light);
+    border-bottom: 2px solid var(--border-green);
+    padding: 1.75rem 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  header h1 {
+    font-family: 'Lora', serif;
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--green-dark);
+    letter-spacing: 0.2px;
+  }
+
+  header p {
+    font-size: 0.95rem;
+    color: var(--green-muted);
+  }
+
+  main {
+    display: grid;
+    grid-template-columns: 60fr 40fr;
+    min-height: calc(100vh - 90px);
+    position: relative;
+    z-index: 1;
+  }
+
+  .text-col {
+    padding: 2.5rem 4rem 3rem 4rem;
+    border-right: 1px solid var(--border-green);
+  }
+
+  .q-col {
+    padding: 2.5rem 3.5rem 3rem 3.5rem;
+    background: var(--lav-pale);
+    border-left: 1px solid var(--border-lav);
+  }
+
+  .part { margin-bottom: 2rem; }
+
+  .part-label {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--green-mid);
+    padding: 4px 14px 4px 12px;
+    border-radius: 20px 20px 20px 4px;
+    margin-bottom: 0.75rem;
+    position: relative;
+  }
+
+  .part-label::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 10px;
+    width: 0; height: 0;
+    border-left: 6px solid transparent;
+    border-right: 2px solid transparent;
+    border-top: 6px solid var(--green-mid);
+  }
+
+  .exchange { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .line { display: flex; flex-direction: column; gap: 2px; }
+
+  .speaker {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-left: 14px;
+  }
+
+  .speaker.lea { color: var(--lav-dark); }
+  .speaker.jonas { color: var(--green-dark); }
+
+  .bubble {
+    font-family: 'Lora', serif;
+    font-size: 0.97rem;
+    line-height: 1.82;
+    padding: 0.9rem 1.2rem;
+    border-radius: 18px;
+    max-width: 96%;
+    position: relative;
+  }
+
+  .bubble.lea {
+    background: var(--lav-light);
+    border: 1px solid var(--border-lav);
+    border-radius: 4px 18px 18px 18px;
+    color: var(--lav-dark);
+    align-self: flex-start;
+  }
+
+  .bubble.jonas {
+    background: var(--green-light);
+    border: 1px solid var(--border-green);
+    border-radius: 18px 4px 18px 18px;
+    color: var(--green-dark);
+    align-self: flex-end;
+  }
+
+  .q-heading {
+    font-family: 'Lora', serif;
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--lav-dark);
+    margin-bottom: 0.3rem;
+  }
+
+  .q-instr {
+    font-size: 0.85rem;
+    color: var(--lav-muted);
+    margin-bottom: 1.25rem;
+    line-height: 1.55;
+  }
+
+  .q-item {
+    background: var(--white);
+    border: 1px solid var(--border-lav);
+    border-radius: 14px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.6rem;
+    transition: border-color 0.15s;
+  }
+
+  .q-item.correct { border-color: var(--correct-border); background: var(--correct-bg); }
+  .q-item.wrong { border-color: var(--wrong-border); background: var(--wrong-bg); }
+
+  .q-text {
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .q-num { color: var(--lav-mid); font-weight: 700; margin-right: 5px; }
+
+  .opts { display: flex; gap: 6px; }
+
+  .opt {
+    font-size: 0.78rem;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border-lav);
+    background: var(--lav-pale);
+    color: var(--lav-dark);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .opt:hover { background: var(--lav-light); border-color: var(--lav-mid); }
+  .opt.selected { background: var(--lav-mid); border-color: var(--lav-dark); color: #fff; }
+  .opt.correct-final { background: var(--correct); border-color: #5a9850; color: #fff; }
+  .opt.wrong-final { background: var(--wrong); border-color: #c04840; color: #fff; }
+
+  .check-btn {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600;
+    border-radius: 24px;
+    border: 1px solid var(--border-lav);
+    background: var(--lav-light);
+    color: #b0a0c8;
+    cursor: not-allowed;
+    transition: all 0.2s;
+  }
+
+  .check-btn.active {
+    background: var(--lav-mid);
+    border-color: var(--lav-dark);
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .check-btn.active:hover { background: var(--lav-dark); }
+
+  .result-msg {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    text-align: center;
+    color: var(--lav-muted);
+    min-height: 1.2rem;
+  }
+
+  .result-msg.perfect { color: var(--green-dark); font-weight: 700; font-size: 1rem; }
+  .result-msg.partial { color: #c87a40; font-weight: 600; }
+
+  #confetti-wrap {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 999;
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div id="confetti-wrap"></div>
+
+<header>
+  <h1>Auf dem Balkon</h1>
+  <p>Les teksten og avgjør hvilken del hvert utsagn hører til.</p>
+</header>
+
+<main>
+  <div class="text-col">
+
+    <div class="part">
+      <div class="part-label">Del 1</div>
+      <div class="exchange">
+        <div class="line">
+          <span class="speaker lea">Lea</span>
+          <div class="bubble lea">Ich kann es immer noch nicht glauben, dass du auf deinem Balkon genug Tomaten für den ganzen Sommer angebaut hast. Wie hast du das geschafft?</div>
+        </div>
+        <div class="line">
+          <span class="speaker jonas">Jonas</span>
+          <div class="bubble jonas">Es hat ein paar Jahre gedauert, bis ich verstanden habe, wie es funktioniert. Am Anfang habe ich alles falsch gemacht – zu viel gegossen, zu wenig Sonne, falsche Erde. Aber irgendwann habe ich angefangen, Bücher darüber zu lesen und mich mit anderen Balkongärtnern in Online-Foren auszutauschen. Seitdem läuft es viel besser.</div>
+        </div>
+        <div class="line">
+          <span class="speaker lea">Lea</span>
+          <div class="bubble lea">Das kenne ich gut. Ich habe letztes Jahr meine ersten Radieschen verloren, weil ich nicht wusste, dass sie so viel Wasser brauchen. Jetzt habe ich eine kleine Tabelle, wo ich jeden Tag aufschreibe, wann ich gegossen habe und wie die Pflanzen aussehen.</div>
+        </div>
+        <div class="line">
+          <span class="speaker jonas">Jonas</span>
+          <div class="bubble jonas">Eine Tabelle! Das ist eine gute Idee. Ich mache das alles noch aus dem Gedächtnis, aber ich vergesse manchmal Dinge.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-label">Del 2</div>
+      <div class="exchange">
+        <div class="line">
+          <span class="speaker lea">Lea</span>
+          <div class="bubble lea">Was baust du dieses Jahr alles an?</div>
+        </div>
+        <div class="line">
+          <span class="speaker jonas">Jonas</span>
+          <div class="bubble jonas">Tomaten natürlich, aber auch Zucchini, Paprika, Basilikum und drei verschiedene Salatsorten. Ich habe auch zum ersten Mal Bohnen versucht – die brauchen eine Kletterhilfe, also habe ich ein kleines Gestell gebaut. Meine Nachbarin hat mich komisch angeschaut, als sie das gesehen hat, aber jetzt fragt sie mich ständig nach Tipps.</div>
+        </div>
+        <div class="line">
+          <span class="speaker lea">Lea</span>
+          <div class="bubble lea">Ha! Bei mir war es mein Mann. Er hat am Anfang gelacht und gesagt, wir werden nie genug ernten, um beim Einkaufen zu sparen. Aber letzten Sommer haben wir von Juni bis September kaum Gemüse gekauft. Das hat ihn dann doch überzeugt.</div>
+        </div>
+        <div class="line">
+          <span class="speaker jonas">Jonas</span>
+          <div class="bubble jonas">Genau das ist das Schöne daran. Es geht mir gar nicht nur ums Geld. Es geht mir darum, zu wissen, was in meinem Essen steckt. Keine Pestizide, kein weiter Transportweg. Ich ernte morgens und esse abends – das schmeckt einfach anders.</div>
+        </div>
+        <div class="line">
+          <span class="speaker lea">Lea</span>
+          <div class="bubble lea">Absolut. Und es macht auch etwas mit dem Kopf. Wenn ich nach einem langen Arbeitstag auf dem Balkon stehe und die Pflanzen gieße, vergesse ich alles andere.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-label">Del 3</div>
+      <div class="exchange">
+        <div class="line">
+          <span class="speaker jonas">Jonas</span>
+          <div class="bubble jonas">Hast du Probleme mit Schädlingen gehabt?</div>
+        </div>
+        <div class="line">
+          <span class="speaker lea">Lea</span>
+          <div class="bubble lea">Letztes Jahr war es schlimm. Blattläuse auf fast allem. Ich habe dann eine Lösung aus Wasser und Spülmittel ausprobiert – das hat geholfen, aber ich musste es mehrmals anwenden. Dieses Jahr habe ich extra Lavendel und Ringelblumen dazwischen gepflanzt. Die locken nützliche Insekten an, die dann die Blattläuse fressen.</div>
+        </div>
+        <div class="line">
+          <span class="speaker jonas">Jonas</span>
+          <div class="bubble jonas">Das ist clever. Ich hatte eher Probleme mit zu wenig Platz. Mein Balkon ist nur vier Quadratmeter groß, also musste ich lernen, in die Höhe zu denken. Hängende Töpfe, Hochbeete auf Rollen, Pflanzen, die man stapeln kann. Jetzt sieht es aus wie ein kleiner Dschungel da draußen, aber es funktioniert.</div>
+        </div>
+        <div class="line">
+          <span class="speaker lea">Lea</span>
+          <div class="bubble lea">Ich finde, das ist auch das Schönste daran – man wird immer kreativer. Jedes Jahr lerne ich etwas Neues und freue mich schon auf die nächste Saison.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="q-col">
+    <p class="q-heading">I hvilken del finner du dette?</p>
+    <p class="q-instr">Velg Del 1, 2 eller 3 for hvert utsagn. Når alle utsagn er besvart, kan du sjekke svarene.</p>
+    <div id="questions"></div>
+    <button class="check-btn" id="checkBtn" disabled onclick="checkAnswers()">Sjekk svarene</button>
+    <div class="result-msg" id="resultMsg"></div>
+  </div>
+</main>
+
+<script>
+const questions = [
+  { text: "Jonas har lært mye av andre med samme interesse.", answer: "1" },
+  { text: "Lea holder systematisk oversikt over stellet av plantene sine.", answer: "1" },
+  { text: "En av dem har plantet blomster strategisk for å bekjempe skadedyr.", answer: "3" },
+  { text: "Jonas er opptatt av mer enn bare det økonomiske ved å dyrke selv.", answer: "2" },
+  { text: "Begge har opplevd skepsis fra noen i nærheten, men snudd den til noe positivt.", answer: "2" },
+  { text: "Plassmangel har tvunget Jonas til å tenke annerledes om hvordan han utnytter balkongen.", answer: "3" },
+  { text: "Lea beskriver hagearbeidet som noe som hjelper henne å koble av.", answer: "2" },
+  { text: "Jonas innrømmer at han ikke alltid er like nøye med å holde orden på rutinene sine.", answer: "1" }
+];
+
+const selected = {};
+const container = document.getElementById('questions');
+
+questions.forEach((q, i) => {
+  const div = document.createElement('div');
+  div.className = 'q-item';
+  div.id = 'q' + i;
+  div.innerHTML = `<div class="q-text"><span class="q-num">${i+1}.</span>${q.text}</div>
+    <div class="opts">
+      <button class="opt" onclick="pick(${i},'1',this)">Del 1</button>
+      <button class="opt" onclick="pick(${i},'2',this)">Del 2</button>
+      <button class="opt" onclick="pick(${i},'3',this)">Del 3</button>
+    </div>`;
+  container.appendChild(div);
+});
+
+function pick(i, val, btn) {
+  btn.parentElement.querySelectorAll('.opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selected[i] = val;
+  if (Object.keys(selected).length === questions.length) {
+    const cb = document.getElementById('checkBtn');
+    cb.classList.add('active');
+    cb.disabled = false;
+  }
+}
+
+function checkAnswers() {
+  let correct = 0;
+  questions.forEach((q, i) => {
+    const item = document.getElementById('q' + i);
+    item.querySelectorAll('.opt').forEach(b => {
+      const v = b.textContent.replace('Del ', '');
+      if (v === q.answer) b.classList.add('correct-final');
+      if (v === selected[i] && selected[i] !== q.answer) b.classList.add('wrong-final');
+    });
+    if (selected[i] === q.answer) { correct++; item.classList.add('correct'); }
+    else item.classList.add('wrong');
+  });
+  const msg = document.getElementById('resultMsg');
+  if (correct === questions.length) {
+    msg.textContent = 'Perfekt! Alle riktige!';
+    msg.className = 'result-msg perfect';
+    launchFlowerConfetti();
+  } else {
+    msg.textContent = correct + ' av ' + questions.length + ' riktige. Riktige svar er markert i grønt.';
+    msg.className = 'result-msg partial';
+  }
+  document.getElementById('checkBtn').disabled = true;
+}
+
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = document.body.scrollHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', () => { resizeCanvas(); drawBg(); });
+
+function drawFlower(x, y, r, petalColor, centerColor) {
+  const petals = 5;
+  for (let i = 0; i < petals; i++) {
+    const angle = (i / petals) * Math.PI * 2;
+    const px = x + Math.cos(angle) * r * 0.9;
+    const py = y + Math.sin(angle) * r * 0.9;
+    ctx.beginPath();
+    ctx.arc(px, py, r * 0.55, 0, Math.PI * 2);
+    ctx.fillStyle = petalColor;
+    ctx.fill();
+  }
+  ctx.beginPath();
+  ctx.arc(x, y, r * 0.42, 0, Math.PI * 2);
+  ctx.fillStyle = centerColor;
+  ctx.fill();
+}
+
+const bgFlowers = [];
+const petalPalette = [
+  ['#e2d9f5','#f5eaff'],
+  ['#d8efd4','#eafae6'],
+  ['#faebd4','#fff4e6'],
+  ['#f5d9e8','#ffe6f2'],
+  ['#d4e8f5','#e6f4ff'],
+];
+for (let i = 0; i < 22; i++) {
+  const pal = petalPalette[Math.floor(Math.random() * petalPalette.length)];
+  bgFlowers.push({
+    x: Math.random() * 1600,
+    y: Math.random() * 2400,
+    r: 10 + Math.random() * 18,
+    petal: pal[0],
+    center: pal[1]
+  });
+}
+
+function drawBg() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  bgFlowers.forEach(f => drawFlower(f.x, f.y, f.r, f.petal, f.center));
+}
+drawBg();
+
+function launchFlowerConfetti() {
+  const wrap = document.getElementById('confetti-wrap');
+  const palette = [
+    { petal: '#c9a8e8', center: '#f0e0ff' },
+    { petal: '#a8d8a0', center: '#d4f0cc' },
+    { petal: '#f0a8c8', center: '#ffe0ee' },
+    { petal: '#f0d890', center: '#fff8cc' },
+    { petal: '#a8c8f0', center: '#ddeeff' },
+    { petal: '#e8b8a0', center: '#fde8d8' },
+  ];
+
+  for (let i = 0; i < 48; i++) {
+    setTimeout(() => {
+      const r = 8 + Math.floor(Math.random() * 3) * 4;
+      const col = palette[Math.floor(Math.random() * palette.length)];
+      const size = r * 4;
+      const el = document.createElement('div');
+      el.style.cssText = `position:absolute;width:${size}px;height:${size}px;left:${Math.random()*100}%;top:-${size}px;`;
+
+      const cx = size / 2, cy = size / 2;
+      let svgPetals = '';
+      for (let p = 0; p < 5; p++) {
+        const angle = (p / 5) * Math.PI * 2;
+        const px = cx + Math.cos(angle) * r * 0.9;
+        const py = cy + Math.sin(angle) * r * 0.9;
+        svgPetals += `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="${(r*0.55).toFixed(1)}" fill="${col.petal}"/>`;
+      }
+      el.innerHTML = `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" xmlns="http://www.w3.org/2000/svg">
+        ${svgPetals}
+        <circle cx="${cx}" cy="${cy}" r="${(r*0.42).toFixed(1)}" fill="${col.center}"/>
+      </svg>`;
+      wrap.appendChild(el);
+
+      let top = -size, vel = 2 + Math.random() * 3;
+      let drift = (Math.random() - 0.5) * 1.8;
+      let opacity = 1, rot = Math.random() * 360, rotV = (Math.random()-0.5)*3;
+      let left = parseFloat(el.style.left);
+
+      const tick = setInterval(() => {
+        top += vel; left += drift; opacity -= 0.006; rot += rotV;
+        el.style.top = top + 'px';
+        el.style.left = left + '%';
+        el.style.opacity = opacity;
+        el.style.transform = `rotate(${rot}deg)`;
+        if (top > window.innerHeight + size || opacity <= 0) { clearInterval(tick); el.remove(); }
+      }, 16);
+    }, i * 35);
+  }
+}
+</script>
+</body>
+</html>
