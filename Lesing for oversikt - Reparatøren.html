@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Der Reparateur – Leseoppgave</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500&family=Source+Sans+3:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #f5f2eb;
+    --cream-dark: #ede9df;
+    --green: #3B6D11;
+    --green-mid: #639922;
+    --green-light: #C0DD97;
+    --green-pale: #EAF3DE;
+    --brown: #5a4a35;
+    --brown-light: #8a7a65;
+    --orange: #D85A30;
+    --orange-pale: #FAECE7;
+    --text: #2a2318;
+    --text-muted: #6b5d4e;
+    --border: rgba(90,74,53,0.15);
+    --border-mid: rgba(90,74,53,0.25);
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    background: var(--cream);
+    color: var(--text);
+    font-family: 'Source Sans 3', sans-serif;
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--green);
+    padding: 1.25rem 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    text-align: center;
+  }
+
+  header h1 {
+    font-family: 'Lora', serif;
+    font-size: 1.75rem;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: -0.2px;
+  }
+
+  header p {
+    font-size: 0.9rem;
+    color: var(--green-light);
+    font-weight: 400;
+  }
+
+  main {
+    display: grid;
+    grid-template-columns: 60fr 40fr;
+    gap: 0;
+    max-width: 100%;
+    min-height: calc(100vh - 70px);
+  }
+
+  .text-col {
+    padding: 2.5rem 4rem 3rem 4rem;
+    border-right: 1px solid var(--border-mid);
+    background: var(--cream);
+  }
+
+  .q-col {
+    padding: 2.5rem 3.5rem 3rem 3.5rem;
+    background: var(--cream-dark);
+  }
+
+  .part {
+    margin-bottom: 2rem;
+  }
+
+  .part:last-child { margin-bottom: 0; }
+
+  .part-label {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--green);
+    background: var(--green-pale);
+    border: 1px solid var(--green-light);
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 0.75rem;
+  }
+
+  .text-block {
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text);
+    background: #fff;
+    border-left: 3px solid var(--green-mid);
+    padding: 1.1rem 1.4rem;
+  }
+
+  .text-block p { margin-bottom: 0.9rem; }
+  .text-block p:last-child { margin-bottom: 0; }
+
+  .text-block strong {
+    font-weight: 600;
+    color: var(--green);
+  }
+
+  .q-heading {
+    font-family: 'Lora', serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.3rem;
+  }
+
+  .q-instr {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.55;
+  }
+
+  .q-item {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.6rem;
+    transition: border-color 0.2s;
+  }
+
+  .q-item.correct { border-color: var(--green-mid); background: var(--green-pale); }
+  .q-item.wrong { border-color: var(--orange); background: var(--orange-pale); }
+
+  .q-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+
+  .q-num {
+    font-weight: 600;
+    color: var(--green);
+    margin-right: 4px;
+  }
+
+  .opts { display: flex; gap: 6px; }
+
+  .opt {
+    font-size: 0.8rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border-mid);
+    background: var(--cream);
+    color: var(--brown);
+    cursor: pointer;
+    font-family: 'Source Sans 3', sans-serif;
+    transition: all 0.15s;
+  }
+
+  .opt:hover { background: var(--green-light); border-color: var(--green-mid); color: var(--green); }
+  .opt.selected { background: var(--green-mid); border-color: var(--green); color: #fff; }
+  .opt.correct-final { background: var(--green); border-color: var(--green); color: #fff; }
+  .opt.wrong-final { background: var(--orange); border-color: var(--orange); color: #fff; }
+
+  .check-btn {
+    margin-top: 1.1rem;
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    font-family: 'Source Sans 3', sans-serif;
+    font-weight: 500;
+    border-radius: 8px;
+    border: 1px solid var(--border-mid);
+    background: var(--cream-dark);
+    color: var(--brown-light);
+    cursor: not-allowed;
+    transition: all 0.2s;
+    letter-spacing: 0.2px;
+  }
+
+  .check-btn.active {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+    cursor: pointer;
+  }
+
+  .check-btn.active:hover { background: #2d5209; }
+
+  .result-msg {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    text-align: center;
+    color: var(--text-muted);
+    min-height: 1.2rem;
+  }
+
+  .result-msg.perfect { color: var(--green); font-weight: 600; font-size: 1rem; }
+  .result-msg.partial { color: #854F0B; font-weight: 500; }
+
+  #confetti-wrap {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 999;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Der Reparateur</h1>
+  <p>Les teksten og avgjør hvilken del hvert utsagn hører til.</p>
+</header>
+
+<div id="confetti-wrap"></div>
+
+<main>
+  <div class="text-col">
+
+    <div class="part">
+      <div class="part-label">Del 1</div>
+      <div class="text-block">
+        <p>Fabian Krause ist kein gewöhnlicher Café-Besitzer. In seinem Laden in Freiburg kann man kaputte Dinge reparieren lassen – und dabei einen Kaffee trinken.</p>
+        <p><strong>Herr Krause, wie ist die Idee zu einem Reparatur-Café entstanden?</strong> Fabian Krause: Ich habe früher als Ingenieur gearbeitet und gesehen, wie viele funktionierende Geräte einfach weggeworfen werden. Das fand ich schade und auch problematisch für die Umwelt. Irgendwann habe ich gedacht: Warum nicht einen Ort schaffen, wo Menschen ihre kaputten Sachen mitbringen und reparieren lassen können? Seit 2019 gibt es mein Café, und ich bin sehr zufrieden damit.</p>
+        <p><strong>Wer repariert die Sachen?</strong> Das sind meistens freiwillige Helfer – Rentner, Studenten, Handwerker. Sie kommen regelmäßig und helfen gern. Ohne sie wäre das Café nicht möglich.</p>
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-label">Del 2</div>
+      <div class="text-block">
+        <p><strong>Was bringen die Menschen typischerweise mit?</strong> Oh, alles Mögliche! Kaffeemaschinen, Fahrräder, alte Radios, Kleidung – manchmal sogar Spielzeug. Am häufigsten kommen Leute mit elektronischen Geräten. Viele haben keine Ahnung, dass so ein kleines Problem oft in zwanzig Minuten gelöst werden kann. Sie sind dann immer sehr überrascht und glücklich.</p>
+        <p><strong>Verdienen Sie gut damit?</strong> Nein, das Café ist kein normales Geschäft. Die Gäste bezahlen nur für den Kaffee und vielleicht ein Stück Kuchen. Für die Reparatur selbst gibt es keinen festen Preis – die meisten geben etwas freiwillig. Es geht mir nicht ums Geld, sondern um die Idee dahinter.</p>
+      </div>
+    </div>
+
+    <div class="part">
+      <div class="part-label">Del 3</div>
+      <div class="text-block">
+        <p><strong>Wie reagieren die Menschen in Freiburg auf Ihr Café?</strong> Die Reaktionen sind überwiegend positiv. Viele Leute finden es toll, dass es so einen Ort gibt. Einige kommen auch einfach zum Reden und Kaffeetrinken, ohne etwas reparieren zu lassen. Das Café ist ein bisschen wie ein Treffpunkt geworden.</p>
+        <p><strong>Gibt es auch Kritik?</strong> Manchmal sagen Leute, dass professionelle Reparaturen in einem richtigen Geschäft besser wären. Das verstehe ich, aber ich glaube, wir ergänzen die anderen Handwerksbetriebe – wir konkurrieren nicht mit ihnen. Außerdem geht es uns auch darum, ein Bewusstsein für Nachhaltigkeit zu schaffen.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="q-col">
+    <p class="q-heading">I hvilken del finner du dette?</p>
+    <p class="q-instr">Velg Del 1, 2 eller 3 for hvert utsagn. Når alle utsagn er besvart, kan du sjekke svarene.</p>
+    <div id="questions"></div>
+    <button class="check-btn" id="checkBtn" disabled onclick="checkAnswers()">Sjekk svarene</button>
+    <div class="result-msg" id="resultMsg"></div>
+  </div>
+</main>
+
+<script>
+const questions = [
+  { text: "Kundene forventer ofte å bruke lang tid, men blir positivt overrasket.", answer: "2" },
+  { text: "Ideen kom fra hans erfaringer med at brukbare gjenstander ble kastet.", answer: "1" },
+  { text: "Ikke alle som kommer, har med seg noe å reparere.", answer: "3" },
+  { text: "Kundene bestemmer selv hva de vil betale for reparasjonen.", answer: "2" },
+  { text: "Fabian Krause jobbet som ingeniør før han åpnet kaféen.", answer: "1" },
+  { text: "Han mener kaféen utfyller andre håndverksbedrifter framfor å konkurrere med dem.", answer: "3" },
+  { text: "Kaféen er avhengig av folk som jobber gratis.", answer: "1" },
+  { text: "Den vanligste kategorien gjenstander folk tar med er elektronikk.", answer: "2" }
+];
+
+const selected = {};
+const container = document.getElementById('questions');
+
+questions.forEach((q, i) => {
+  const div = document.createElement('div');
+  div.className = 'q-item';
+  div.id = 'q' + i;
+  div.innerHTML = `<div class="q-text"><span class="q-num">${i+1}.</span>${q.text}</div>
+    <div class="opts">
+      <button class="opt" onclick="pick(${i},'1',this)">Del 1</button>
+      <button class="opt" onclick="pick(${i},'2',this)">Del 2</button>
+      <button class="opt" onclick="pick(${i},'3',this)">Del 3</button>
+    </div>`;
+  container.appendChild(div);
+});
+
+function pick(i, val, btn) {
+  btn.parentElement.querySelectorAll('.opt').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selected[i] = val;
+  if (Object.keys(selected).length === questions.length) {
+    const cb = document.getElementById('checkBtn');
+    cb.classList.add('active');
+    cb.disabled = false;
+  }
+}
+
+function checkAnswers() {
+  let correct = 0;
+  questions.forEach((q, i) => {
+    const item = document.getElementById('q' + i);
+    item.querySelectorAll('.opt').forEach(b => {
+      const v = b.textContent.replace('Del ', '');
+      if (v === q.answer) b.classList.add('correct-final');
+      if (v === selected[i] && selected[i] !== q.answer) b.classList.add('wrong-final');
+    });
+    if (selected[i] === q.answer) { correct++; item.classList.add('correct'); }
+    else item.classList.add('wrong');
+  });
+  const msg = document.getElementById('resultMsg');
+  if (correct === questions.length) {
+    msg.textContent = 'Perfekt! Alle riktige!';
+    msg.className = 'result-msg perfect';
+    launchConfetti();
+  } else {
+    msg.textContent = correct + ' av ' + questions.length + ' riktige. Riktige svar er markert i grønt.';
+    msg.className = 'result-msg partial';
+  }
+  document.getElementById('checkBtn').disabled = true;
+}
+
+function launchConfetti() {
+  const colors = ['#639922','#97C459','#C0DD97','#D85A30','#EF9F27','#5DCAA5','#8a7a65'];
+  const wrap = document.getElementById('confetti-wrap');
+  for (let i = 0; i < 120; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      const size = 6 + Math.random() * 6;
+      el.style.cssText = `position:absolute;width:${size}px;height:${size}px;left:${Math.random()*100}%;top:-12px;background:${colors[Math.floor(Math.random()*colors.length)]};transform:rotate(${Math.random()*360}deg);border-radius:${Math.random()>0.5?'50%':'2px'};`;
+      wrap.appendChild(el);
+      let top = -12, vel = 3 + Math.random() * 4, drift = (Math.random() - 0.5) * 1.5, opacity = 1;
+      let left = parseFloat(el.style.left);
+      const tick = setInterval(() => {
+        top += vel; left += drift; opacity -= 0.006;
+        el.style.top = top + 'px';
+        el.style.left = left + '%';
+        el.style.opacity = opacity;
+        if (top > window.innerHeight + 20 || opacity <= 0) { clearInterval(tick); el.remove(); }
+      }, 16);
+    }, i * 20);
+  }
+}
+</script>
+</body>
+</html>
