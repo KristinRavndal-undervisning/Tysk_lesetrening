@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tysk 2 – Leseøvelse</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f5f0f0;
+    --panel-left: #ffffff;
+    --panel-right: #faf3f3;
+    --card: #ffffff;
+    --accent: #c8102e;
+    --accent-dim: #a00d24;
+    --text: #1a1a1a;
+    --text-dim: #6b6b6b;
+    --border: #e0c8cc;
+    --gold: #9a7b2a;
+    --correct: #2e7d4f;
+    --wrong: #c0392b;
+  }
+
+  body {
+    background-color: var(--bg);
+    font-family: 'Nunito', system-ui, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── FOOTBALL HEADER ── */
+  header {
+    background: #c8102e;
+    position: relative;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Grass strip at bottom */
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 6px;
+    background: repeating-linear-gradient(
+      90deg,
+      #2d8a3e 0px, #2d8a3e 18px,
+      #236e31 18px, #236e31 36px
+    );
+  }
+
+  /* White centre line */
+  header::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 8px; bottom: 6px;
+    width: 2px;
+    background: rgba(255,255,255,0.25);
+    transform: translateX(-50%);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    z-index: 1;
+  }
+
+  .header-ball {
+    font-size: 1.3rem;
+    line-height: 1;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+  }
+
+  header h1 {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.8rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.92);
+  }
+
+  /* ── LAYOUT ── */
+  .main-layout {
+    display: grid;
+    grid-template-columns: 55fr 45fr;
+    gap: 0;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: calc(100vh - 52px);
+  }
+
+  /* ── LEFT COLUMN ── */
+  .text-panel {
+    padding: 44px 48px 44px 40px;
+    background: var(--panel-left);
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+
+  .text-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--accent-dim) 20%, var(--accent-dim) 80%, transparent);
+    opacity: 0.5;
+  }
+
+  .text-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .text-label span {
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  .text-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .article-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.65rem;
+    line-height: 1.22;
+    color: #111111;
+    margin-bottom: 10px;
+  }
+
+  .article-title em {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .article-deck {
+    font-size: 0.93rem;
+    color: var(--text-dim);
+    font-style: italic;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.65;
+    font-weight: 400;
+  }
+
+  .article-body p {
+    font-size: 1rem;
+    line-height: 1.85;
+    margin-bottom: 1.1em;
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  .article-body p:last-child { margin-bottom: 0; }
+
+  /* Drop cap */
+  .article-body p:first-child::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.2rem;
+    float: left;
+    line-height: 0.8;
+    margin: 6px 9px 0 0;
+    color: var(--accent);
+  }
+
+  /* ── RIGHT COLUMN ── */
+  .task-panel {
+    padding: 44px 32px 28px 36px;
+    background: var(--panel-right);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .task-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: -8px;
+  }
+
+  .task-label span {
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  .task-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .question-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+    transition: box-shadow 0.2s;
+  }
+
+  .question-block:hover {
+    box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+  }
+
+  .question-number {
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+
+  .question-text {
+    font-size: 0.92rem;
+    font-style: italic;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    line-height: 1.5;
+    border-left: 2px solid var(--accent-dim);
+    padding-left: 12px;
+    font-weight: 300;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.18s;
+    background: #fdf7f7;
+    user-select: none;
+  }
+
+  .option:hover {
+    border-color: var(--accent-dim);
+    background: #fdeaec;
+  }
+
+  .option.selected {
+    border-color: var(--accent);
+    background: #fde0e3;
+  }
+
+  .option.correct {
+    border-color: var(--correct);
+    background: #eaf5ef;
+  }
+
+  .option.wrong {
+    border-color: var(--wrong);
+    background: #fdeaea;
+    opacity: 0.7;
+  }
+
+  .option-dot {
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all 0.18s;
+    background: transparent;
+    position: relative;
+  }
+
+  .option.selected .option-dot {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+
+  .option.selected .option-dot::after,
+  .option.correct .option-dot::after {
+    content: '';
+    position: absolute;
+    width: 5px; height: 5px;
+    background: #fff;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .option.correct .option-dot {
+    border-color: var(--correct);
+    background: var(--correct);
+  }
+
+  .option-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text);
+    font-weight: 300;
+  }
+
+  .feedback {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    min-height: 18px;
+    font-style: italic;
+    transition: opacity 0.2s;
+    font-weight: 300;
+  }
+
+  .feedback.hidden { opacity: 0; }
+  .feedback.wrong-msg { color: var(--wrong); }
+  .feedback.correct-msg { color: var(--correct); }
+
+  .check-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 4px;
+  }
+
+  #check-btn {
+    background: var(--accent-dim);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 13px 44px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.3;
+    pointer-events: none;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.3);
+  }
+
+  #check-btn.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  #check-btn.active:hover {
+    background: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+  }
+
+  #check-btn.active:active { transform: translateY(0); }
+
+  #result-msg {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    text-align: center;
+    font-style: italic;
+    min-height: 1.3em;
+    font-weight: 300;
+  }
+
+  #confetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  @media (max-width: 900px) {
+    .main-layout { grid-template-columns: 1fr; }
+    .text-panel { border-right: none; border-bottom: 1px solid var(--border); }
+    .text-panel::before { display: none; }
+    header { height: 44px; }
+    .text-panel, .task-panel { padding: 30px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<header>
+  <div class="header-inner">
+    <span class="header-ball">⚽</span>
+    <h1>Leseverstehen</h1>
+    <span class="header-ball">⚽</span>
+  </div>
+</header>
+
+<div class="main-layout">
+
+  <!-- LEFT: GERMAN TEXT -->
+  <section class="text-panel">
+    <div class="text-label"><span>Lesetext</span></div>
+    <h2 class="article-title">Ein Abend in der <em>Allianz Arena</em></h2>
+    <p class="article-deck">Laut, rot und unvergesslich.</p>
+
+    <div class="article-body">
+      <p>
+        Ich bin seit meiner Kindheit ein großer Fan von FC Bayern München,
+        aber ein Heimspiel live zu erleben war für mich immer ein Traum.
+        Letzten Herbst habe ich mir endlich einen Traum wahr gemacht: Zusammen
+        mit meinem Bruder bin ich von Oslo nach München geflogen, nur um
+        ein einziges Spiel zu sehen. Es war ein wichtiges Ligaspiel, und
+        die Karten waren nicht billig – aber es hat sich absolut gelohnt.
+      </p>
+      <p>
+        Schon auf dem Weg zum Stadion war die Stimmung besonders. Die
+        Die U-Bahn war voll mit Fans in Rot und Weiß, und überall hörte man
+        Lieder und Sprechchöre. Als wir die Allianz Arena zum ersten Mal
+        sahen, erstrahlte sie von außen in leuchtendem Rot. Das war ein
+        Anblick, den ich nie vergessen werde. Wir hatten Plätze auf der
+        Tribüne, nicht weit von der Fankurve entfernt, und die Atmosphäre
+        war unglaublich laut und mitreißend.
+      </p>
+      <p>
+        Das Spiel selbst war spannend von Anfang bis Ende. Bayern führte
+        zur Halbzeit mit 1:0, aber der Gegner kämpfte sich zurück und
+        glich in der zweiten Halbzeit aus. In den letzten Minuten erzielte
+        Bayern dann doch noch das entscheidende Tor – das Stadion explodierte
+        förmlich. Mein Bruder und ich fielen uns in die Arme, zusammen mit
+        tausenden von fremden Menschen, die in diesem Moment alle dasselbe
+        fühlten.
+      </p>
+      <p>
+        Nach dem Spiel sind wir noch lange in der Stadt geblieben. Wir
+        haben in einer Kneipe in der Nähe des Stadions gefeiert und mit
+        anderen Fans gesprochen. Obwohl mein Deutsch noch nicht perfekt
+        ist, hatte ich keine Mühe, mich zu verständigen – die Münchner
+        waren offen und freundlich. Es war nicht nur ein Fußballabend,
+        sondern das Gefühl, Teil von etwas Größerem zu sein.
+      </p>
+    </div>
+  </section>
+
+  <!-- RIGHT: TASKS -->
+  <section class="task-panel">
+    <div class="task-label"><span>Aufgaben</span></div>
+
+    <!-- Question 1 -->
+    <div class="question-block" id="q1-block">
+      <div class="question-number">Spørsmål 1 av 2</div>
+      <div class="question-text">Velg det alternativet som stemmer med det som står i teksten.</div>
+      <div class="options" id="q1-options">
+        <div class="option" data-q="1" data-val="a">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten handler om en mann som bor i München og går på fotballkamp hver helg.</div>
+        </div>
+        <div class="option" data-q="1" data-val="b">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten handler om en norsk fan som reiste til München for å se Bayern München spille hjemmekamp.</div>
+        </div>
+        <div class="option" data-q="1" data-val="c">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten handler om en journalist som skriver en reportasje om Bayern Münchens stadion.</div>
+        </div>
+        <div class="option" data-q="1" data-val="d">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten handler om to brødre som begynte å støtte Bayern München etter å ha besøkt München.</div>
+        </div>
+      </div>
+      <div class="feedback hidden" id="q1-feedback"></div>
+    </div>
+
+    <!-- Question 2 -->
+    <div class="question-block" id="q2-block">
+      <div class="question-number">Spørsmål 2 av 2</div>
+      <div class="question-text">Velg det alternativet som stemmer med det som står i teksten.</div>
+      <div class="options" id="q2-options">
+        <div class="option" data-q="2" data-val="a">
+          <div class="option-dot"></div>
+          <div class="option-text">Fortelleren synes det var vanskelig å kommunisere med folk etter kampen fordi tysken hans ikke var god nok.</div>
+        </div>
+        <div class="option" data-q="2" data-val="b">
+          <div class="option-dot"></div>
+          <div class="option-text">Bayern München ledet ved pause, men ble forbigått av motstanderen og tapte kampen.</div>
+        </div>
+        <div class="option" data-q="2" data-val="c">
+          <div class="option-dot"></div>
+          <div class="option-text">De siste minuttene av kampen var svært intense.</div>
+        </div>
+        <div class="option" data-q="2" data-val="d">
+          <div class="option-dot"></div>
+          <div class="option-text">Fortelleren og broren satt i hjemmefeltet bak det ene målet.</div>
+        </div>
+      </div>
+      <div class="feedback hidden" id="q2-feedback"></div>
+    </div>
+
+    <!-- Check button -->
+    <div class="check-area">
+      <button id="check-btn">Sjekk svarene</button>
+      <div id="result-msg"></div>
+    </div>
+
+  </section>
+</div>
+
+<script>
+  const CORRECT = { '1': 'b', '2': 'c' };
+  const state = { '1': null, '2': null, checked: false };
+
+  document.querySelectorAll('.option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if (state.checked) return;
+      const q = opt.dataset.q;
+      document.querySelectorAll(`.option[data-q="${q}"]`).forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      state[q] = opt.dataset.val;
+      const fb = document.getElementById(`q${q}-feedback`);
+      fb.className = 'feedback hidden';
+      fb.textContent = '';
+      updateButton();
+    });
+  });
+
+  function updateButton() {
+    const btn = document.getElementById('check-btn');
+    if (state['1'] && state['2']) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  }
+
+  document.getElementById('check-btn').addEventListener('click', () => {
+    if (!state['1'] || !state['2']) return;
+
+    let allCorrect = true;
+    state.checked = false;
+
+    [1, 2].forEach(q => {
+      const chosen = state[String(q)];
+      const correct = CORRECT[String(q)];
+      const fb = document.getElementById(`q${q}-feedback`);
+      const opts = document.querySelectorAll(`.option[data-q="${q}"]`);
+
+      opts.forEach(o => {
+        o.classList.remove('correct', 'wrong');
+        if (o.dataset.val === chosen) {
+          if (chosen === correct) {
+            o.classList.add('correct');
+          } else {
+            o.classList.add('wrong');
+          }
+        }
+      });
+
+      if (chosen !== correct) {
+        allCorrect = false;
+        fb.className = 'feedback wrong-msg';
+        fb.textContent = 'Ikke riktig – les teksten på nytt og prøv igjen.';
+      } else {
+        fb.className = 'feedback correct-msg';
+        fb.textContent = 'Riktig! ✓';
+      }
+    });
+
+    const resultMsg = document.getElementById('result-msg');
+
+    if (allCorrect) {
+      state.checked = true;
+      resultMsg.textContent = '🎉 Begge svar er riktige – Ausgezeichnet!';
+      resultMsg.style.color = '#2e7d4f';
+      document.querySelectorAll('.option').forEach(o => o.style.cursor = 'default');
+      document.getElementById('check-btn').classList.remove('active');
+      launchConfetti();
+    } else {
+      resultMsg.textContent = 'Et eller flere svar er feil. Les teksten på nytt og prøv igjen!';
+      resultMsg.style.color = '#c0392b';
+      [1, 2].forEach(q => {
+        if (state[String(q)] !== CORRECT[String(q)]) {
+          document.querySelectorAll(`.option[data-q="${q}"]`).forEach(o => {
+            o.classList.remove('selected', 'wrong', 'correct');
+          });
+          state[String(q)] = null;
+        }
+      });
+      updateButton();
+    }
+  });
+
+  function launchConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const W = canvas.width;
+    const H = canvas.height;
+
+    const balls = Array.from({ length: 28 }, () => {
+      const r = 12 + Math.random() * 12;
+      const speed = 4 + Math.random() * 5;
+      const dir = Math.random() * Math.PI * 2;
+      return {
+        x: W * 0.2 + Math.random() * W * 0.6,
+        y: H * 0.2 + Math.random() * H * 0.4,
+        r,
+        vx: Math.cos(dir) * speed,
+        vy: Math.sin(dir) * speed,
+        alpha: 1,
+        bounces: 0
+      };
+    });
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      let alive = 0;
+      balls.forEach(b => {
+        b.x += b.vx;
+        b.y += b.vy;
+        b.vy += 0.18;
+
+        if (b.x - b.r < 0)  { b.x = b.r;   b.vx =  Math.abs(b.vx) * 0.82; b.bounces++; }
+        if (b.x + b.r > W)  { b.x = W-b.r; b.vx = -Math.abs(b.vx) * 0.82; b.bounces++; }
+        if (b.y + b.r > H)  { b.y = H-b.r; b.vy = -Math.abs(b.vy) * 0.72; b.bounces++; }
+
+        if (b.bounces > 10) b.alpha -= 0.02;
+        if (b.alpha <= 0) return;
+        alive++;
+
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, b.alpha);
+        ctx.font = `${b.r * 2}px serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('⚽', b.x, b.y);
+        ctx.restore();
+      });
+      if (alive > 0) {
+        requestAnimationFrame(draw);
+      } else {
+        ctx.clearRect(0, 0, W, H);
+      }
+    }
+    draw();
+  }
+</script>
+</body>
+</html>
