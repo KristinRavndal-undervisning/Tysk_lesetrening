@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tysk 2 – Leseøvelse</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:opsz,wght@8..60,300;8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #faf6f0;
+    --dark: #1e1410;
+    --brown: #5c2d1e;
+    --cherry: #8b1a2f;
+    --cherry-light: #c0395a;
+    --gold: #c9933a;
+    --text: #2d1f18;
+    --muted: #7a6358;
+    --border: #ddd0c4;
+    --white-cream: #fffdf9;
+  }
+
+  body {
+    background-color: var(--cream);
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: var(--text);
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 10% 20%, rgba(139,26,47,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(92,45,30,0.07) 0%, transparent 50%);
+  }
+
+  header {
+    background: var(--brown);
+    color: var(--cream);
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 3px solid var(--gold);
+  }
+
+  header .badge {
+    background: var(--cherry);
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+  }
+
+  header .subtitle {
+    margin-left: auto;
+    font-size: 0.82rem;
+    color: rgba(250,246,240,0.65);
+    font-style: italic;
+  }
+
+  .main-layout {
+    display: grid;
+    grid-template-columns: 55fr 45fr;
+    gap: 0;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: calc(100vh - 64px);
+  }
+
+  /* LEFT COLUMN — TEXT */
+  .text-panel {
+    padding: 44px 48px 44px 40px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+
+  .text-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--gold) 20%, var(--gold) 80%, transparent);
+  }
+
+  .text-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .text-label span {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .text-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .article-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    line-height: 1.25;
+    color: var(--brown);
+    margin-bottom: 8px;
+  }
+
+  .article-title em {
+    color: var(--cherry);
+    font-style: italic;
+  }
+
+  .article-deck {
+    font-size: 0.95rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.6;
+  }
+
+  .article-body p {
+    font-size: 1.02rem;
+    line-height: 1.78;
+    margin-bottom: 1.1em;
+    color: var(--text);
+  }
+
+  .article-body p:last-child { margin-bottom: 0; }
+
+  .highlight-word {
+    color: var(--cherry);
+    font-weight: 600;
+  }
+
+  /* Decorative drop cap */
+  .article-body p:first-child::first-letter {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.4rem;
+    float: left;
+    line-height: 0.8;
+    margin: 6px 8px 0 0;
+    color: var(--cherry);
+  }
+
+  /* RIGHT COLUMN — TASKS */
+  .task-panel {
+    padding: 44px 32px 28px 36px;
+    background: var(--white-cream);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .task-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: -8px;
+  }
+
+  .task-label span {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-family: 'Source Serif 4', serif;
+  }
+
+  .task-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .question-block {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 12px rgba(92,45,30,0.05);
+    transition: box-shadow 0.2s;
+  }
+
+  .question-block:hover {
+    box-shadow: 0 4px 20px rgba(92,45,30,0.09);
+  }
+
+  .question-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .question-text {
+    font-size: 0.97rem;
+    font-style: italic;
+    color: var(--muted);
+    margin-bottom: 18px;
+    line-height: 1.5;
+    border-left: 2px solid var(--cherry-light);
+    padding-left: 12px;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.18s;
+    background: var(--cream);
+    user-select: none;
+  }
+
+  .option:hover {
+    border-color: var(--cherry-light);
+    background: #fff5f7;
+  }
+
+  .option.selected {
+    border-color: var(--cherry);
+    background: #fff0f3;
+  }
+
+  .option.correct {
+    border-color: #2e7d4f;
+    background: #f0faf5;
+  }
+
+  .option.wrong {
+    border-color: #c0392b;
+    background: #fff5f5;
+    opacity: 0.7;
+  }
+
+  .option-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all 0.18s;
+    background: #fff;
+    position: relative;
+  }
+
+  .option.selected .option-dot {
+    border-color: var(--cherry);
+    background: var(--cherry);
+  }
+
+  .option.selected .option-dot::after {
+    content: '';
+    position: absolute;
+    width: 6px; height: 6px;
+    background: #fff;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .option.correct .option-dot {
+    border-color: #2e7d4f;
+    background: #2e7d4f;
+  }
+  .option.correct .option-dot::after {
+    content: '';
+    position: absolute;
+    width: 6px; height: 6px;
+    background: #fff;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .option-text {
+    font-size: 0.93rem;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  /* Feedback */
+  .feedback {
+    margin-top: 12px;
+    font-size: 0.88rem;
+    min-height: 20px;
+    font-style: italic;
+    transition: opacity 0.2s;
+  }
+
+  .feedback.hidden { opacity: 0; }
+  .feedback.wrong-msg { color: #a02020; }
+  .feedback.correct-msg { color: #2e7d4f; }
+
+  /* Check button */
+  .check-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 4px;
+  }
+
+  #check-btn {
+    background: var(--cherry);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 14px 44px;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.38;
+    pointer-events: none;
+    box-shadow: 0 3px 12px rgba(139,26,47,0.18);
+  }
+
+  #check-btn.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  #check-btn.active:hover {
+    background: var(--brown);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 18px rgba(92,45,30,0.25);
+  }
+
+  #check-btn.active:active {
+    transform: translateY(0);
+  }
+
+  #result-msg {
+    font-size: 0.9rem;
+    color: var(--muted);
+    text-align: center;
+    font-style: italic;
+    min-height: 1.3em;
+  }
+
+  /* Confetti canvas */
+  #confetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* Divider ornament */
+  .ornament {
+    text-align: center;
+    color: var(--gold);
+    font-size: 1.1rem;
+    letter-spacing: 0.3em;
+    opacity: 0.6;
+    margin: 4px 0;
+  }
+
+  @media (max-width: 900px) {
+    .main-layout { grid-template-columns: 1fr; }
+    .text-panel { border-right: none; border-bottom: 1px solid var(--border); }
+    .text-panel::before { display: none; }
+    header { padding: 14px 20px; }
+    .text-panel, .task-panel { padding: 30px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<header>
+  <h1>Leseverstehen</h1>
+</header>
+
+<div class="main-layout">
+
+  <!-- LEFT: GERMAN TEXT -->
+  <section class="text-panel">
+    <div class="text-label"><span>Lesetext</span></div>
+    <h2 class="article-title">Die <em>Schwarzwälder Kirschtorte</em><br>und die deutsche Backkultur</h2>
+    <p class="article-deck">Ein Stück Torte, das die Welt kennt – und eine Kultur, die weit über die Backstube hinausgeht.</p>
+
+    <div class="article-body">
+      <p>
+        Wenn man an deutsche Backkultur denkt, kommt einem sofort die
+        <span class="highlight-word">Schwarzwälder Kirschtorte</span> in den Sinn. Dieser Klassiker aus dem
+        Schwarzwald besteht aus Schokoladenböden, Sahne, Kirschen und
+        einem Schuss Kirschwasser – dem typischen Schwarzwälder Obstbrand.
+        Doch die deutsche Backtradition hat noch viel mehr zu bieten: über
+        3.000 verschiedene Brotsorten, unzählige regionale Torten und Kuchen
+        sowie Gebäck, das von Generation zu Generation weitergegeben wird.
+      </p>
+      <p>
+        Backen ist in Deutschland mehr als nur Kochen. Es ist ein
+        Lebensgefühl, das Gemeinschaft, Heimat und Handwerk vereint.
+        Ob in der Konditorei um die Ecke, auf dem Weihnachtsmarkt oder
+        im eigenen Zuhause – frisches Gebäck gehört zum deutschen Alltag
+        wie der Morgenkaffee.
+      </p>
+      <p>
+        Die <span class="highlight-word">Schwarzwälder Kirschtorte</span> selbst hat eine überraschend junge
+        Geschichte. Zwar kannte man die Zutaten schon lange, aber das
+        heutige Rezept wurde erst im frühen 20. Jahrhundert von dem
+        Konditor Josef Keller entwickelt.
+        Heute ist sie deutschlandweit bekannt und wird in vielen Ländern
+        der Welt als Inbegriff der deutschen Konditorkunst angesehen.
+      </p>
+      <p>
+        Das deutsche Bäckerhandwerk ist weltweit bekannt und geschätzt.
+        Seit 2014 steht die deutsche Brotkultur auf der
+        UNESCO-Liste des immateriellen Kulturerbes.
+        Diese Anerkennung macht deutlich, dass das Backen in Deutschland
+        nicht nur Tradition ist, sondern auch Identität. Wer einmal
+        eine frische <span class="highlight-word">Schwarzwälder Kirschtorte</span> in einem kleinen
+        Schwarzwälder Café probiert hat, versteht sofort, warum.
+      </p>
+    </div>
+  </section>
+
+  <!-- RIGHT: TASKS -->
+  <section class="task-panel">
+    <div class="task-label"><span>Aufgaben</span></div>
+
+    <!-- Question 1 -->
+    <div class="question-block" id="q1-block">
+      <div class="question-number">Spørsmål 1 av 2</div>
+      <div class="question-text">Velg det alternativet som stemmer med det som står i teksten.</div>
+      <div class="options" id="q1-options">
+        <div class="option" data-q="1" data-val="a">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten handler om en spesiell kafé i Schwarzwald der man kan smake på tradisjonelle kaker.</div>
+        </div>
+        <div class="option" data-q="1" data-val="b">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten handler om tysk bakekultur og Schwarzwälder Kirschtorte som et kjent symbol på denne.</div>
+        </div>
+        <div class="option" data-q="1" data-val="c">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten gir en trinn-for-trinn oppskrift på Schwarzwälder Kirschtorte og forklarer hvor man finner ingrediensene.</div>
+        </div>
+        <div class="option" data-q="1" data-val="d">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten sammenligner ulike regionale kaker fra forskjellige deler av Tyskland.</div>
+        </div>
+      </div>
+      <div class="feedback hidden" id="q1-feedback"></div>
+    </div>
+
+
+    <div class="question-block" id="q2-block">
+      <div class="question-number">Spørsmål 2 av 2</div>
+      <div class="question-text">Velg det alternativet som stemmer med det som står i teksten.</div>
+      <div class="options" id="q2-options">
+        <div class="option" data-q="2" data-val="a">
+          <div class="option-dot"></div>
+          <div class="option-text">Den tyske brødkulturen er ført opp på UNESCOs liste over immateriell kulturarv.</div>
+        </div>
+        <div class="option" data-q="2" data-val="b">
+          <div class="option-dot"></div>
+          <div class="option-text">Schwarzwälder Kirschtorte er et svært gammelt bakverk med oppskrift fra middelalderen.</div>
+        </div>
+        <div class="option" data-q="2" data-val="c">
+          <div class="option-dot"></div>
+          <div class="option-text">Det finnes over 300 forskjellige typer Schwarzwälder Kirschtorte i Tyskland.</div>
+        </div>
+        <div class="option" data-q="2" data-val="d">
+          <div class="option-dot"></div>
+          <div class="option-text">Kirschwasser er en type sjokoladekrem som brukes i tradisjonelt tysk bakverk.</div>
+        </div>
+      </div>
+      <div class="feedback hidden" id="q2-feedback"></div>
+    </div>
+
+    <!-- Check button -->
+    <div class="check-area">
+      <button id="check-btn">Sjekk svarene</button>
+      <div id="result-msg"></div>
+    </div>
+
+  </section>
+</div>
+
+<script>
+  const CORRECT = { '1': 'b', '2': 'a' };
+  const state = { '1': null, '2': null, checked: false };
+
+  // Option click handling
+  document.querySelectorAll('.option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if (state.checked) return;
+      const q = opt.dataset.q;
+      // Deselect all in this question
+      document.querySelectorAll(`.option[data-q="${q}"]`).forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      state[q] = opt.dataset.val;
+      // Hide feedback on new selection
+      const fb = document.getElementById(`q${q}-feedback`);
+      fb.className = 'feedback hidden';
+      fb.textContent = '';
+      updateButton();
+    });
+  });
+
+  function updateButton() {
+    const btn = document.getElementById('check-btn');
+    if (state['1'] && state['2']) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  }
+
+  document.getElementById('check-btn').addEventListener('click', () => {
+    if (!state['1'] || !state['2']) return;
+
+    let allCorrect = true;
+    state.checked = false; // allow re-try
+
+    [1, 2].forEach(q => {
+      const chosen = state[String(q)];
+      const correct = CORRECT[String(q)];
+      const fb = document.getElementById(`q${q}-feedback`);
+      const opts = document.querySelectorAll(`.option[data-q="${q}"]`);
+
+      opts.forEach(o => {
+        o.classList.remove('correct', 'wrong');
+        if (o.dataset.val === chosen) {
+          if (chosen === correct) {
+            o.classList.add('correct');
+          } else {
+            o.classList.add('wrong');
+          }
+        }
+      });
+
+      if (chosen !== correct) {
+        allCorrect = false;
+        fb.className = 'feedback wrong-msg';
+        fb.textContent = 'Ikke riktig – les teksten på nytt og prøv igjen.';
+      } else {
+        fb.className = 'feedback correct-msg';
+        fb.textContent = 'Riktig! ✓';
+      }
+    });
+
+    const resultMsg = document.getElementById('result-msg');
+
+    if (allCorrect) {
+      state.checked = true;
+      resultMsg.textContent = '🎉 Begge svar er riktige – Ausgezeichnet!';
+      resultMsg.style.color = '#2e7d4f';
+      // Disable options
+      document.querySelectorAll('.option').forEach(o => o.style.cursor = 'default');
+      document.getElementById('check-btn').classList.remove('active');
+      launchConfetti();
+    } else {
+      resultMsg.textContent = 'Et eller flere svar er feil. Les teksten på nytt og prøv igjen!';
+      resultMsg.style.color = '#a02020';
+      // Reset wrong selections so they can try again
+      [1, 2].forEach(q => {
+        if (state[String(q)] !== CORRECT[String(q)]) {
+          document.querySelectorAll(`.option[data-q="${q}"]`).forEach(o => {
+            o.classList.remove('selected', 'wrong', 'correct');
+          });
+          state[String(q)] = null;
+        }
+      });
+      updateButton();
+    }
+  });
+
+  // ---- Confetti ----
+  function launchConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const colors = ['#8b1a2f', '#c9933a', '#5c2d1e', '#e8c49a', '#fff', '#c0395a'];
+    const pieces = Array.from({ length: 180 }, () => ({
+      x: Math.random() * canvas.width,
+      y: -10 - Math.random() * 200,
+      w: 6 + Math.random() * 8,
+      h: 10 + Math.random() * 8,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      vx: -2 + Math.random() * 4,
+      vy: 3 + Math.random() * 5,
+      angle: Math.random() * Math.PI * 2,
+      spin: (Math.random() - 0.5) * 0.2,
+      alpha: 1
+    }));
+
+    let frame;
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let alive = 0;
+      pieces.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.08;
+        p.angle += p.spin;
+        if (p.y > canvas.height * 0.75) p.alpha -= 0.025;
+        if (p.alpha <= 0) return;
+        alive++;
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      });
+      if (alive > 0) {
+        frame = requestAnimationFrame(draw);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+    draw();
+  }
+</script>
+</body>
+</html>

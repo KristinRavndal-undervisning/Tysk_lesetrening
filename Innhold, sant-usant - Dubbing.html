@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tysk 2 – Leseøvelse</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #2c2f36;
+    --panel-left: #31343c;
+    --panel-right: #35383f;
+    --card: #3c3f48;
+    --accent: #7eb8c9;
+    --accent-dim: #4a8fa3;
+    --text: #dde2e8;
+    --text-dim: #b8bdc6;
+    --border: #44474f;
+    --gold: #c4a85a;
+    --correct: #4caf7d;
+    --wrong: #e05a5a;
+  }
+
+  body {
+    background-color: var(--bg);
+    font-family: 'DM Sans', system-ui, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── FILM STRIP HEADER ── */
+  header {
+    background: #1e2026;
+    position: relative;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Film perforations left and right */
+  header::before,
+  header::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 36px;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 5px,
+      #1e2026 5px,
+      #1e2026 11px,
+      transparent 11px,
+      transparent 16px
+    );
+    background-size: 100% 16px;
+  }
+  header::before { left: 0; border-right: 2px solid #3c3f48; }
+  header::after  { right: 0; border-left: 2px solid #3c3f48; }
+
+  header h1 {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 0.8rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #8a909c;
+    z-index: 1;
+  }
+
+  /* ── LAYOUT ── */
+  .main-layout {
+    display: grid;
+    grid-template-columns: 55fr 45fr;
+    gap: 0;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: calc(100vh - 52px);
+  }
+
+  /* ── LEFT COLUMN ── */
+  .text-panel {
+    padding: 44px 48px 44px 40px;
+    background: var(--panel-left);
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+
+  .text-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--accent-dim) 20%, var(--accent-dim) 80%, transparent);
+    opacity: 0.4;
+  }
+
+  .text-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .text-label span {
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  .text-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .article-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.65rem;
+    line-height: 1.22;
+    color: #eef1f5;
+    margin-bottom: 10px;
+  }
+
+  .article-title em {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .article-deck {
+    font-size: 0.92rem;
+    color: var(--text-dim);
+    font-style: italic;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .article-body p {
+    font-size: 0.98rem;
+    line-height: 1.82;
+    margin-bottom: 1.1em;
+    color: var(--text);
+    font-weight: 300;
+  }
+
+  .article-body p:last-child { margin-bottom: 0; }
+
+  .highlight-word { /* neutralised */ }
+
+  /* Drop cap */
+  .article-body p:first-child::first-letter {
+    font-family: 'DM Serif Display', serif;
+    font-size: 3.2rem;
+    float: left;
+    line-height: 0.8;
+    margin: 6px 9px 0 0;
+    color: var(--accent);
+  }
+
+  /* ── RIGHT COLUMN ── */
+  .task-panel {
+    padding: 44px 32px 28px 36px;
+    background: var(--panel-right);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .task-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: -8px;
+  }
+
+  .task-label span {
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  .task-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .question-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.25);
+    transition: box-shadow 0.2s;
+  }
+
+  .question-block:hover {
+    box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+  }
+
+  .question-number {
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+
+  .question-text {
+    font-size: 0.92rem;
+    font-style: italic;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    line-height: 1.5;
+    border-left: 2px solid var(--accent-dim);
+    padding-left: 12px;
+    font-weight: 300;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.18s;
+    background: #2e3139;
+    user-select: none;
+  }
+
+  .option:hover {
+    border-color: var(--accent-dim);
+    background: #333844;
+  }
+
+  .option.selected {
+    border-color: var(--accent);
+    background: #263840;
+  }
+
+  .option.correct {
+    border-color: var(--correct);
+    background: #1e3328;
+  }
+
+  .option.wrong {
+    border-color: var(--wrong);
+    background: #351e1e;
+    opacity: 0.7;
+  }
+
+  .option-dot {
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all 0.18s;
+    background: transparent;
+    position: relative;
+  }
+
+  .option.selected .option-dot {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+
+  .option.selected .option-dot::after,
+  .option.correct .option-dot::after {
+    content: '';
+    position: absolute;
+    width: 5px; height: 5px;
+    background: #fff;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .option.correct .option-dot {
+    border-color: var(--correct);
+    background: var(--correct);
+  }
+
+  .option-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text);
+    font-weight: 300;
+  }
+
+  .feedback {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    min-height: 18px;
+    font-style: italic;
+    transition: opacity 0.2s;
+    font-weight: 300;
+  }
+
+  .feedback.hidden { opacity: 0; }
+  .feedback.wrong-msg { color: var(--wrong); }
+  .feedback.correct-msg { color: var(--correct); }
+
+  .check-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 4px;
+  }
+
+  #check-btn {
+    background: var(--accent-dim);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 13px 44px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.3;
+    pointer-events: none;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.3);
+  }
+
+  #check-btn.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  #check-btn.active:hover {
+    background: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+  }
+
+  #check-btn.active:active { transform: translateY(0); }
+
+  #result-msg {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    text-align: center;
+    font-style: italic;
+    min-height: 1.3em;
+    font-weight: 300;
+  }
+
+  #confetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  @media (max-width: 900px) {
+    .main-layout { grid-template-columns: 1fr; }
+    .text-panel { border-right: none; border-bottom: 1px solid var(--border); }
+    .text-panel::before { display: none; }
+    header { height: 44px; }
+    .text-panel, .task-panel { padding: 30px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<header>
+  <h1>Leseverstehen</h1>
+</header>
+
+<div class="main-layout">
+
+  <!-- LEFT: GERMAN TEXT -->
+  <section class="text-panel">
+    <div class="text-label"><span>Lesetext</span></div>
+    <h2 class="article-title">Deutschland und das <em>Synchronisieren</em></h2>
+    <p class="article-deck">Wenn Hollywoodstars auf Deutsch sprechen – und die Deutschen das so mögen wie kaum eine andere Nation.</p>
+
+    <div class="article-body">
+      <p>
+        Wer in Deutschland ins Kino geht oder einen ausländischen Film
+        im Fernsehen sieht, erlebt etwas Besonderes: Fast alle Filme
+        werden ins Deutsche synchronisiert, das heißt, die
+        Originalstimmen werden durch deutsche Stimmen ersetzt.
+        Das ist in vielen anderen Ländern unüblich – dort laufen
+        ausländische Filme meist mit Untertiteln. Deutschland gehört
+        dagegen zu den wenigen Ländern der Welt, in denen das
+        Synchronisieren eine lange Tradition und ein hohes Niveau hat.
+      </p>
+      <p>
+        Die Geschichte der deutschen Synchronisation begann in den späten 1920er Jahren,
+        als der Tonfilm aufkam. Seitdem hat sich die Branche enorm
+        entwickelt. Heute arbeiten in Deutschland Tausende von
+        Synchronsprechern und Übersetzern. Allein in
+        Berlin, München und Hamburg gibt es zahlreiche professionelle
+        Synchronstudios. Das Synchronisieren ist ein aufwendiges
+        Handwerk: Die übersetzten Dialoge müssen nicht nur inhaltlich
+        stimmen, sondern auch zur Lippenbewegung der Schauspieler passen.
+      </p>
+      <p>
+        Viele Deutsche sind so an Synchronstimmen gewöhnt, dass sie
+        es kaum merken, wenn ein amerikanischer Schauspieler plötzlich
+        perfektes Hochdeutsch spricht. Manche Synchronsprecher sind
+        sogar so beliebt, dass sie eigene Fans haben. Ein bekanntes Beispiel
+        ist der Sprecher Christian Brückner, der seit Jahrzehnten die deutsche
+        Stimme von Robert De Niro ist. Viele Deutsche kennen
+        Brückners Stimme besser als De Niros Original.
+      </p>
+      <p>
+        Allerdings gibt es auch Kritik an dieser Tradition. Manche
+        Sprachexperten sind der Meinung, dass das Synchronisieren
+        dazu beiträgt, dass Deutsche seltener Fremdsprachen lernen,
+        weil sie im Alltag kaum englische oder andere Originalstimmen
+        hören. Trotzdem bleibt das Synchronisieren in Deutschland ein prägendes
+        Kulturphänomen – und die Deutschen würden auf ihre
+        synchronisierten Lieblingsfilme wohl nur ungern verzichten.
+      </p>
+    </div>
+  </section>
+
+  <!-- RIGHT: TASKS -->
+  <section class="task-panel">
+    <div class="task-label"><span>Aufgaben</span></div>
+
+    <!-- Question 1 -->
+    <div class="question-block" id="q1-block">
+      <div class="question-number">Spørsmål 1 av 2</div>
+      <div class="question-text">Velg det alternativet som stemmer med det som står i teksten.</div>
+      <div class="options" id="q1-options">
+        <div class="option" data-q="1" data-val="a">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten handler om tysk filmindustri og hvilke tyske filmer som er mest populære i utlandet.</div>
+        </div>
+        <div class="option" data-q="1" data-val="b">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten handler om den tyske tradisjonen med å dubbe utenlandske filmer og hva det innebærer.</div>
+        </div>
+        <div class="option" data-q="1" data-val="c">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten gir råd om hvordan man kan lære seg et annet språk ved å se filmer med undertekster.</div>
+        </div>
+        <div class="option" data-q="1" data-val="d">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten sammenligner tyske og amerikanske skuespillere og deres ulike stemmekvaliteter.</div>
+        </div>
+      </div>
+      <div class="feedback hidden" id="q1-feedback"></div>
+    </div>
+
+    <!-- Question 2 -->
+    <div class="question-block" id="q2-block">
+      <div class="question-number">Spørsmål 2 av 2</div>
+      <div class="question-text">Velg det alternativet som stemmer med det som står i teksten.</div>
+      <div class="options" id="q2-options">
+        <div class="option" data-q="2" data-val="a">
+          <div class="option-dot"></div>
+          <div class="option-text">Noen mener at dubbingen kan gjøre at tyskere lærer færre fremmedspråk.</div>
+        </div>
+        <div class="option" data-q="2" data-val="b">
+          <div class="option-dot"></div>
+          <div class="option-text">Den tyske dubbetradisjonen startet etter andre verdenskrig på grunn av mangel på engelskkunnskaper.</div>
+        </div>
+        <div class="option" data-q="2" data-val="c">
+          <div class="option-dot"></div>
+          <div class="option-text">Alle utenlandske filmer i Tyskland vises med undertekster i stedet for dubbing.</div>
+        </div>
+        <div class="option" data-q="2" data-val="d">
+          <div class="option-dot"></div>
+          <div class="option-text">Christian Brückner er den mest kjente skuespilleren i Tyskland.</div>
+        </div>
+      </div>
+      <div class="feedback hidden" id="q2-feedback"></div>
+    </div>
+
+    <!-- Check button -->
+    <div class="check-area">
+      <button id="check-btn">Sjekk svarene</button>
+      <div id="result-msg"></div>
+    </div>
+
+  </section>
+</div>
+
+<script>
+  const CORRECT = { '1': 'b', '2': 'a' };
+  const state = { '1': null, '2': null, checked: false };
+
+  document.querySelectorAll('.option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if (state.checked) return;
+      const q = opt.dataset.q;
+      document.querySelectorAll(`.option[data-q="${q}"]`).forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      state[q] = opt.dataset.val;
+      const fb = document.getElementById(`q${q}-feedback`);
+      fb.className = 'feedback hidden';
+      fb.textContent = '';
+      updateButton();
+    });
+  });
+
+  function updateButton() {
+    const btn = document.getElementById('check-btn');
+    if (state['1'] && state['2']) {
+      btn.classList.add('active');
+    } else {
+      btn.classList.remove('active');
+    }
+  }
+
+  document.getElementById('check-btn').addEventListener('click', () => {
+    if (!state['1'] || !state['2']) return;
+
+    let allCorrect = true;
+    state.checked = false;
+
+    [1, 2].forEach(q => {
+      const chosen = state[String(q)];
+      const correct = CORRECT[String(q)];
+      const fb = document.getElementById(`q${q}-feedback`);
+      const opts = document.querySelectorAll(`.option[data-q="${q}"]`);
+
+      opts.forEach(o => {
+        o.classList.remove('correct', 'wrong');
+        if (o.dataset.val === chosen) {
+          if (chosen === correct) {
+            o.classList.add('correct');
+          } else {
+            o.classList.add('wrong');
+          }
+        }
+      });
+
+      if (chosen !== correct) {
+        allCorrect = false;
+        fb.className = 'feedback wrong-msg';
+        fb.textContent = 'Ikke riktig – les teksten på nytt og prøv igjen.';
+      } else {
+        fb.className = 'feedback correct-msg';
+        fb.textContent = 'Riktig! ✓';
+      }
+    });
+
+    const resultMsg = document.getElementById('result-msg');
+
+    if (allCorrect) {
+      state.checked = true;
+      resultMsg.textContent = '🎉 Begge svar er riktige – Ausgezeichnet!';
+      resultMsg.style.color = '#2e7d4f';
+      document.querySelectorAll('.option').forEach(o => o.style.cursor = 'default');
+      document.getElementById('check-btn').classList.remove('active');
+      launchConfetti();
+    } else {
+      resultMsg.textContent = 'Et eller flere svar er feil. Les teksten på nytt og prøv igjen!';
+      resultMsg.style.color = '#a02020';
+      [1, 2].forEach(q => {
+        if (state[String(q)] !== CORRECT[String(q)]) {
+          document.querySelectorAll(`.option[data-q="${q}"]`).forEach(o => {
+            o.classList.remove('selected', 'wrong', 'correct');
+          });
+          state[String(q)] = null;
+        }
+      });
+      updateButton();
+    }
+  });
+
+  function launchConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Palette colors + bright whites/golds for sparkle
+    const colors = ['#7eb8c9', '#4a8fa3', '#c4a85a', '#e8d88a', '#ffffff', '#a8d8e8', '#f0e6b0'];
+
+    function drawStar(ctx, r, points) {
+      const step = Math.PI / points;
+      ctx.beginPath();
+      for (let i = 0; i < points * 2; i++) {
+        const radius = i % 2 === 0 ? r : r * 0.42;
+        const angle = i * step - Math.PI / 2;
+        ctx[i === 0 ? 'moveTo' : 'lineTo'](
+          Math.cos(angle) * radius,
+          Math.sin(angle) * radius
+        );
+      }
+      ctx.closePath();
+    }
+
+    const stars = Array.from({ length: 140 }, () => ({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * 250,
+      r: 3 + Math.random() * 7,
+      points: Math.random() < 0.5 ? 4 : 5,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      vx: -1.5 + Math.random() * 3,
+      vy: 2.5 + Math.random() * 4,
+      spin: (Math.random() - 0.5) * 0.12,
+      angle: Math.random() * Math.PI * 2,
+      alpha: 1,
+      glow: Math.random() < 0.35   // some stars get a soft glow
+    }));
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let alive = 0;
+      stars.forEach(s => {
+        s.x += s.vx;
+        s.y += s.vy;
+        s.vy += 0.06;
+        s.angle += s.spin;
+        if (s.y > canvas.height * 0.78) s.alpha -= 0.022;
+        if (s.alpha <= 0) return;
+        alive++;
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, s.alpha);
+        ctx.translate(s.x, s.y);
+        ctx.rotate(s.angle);
+
+        if (s.glow) {
+          ctx.shadowColor = s.color;
+          ctx.shadowBlur = 8;
+        }
+
+        drawStar(ctx, s.r, s.points);
+        ctx.fillStyle = s.color;
+        ctx.fill();
+        ctx.restore();
+      });
+      if (alive > 0) {
+        requestAnimationFrame(draw);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+    draw();
+  }
+</script>
+</body>
+</html>
