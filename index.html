@@ -261,7 +261,7 @@
     });
     const reset = document.createElement('button');
     reset.className = 'reset-btn' + (activeTags.length > 0 ? ' visible' : '');
-    reset.textContent = '✕ Vis alle';
+    reset.textContent = '✕ Nullstill utvalg';
     reset.onclick = () => { activeTags = []; render(); };
     bar.appendChild(reset);
     const count = document.createElement('span');
