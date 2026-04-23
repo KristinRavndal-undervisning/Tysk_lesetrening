@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tysk 2 – Leseøvelse</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f4f1ec;
+    --panel-left: #fdfbf8;
+    --panel-right: #f0ede8;
+    --card: #fdfbf8;
+    --accent: #4a6741;
+    --accent-dim: #3a5233;
+    --accent-light: #e8f0e6;
+    --text: #1e1e1e;
+    --text-dim: #6e6860;
+    --border: #d8d2c8;
+    --gold: #8a6e3a;
+    --correct: #3a7a52;
+    --wrong: #9e3a3a;
+  }
+
+  body {
+    background-color: var(--bg);
+    font-family: 'Jost', system-ui, sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER — Sheet music style ── */
+  header {
+    background: #1e1e1e;
+    position: relative;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* Staff lines */
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 7px,
+        rgba(255,255,255,0.12) 7px,
+        rgba(255,255,255,0.12) 8px
+      );
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 1;
+  }
+
+  .header-clef {
+    font-size: 1.6rem;
+    line-height: 1;
+    color: #4a6741;
+  }
+
+  header h1 {
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    font-size: 0.78rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.8);
+  }
+
+  /* ── LAYOUT ── */
+  .main-layout {
+    display: grid;
+    grid-template-columns: 55fr 45fr;
+    gap: 0;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: calc(100vh - 58px);
+  }
+
+  /* ── LEFT COLUMN ── */
+  .text-panel {
+    padding: 44px 48px 44px 40px;
+    background: var(--panel-left);
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+
+  .text-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--accent) 20%, var(--accent) 80%, transparent);
+    opacity: 0.3;
+  }
+
+  /* Source tag — looks like a journal citation */
+  .source-tag {
+    display: inline-block;
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--accent);
+    padding: 3px 9px;
+    border-radius: 2px;
+    margin-bottom: 18px;
+    font-family: 'Jost', sans-serif;
+    font-weight: 500;
+  }
+
+  .text-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+
+  .text-label span {
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  .text-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .article-title {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.7rem;
+    line-height: 1.22;
+    color: #1e1e1e;
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+
+  .article-title em {
+    color: var(--accent);
+    font-style: italic;
+  }
+
+  .article-byline {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+  }
+
+  .article-deck {
+    font-size: 0.93rem;
+    color: #3a3530;
+    font-style: italic;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.65;
+    font-family: 'Libre Baskerville', serif;
+  }
+
+  .article-body p {
+    font-size: 0.96rem;
+    line-height: 1.85;
+    margin-bottom: 1.1em;
+    color: var(--text);
+    font-family: 'Libre Baskerville', serif;
+    font-weight: 400;
+  }
+
+  .article-body p:last-child { margin-bottom: 0; }
+
+  /* Drop cap */
+  .article-body p:first-child::first-letter {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 3.4rem;
+    float: left;
+    line-height: 0.8;
+    margin: 8px 9px 0 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* ── RIGHT COLUMN ── */
+  .task-panel {
+    padding: 44px 32px 28px 36px;
+    background: var(--panel-right);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .task-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: -8px;
+  }
+
+  .task-label span {
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  .task-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .question-block {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s;
+  }
+
+  .question-block:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.09);
+  }
+
+  .question-number {
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+
+  .question-text {
+    font-size: 0.92rem;
+    font-style: italic;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    line-height: 1.5;
+    border-left: 2px solid var(--accent);
+    padding-left: 12px;
+    font-family: 'Libre Baskerville', serif;
+    font-weight: 400;
+  }
+
+  .options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.18s;
+    background: #f8f5f0;
+    user-select: none;
+  }
+
+  .option:hover {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .option.selected {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .option.correct {
+    border-color: var(--correct);
+    background: #eaf4ee;
+  }
+
+  .option.wrong {
+    border-color: var(--wrong);
+    background: #f8eaea;
+    opacity: 0.7;
+  }
+
+  .option-dot {
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    border: 2px solid #bbb;
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all 0.18s;
+    background: transparent;
+    position: relative;
+  }
+
+  .option.selected .option-dot {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+
+  .option.selected .option-dot::after,
+  .option.correct .option-dot::after {
+    content: '';
+    position: absolute;
+    width: 5px; height: 5px;
+    background: #fff;
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .option.correct .option-dot {
+    border-color: var(--correct);
+    background: var(--correct);
+  }
+
+  .option-text {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text);
+    font-family: 'Libre Baskerville', serif;
+    font-weight: 400;
+  }
+
+  .feedback {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    min-height: 18px;
+    font-style: italic;
+    transition: opacity 0.2s;
+    font-weight: 300;
+  }
+
+  .feedback.hidden { opacity: 0; }
+  .feedback.wrong-msg { color: var(--wrong); }
+  .feedback.correct-msg { color: var(--correct); }
+
+  .check-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    margin-top: 4px;
+  }
+
+  #check-btn {
+    background: var(--accent-dim);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 13px 44px;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0.3;
+    pointer-events: none;
+    box-shadow: 0 3px 14px rgba(0,0,0,0.12);
+  }
+
+  #check-btn.active { opacity: 1; pointer-events: all; }
+  #check-btn.active:hover {
+    background: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 18px rgba(0,0,0,0.18);
+  }
+  #check-btn.active:active { transform: translateY(0); }
+
+  #result-msg {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    text-align: center;
+    font-style: italic;
+    min-height: 1.3em;
+    font-weight: 300;
+  }
+
+  #confetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  @media (max-width: 900px) {
+    .main-layout { grid-template-columns: 1fr; }
+    .text-panel { border-right: none; border-bottom: 1px solid var(--border); }
+    .text-panel::before { display: none; }
+    header { height: 48px; }
+    .text-panel, .task-panel { padding: 30px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="confetti-canvas"></canvas>
+
+<header>
+  <div class="header-inner">
+    <span class="header-clef">♪</span>
+    <span class="header-clef">♫</span>
+    <span class="header-clef">𝄞</span>
+    <h1>Leseverstehen</h1>
+    <span class="header-clef">𝄞</span>
+    <span class="header-clef">♫</span>
+    <span class="header-clef">♩</span>
+  </div>
+</header>
+
+<div class="main-layout">
+
+  <!-- LEFT: GERMAN TEXT -->
+  <section class="text-panel">
+    <div class="text-label"><span>Lesetext</span></div>
+    <div class="source-tag">Klang &amp; Bildung — Ratgeber für Eltern</div>
+    <h2 class="article-title">Warum jedes Kind ein <em>Instrument</em> lernen sollte</h2>
+    <p class="article-byline">Von Dr. Miriam Vogt, Musikpädagogin und Autorin</p>
+    <p class="article-deck">Studien zeigen: Kinder, die früh ein Instrument erlernen, entwickeln sich kognitiv und sozial deutlich besser als ihre Altersgenossen.</p>
+
+    <div class="article-body">
+      <p>
+        Musikunterricht ist eine der wertvollsten Investitionen, die Eltern
+        für ihre Kinder tätigen können. Zahlreiche wissenschaftliche Studien
+        belegen, dass Kinder, die ein Instrument spielen, bessere Leistungen
+        in der Schule erbringen, konzentrierter arbeiten und ein höheres
+        Selbstvertrauen entwickeln. Die Frage ist daher nicht, ob, sondern
+        wann man mit dem Unterricht beginnen sollte – und Experten sind sich
+        einig: je früher, desto besser.
+      </p>
+      <p>
+        Besonders empfehlenswert ist es, bereits im Alter von fünf bis sieben
+        Jahren mit einem klassischen Instrument zu beginnen. Geige, Klavier
+        oder Flöte bieten dabei ideale Voraussetzungen für eine solide
+        musikalische Grundausbildung. Qualitativ hochwertige Instrumente und
+        professionell ausgearbeitetes Notenmaterial sind dabei entscheidend –
+        denn nur mit dem richtigen Werkzeug kann sich das Talent eines Kindes
+        wirklich entfalten. Unser bewährtes Einstiegspaket, bestehend aus
+        Instrument, Notenheft und strukturiertem Übungsplan, bildet die
+        Grundlage für nachhaltigen Erfolg – und ist derzeit zu einem
+        besonders günstigen Einführungspreis erhältlich.
+      </p>
+      <p>
+        Neben den kognitiven Vorteilen fördert das gemeinsame Musizieren auch
+        soziale Kompetenzen. Kinder, die in Ensembles oder Schulorchestern
+        spielen, lernen Teamarbeit, Geduld und Disziplin – Eigenschaften, die
+        ihnen weit über die Schulzeit hinaus nützen. Viele Musikpädagogen
+        empfehlen daher, den Unterricht möglichst früh zu beginnen und
+        regelmäßig fortzuführen.
+      </p>
+      <p>
+        Der Einstieg muss nicht kompliziert sein. Mit unserem Lehrwerk –
+        sorgfältig abgestimmt auf Alter und Instrument – kommen Kinder schnell
+        zu ersten Erfolgserlebnissen. Unsere gut strukturierten Übungshefte,
+        begleitenden Hörbeispiele und klar aufgebaute Lehrpläne machen den
+        Lernprozess effektiv und motivierend. Eltern, die ihrem Kind diesen
+        Start ermöglichen, finden unser gesamtes Sortiment unter
+        klang-und-bildung.de – mit kostenlosem Versand bei der ersten Bestellung.
+      </p>
+    </div>
+  </section>
+
+  <!-- RIGHT: TASKS -->
+  <section class="task-panel">
+    <div class="task-label"><span>Aufgaben</span></div>
+
+    <!-- Question 1 -->
+    <div class="question-block" id="q1-block">
+      <div class="question-number">Spørsmål 1 av 2</div>
+      <div class="question-text">Velg det alternativet som stemmer med det som står i teksten.</div>
+      <div class="options" id="q1-options">
+        <div class="option" data-q="1" data-val="a">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten gir en nøytral oversikt over ulike syn på musikk­undervisning for barn.</div>
+        </div>
+        <div class="option" data-q="1" data-val="b">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten forsøker å overbevise foreldre om å kjøpe musikk­materiell.</div>
+        </div>
+        <div class="option" data-q="1" data-val="c">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten er en vitenskapelig artikkel om kognitiv utvikling hos barn som spiller instrument.</div>
+        </div>
+        <div class="option" data-q="1" data-val="d">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten advarer foreldre mot å kjøpe billige instrumenter og noter av dårlig kvalitet.</div>
+        </div>
+      </div>
+      <div class="feedback hidden" id="q1-feedback"></div>
+    </div>
+
+    <!-- Question 2 -->
+    <div class="question-block" id="q2-block">
+      <div class="question-number">Spørsmål 2 av 2</div>
+      <div class="question-text">Velg det alternativet som stemmer med det som står i teksten.</div>
+      <div class="options" id="q2-options">
+        <div class="option" data-q="2" data-val="a">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten hevder at barn som spiller et instrument, lærer fremmedspråk raskere enn andre.</div>
+        </div>
+        <div class="option" data-q="2" data-val="b">
+          <div class="option-dot"></div>
+          <div class="option-text">Ifølge teksten er de sosiale fordelene ved musikk viktigere enn de kognitive.</div>
+        </div>
+        <div class="option" data-q="2" data-val="c">
+          <div class="option-dot"></div>
+          <div class="option-text">Teksten peker på at begavede barn har mer nytte av musikk­undervisning enn andre.</div>
+        </div>
+        <div class="option" data-q="2" data-val="d">
+          <div class="option-dot"></div>
+          <div class="option-text">Ifølge teksten gjør tidlig musikk­opplæring barn mer konsentrerte og faglig sterkere på skolen.</div>
+        </div>
+      </div>
+      <div class="feedback hidden" id="q2-feedback"></div>
+    </div>
+
+    <!-- Check button -->
+    <div class="check-area">
+      <button id="check-btn">Sjekk svarene</button>
+      <div id="result-msg"></div>
+    </div>
+
+  </section>
+</div>
+
+<script>
+  const CORRECT = { '1': 'b', '2': 'd' };
+  const state = { '1': null, '2': null, checked: false };
+
+  document.querySelectorAll('.option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      if (state.checked) return;
+      const q = opt.dataset.q;
+      document.querySelectorAll(`.option[data-q="${q}"]`).forEach(o => o.classList.remove('selected'));
+      opt.classList.add('selected');
+      state[q] = opt.dataset.val;
+      const fb = document.getElementById(`q${q}-feedback`);
+      fb.className = 'feedback hidden';
+      fb.textContent = '';
+      updateButton();
+    });
+  });
+
+  function updateButton() {
+    const btn = document.getElementById('check-btn');
+    if (state['1'] && state['2']) btn.classList.add('active');
+    else btn.classList.remove('active');
+  }
+
+  document.getElementById('check-btn').addEventListener('click', () => {
+    if (!state['1'] || !state['2']) return;
+    let allCorrect = true;
+    state.checked = false;
+
+    [1, 2].forEach(q => {
+      const chosen = state[String(q)];
+      const correct = CORRECT[String(q)];
+      const fb = document.getElementById(`q${q}-feedback`);
+      const opts = document.querySelectorAll(`.option[data-q="${q}"]`);
+
+      opts.forEach(o => {
+        o.classList.remove('correct', 'wrong');
+        if (o.dataset.val === chosen) {
+          o.classList.add(chosen === correct ? 'correct' : 'wrong');
+        }
+      });
+
+      if (chosen !== correct) {
+        allCorrect = false;
+        fb.className = 'feedback wrong-msg';
+        fb.textContent = 'Ikke riktig – les teksten på nytt og prøv igjen.';
+      } else {
+        fb.className = 'feedback correct-msg';
+        fb.textContent = 'Riktig! ✓';
+      }
+    });
+
+    const resultMsg = document.getElementById('result-msg');
+    if (allCorrect) {
+      state.checked = true;
+      resultMsg.textContent = '🎉 Begge svar er riktige – Ausgezeichnet!';
+      resultMsg.style.color = '#3a7a52';
+      document.querySelectorAll('.option').forEach(o => o.style.cursor = 'default');
+      document.getElementById('check-btn').classList.remove('active');
+      launchConfetti();
+    } else {
+      resultMsg.textContent = 'Et eller flere svar er feil. Les teksten på nytt og prøv igjen!';
+      resultMsg.style.color = '#9e3a3a';
+      [1, 2].forEach(q => {
+        if (state[String(q)] !== CORRECT[String(q)]) {
+          document.querySelectorAll(`.option[data-q="${q}"]`).forEach(o => {
+            o.classList.remove('selected', 'wrong', 'correct');
+          });
+          state[String(q)] = null;
+        }
+      });
+      updateButton();
+    }
+  });
+
+  function launchConfetti() {
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    // Musical note symbols
+    const notes = ['𝅘𝅥𝅮', '♩', '♪', '♫', '♬', '𝄞'];
+    const colors = ['#4a6741', '#8a6e3a', '#3a5233', '#c8a05a', '#2e6e48', '#6e8a60'];
+
+    const pieces = Array.from({ length: 80 }, () => ({
+      x: Math.random() * canvas.width,
+      y: -20 - Math.random() * 200,
+      note: notes[Math.floor(Math.random() * notes.length)],
+      color: colors[Math.floor(Math.random() * colors.length)],
+      size: 14 + Math.random() * 18,
+      vx: -1.5 + Math.random() * 3,
+      vy: 2 + Math.random() * 4,
+      spin: (Math.random() - 0.5) * 0.1,
+      angle: (Math.random() - 0.5) * 0.6,
+      alpha: 1
+    }));
+
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let alive = 0;
+      pieces.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.06;
+        p.angle += p.spin;
+        if (p.y > canvas.height * 0.8) p.alpha -= 0.022;
+        if (p.alpha <= 0) return;
+        alive++;
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, p.alpha);
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+        ctx.font = `${p.size}px serif`;
+        ctx.fillStyle = p.color;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(p.note, 0, 0);
+        ctx.restore();
+      });
+      if (alive > 0) requestAnimationFrame(draw);
+      else ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+    draw();
+  }
+</script>
+</body>
+</html>
