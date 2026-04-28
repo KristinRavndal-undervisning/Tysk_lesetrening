@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zweisprachig aufgewachsen – Leseoppgave</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue-50: #E6F1FB;
+    --blue-100: #B5D4F4;
+    --blue-400: #378ADD;
+    --blue-600: #185FA5;
+    --blue-800: #0C447C;
+    --blue-900: #042C53;
+    --teal-50: #E1F5EE;
+    --teal-800: #085041;
+    --purple-50: #EEEDFE;
+    --purple-800: #3C3489;
+    --coral-50: #FAECE7;
+    --coral-800: #712B13;
+    --green-600: #3B6D11;
+    --green-text: #0F6E56;
+    --danger-text: #993C1D;
+    --text-primary: #1a1a1a;
+    --text-secondary: #5a5a5a;
+    --border: #ddd;
+    --bg: #f7f6f2;
+    --surface: #ffffff;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-tag {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue-600);
+    background: var(--blue-50);
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 0.75rem;
+  }
+
+  .header h1 {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 32px;
+    font-weight: 500;
+    color: var(--blue-800);
+    letter-spacing: -0.4px;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+  }
+
+  .header p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* Two-column layout */
+  .cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+
+  /* Text column */
+  .person-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .person-block:last-child { margin-bottom: 0; }
+
+  .person-label {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 11px;
+    border-radius: 20px;
+    margin-bottom: 0.7rem;
+  }
+  .label-leila   { background: var(--purple-50); color: var(--purple-800); }
+  .label-tobias  { background: var(--teal-50);   color: var(--teal-800); }
+  .label-yuki    { background: var(--coral-50);  color: var(--coral-800); }
+
+  .person-text {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 15.5px;
+    line-height: 1.85;
+    color: var(--text-primary);
+  }
+
+  /* Sticky matrix column */
+  .matrix-col {
+    position: sticky;
+    top: 1.5rem;
+  }
+
+  .matrix-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .matrix-card table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+
+  .matrix-card thead tr {
+    background: var(--blue-50);
+  }
+  .matrix-card thead th {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    color: var(--blue-800);
+    padding: 10px 6px;
+    text-align: center;
+    border-bottom: 1px solid var(--blue-100);
+  }
+  .matrix-card thead th:first-child {
+    text-align: left;
+    padding-left: 14px;
+    width: 44%;
+  }
+
+  .matrix-card tbody tr {
+    border-bottom: 1px solid #f0eeea;
+    transition: background 0.1s;
+  }
+  .matrix-card tbody tr:last-child { border-bottom: none; }
+  .matrix-card tbody tr:hover { background: #fafaf8; }
+
+  .matrix-card td {
+    padding: 9px 6px;
+    vertical-align: middle;
+    text-align: center;
+  }
+  .matrix-card td:first-child {
+    font-size: 12.5px;
+    color: var(--text-primary);
+    line-height: 1.5;
+    text-align: left;
+    padding-left: 14px;
+  }
+
+  input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    accent-color: var(--blue-600);
+  }
+
+  .correct-row td:first-child { color: var(--green-text); font-weight: 500; }
+  .wrong-row   td:first-child { color: var(--danger-text); font-weight: 500; }
+
+  /* Footer */
+  .footer {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .check-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 9px 22px;
+    border-radius: 20px;
+    border: none;
+    background: var(--blue-600);
+    color: #fff;
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    transition: background 0.15s, opacity 0.15s;
+  }
+  .check-btn:disabled { opacity: 0.3; cursor: default; }
+  .check-btn:not(:disabled):hover { background: var(--blue-800); }
+
+  .feedback {
+    font-size: 12.5px;
+  }
+
+  /* Confetti canvas */
+  #cc {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* Responsive */
+  @media (max-width: 680px) {
+    .cols { grid-template-columns: 1fr; }
+    .matrix-col { position: static; }
+    .header h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="cc"></canvas>
+
+<div class="page">
+  <div class="header">
+    <span class="header-tag">Leseoppgave · Tysk</span>
+    <h1>Zweisprachig aufgewachsen</h1>
+    <p>Les tekstene og sett kryss for hvem som passer til hver påstand. Flere navn kan gjelde – eller ingen.</p>
+  </div>
+
+  <div class="cols">
+
+    <!-- Tekster -->
+    <div class="text-col">
+      <div class="person-block">
+        <span class="person-label label-leila">Leila</span>
+        <p class="person-text">Ich bin in Deutschland geboren, aber meine Eltern kommen aus dem Iran. Zu Hause sprechen wir Persisch, in der Schule natürlich Deutsch. Manchmal fühle ich mich wie zwei verschiedene Personen – je nachdem, welche Sprache ich gerade spreche. Das klingt vielleicht seltsam, aber ich finde es eigentlich schön. Ich habe das Gefühl, dass ich zwei Welten verstehe, die viele andere gar nicht kennen. Manchmal vermische ich die Sprachen unbewusst, besonders wenn ich aufgeregt bin. Meine deutschen Freunde finden das lustig, aber ich finde es manchmal auch irgendwie peinlich.</p>
+      </div>
+      <div class="person-block">
+        <span class="person-label label-tobias">Tobias</span>
+        <p class="person-text">Meine Mutter ist Brasilianerin, mein Vater ist Deutscher. Ich bin mit beiden Sprachen aufgewachsen und wechsle oft zwischen Portugiesisch und Deutsch, ohne darüber nachzudenken. In der Schule war Spanisch leicht für mich, weil es dem Portugiesischen ähnlich ist. Ich glaube, das Aufwachsen mit zwei Sprachen hat mir einen Vorteil verschafft – nicht nur beim Sprachenlernen, sondern auch beim Verstehen anderer Menschen. Manchmal passiert es mir, dass ich ein Wort in der einen Sprache nicht sofort finde oder aus Versehen etwas vermische. Aber das sind Kleinigkeiten, und das stört mich nicht mehr.</p>
+      </div>
+      <div class="person-block">
+        <span class="person-label label-yuki">Yuki</span>
+        <p class="person-text">Ich bin in Japan aufgewachsen und erst mit zehn Jahren nach Deutschland gezogen. Deshalb war Deutsch für mich am Anfang wirklich schwer. Heute spreche ich beide Sprachen fließend, aber Japanisch bleibt meine Herzenssprache. Wenn ich traurig bin oder träume, denke ich auf Japanisch. Ich finde es wichtig, die eigene Muttersprache nicht zu verlieren, auch wenn man in einem anderen Land lebt. Ich unterrichte inzwischen jüngere Kinder in der japanischen Gemeinde hier in der Stadt – das macht mir sehr viel Freude und gibt mir das Gefühl, etwas Wertvolles weiterzugeben.</p>
+      </div>
+    </div>
+
+    <!-- Matrise -->
+    <div class="matrix-col">
+      <div class="matrix-card">
+        <table id="matrix">
+          <thead>
+            <tr>
+              <th>Påstand</th>
+              <th>Leila</th>
+              <th>Tobias</th>
+              <th>Yuki</th>
+              <th>Ingen</th>
+            </tr>
+          </thead>
+          <tbody id="mbody"></tbody>
+        </table>
+      </div>
+      <div class="footer">
+        <button class="check-btn" id="cbtn" disabled>Sjekk svar</button>
+        <span class="feedback" id="fb"></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const stmts = [
+  { t: "Vokste opp med to språk fra fødselen av.",               c: ["Leila","Tobias"] },
+  { t: "Har et dypere forhold til morsmålet enn til det andre språket.",              c: ["Yuki"] },
+  { t: "Bytter mellom språk uten å tenke over det.",             c: ["Leila","Tobias"] },
+  { t: "Ser på tospråklighet som en utfordring i hverdagen.",    c: ["Ingen"] },
+  { t: "Har lært et tredje språk lettere på grunn av tospråkligheten.", c: ["Tobias"] },
+  { t: "Har opplevd det som pinlig å blande språkene.",          c: ["Leila"] },
+  { t: "Synes tospråklighet gjør det lettere å forstå andre mennesker.", c: ["Tobias"] },
+  { t: "Underviser andre i sitt morsmål.",                       c: ["Yuki"] }
+];
+
+const names = ["Leila","Tobias","Yuki","Ingen"];
+const tbody = document.getElementById("mbody");
+const btn   = document.getElementById("cbtn");
+const fb    = document.getElementById("fb");
+
+stmts.forEach((s, i) => {
+  const tr = document.createElement("tr");
+  tr.dataset.i = i;
+  let h = `<td>${s.t}</td>`;
+  names.forEach(n => {
+    h += `<td><input type="checkbox" data-r="${i}" data-n="${n}" aria-label="${n}"></td>`;
+  });
+  tr.innerHTML = h;
+  tbody.appendChild(tr);
+});
+
+function checked(r) { return tbody.querySelectorAll(`input[data-r="${r}"]:checked`).length; }
+function allDone()  { return stmts.every((_, i) => checked(i) >= 1); }
+
+document.getElementById("matrix").addEventListener("change", () => {
+  btn.disabled = !allDone();
+  stmts.forEach((_, i) => tbody.querySelector(`tr[data-i="${i}"]`).classList.remove("correct-row","wrong-row"));
+  fb.textContent = "";
+});
+
+btn.addEventListener("click", () => {
+  let ok = true;
+  stmts.forEach((s, i) => {
+    const tr  = tbody.querySelector(`tr[data-i="${i}"]`);
+    tr.classList.remove("correct-row","wrong-row");
+    const got = [...tbody.querySelectorAll(`input[data-r="${i}"]:checked`)].map(x => x.dataset.n);
+    if (got.slice().sort().join(",") === s.c.slice().sort().join(",")) {
+      tr.classList.add("correct-row");
+    } else {
+      tr.classList.add("wrong-row");
+      ok = false;
+    }
+  });
+  if (ok) {
+    fb.textContent = "Alle svar er riktige!";
+    fb.style.color = "#0F6E56";
+    confetti();
+  } else {
+    fb.textContent = "Noen svar er feil – prøv igjen.";
+    fb.style.color = "#993C1D";
+  }
+});
+
+function confetti() {
+  const cv  = document.getElementById("cc");
+  const ctx = cv.getContext("2d");
+  cv.width  = window.innerWidth;
+  cv.height = window.innerHeight;
+  const colors = ["#7F77DD","#1D9E75","#D85A30","#378ADD","#D4537E","#EF9F27"];
+  const ps = Array.from({length: 140}, () => ({
+    x: Math.random() * cv.width,
+    y: Math.random() * cv.height - cv.height,
+    r: 4 + Math.random() * 6,
+    d: 1.5 + Math.random() * 2.5,
+    col: colors[Math.floor(Math.random() * colors.length)],
+    ta: 0, ts: 0.05 + Math.random() * 0.1, tilt: 0
+  }));
+  let fr, fading = false, opacity = 1;
+  function draw() {
+    if (fading) {
+      opacity -= 0.018;
+      if (opacity <= 0) { ctx.clearRect(0, 0, cv.width, cv.height); return; }
+      ctx.globalAlpha = opacity;
+    }
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ps.forEach(p => {
+      ctx.beginPath();
+      ctx.fillStyle = p.col;
+      ctx.globalAlpha = fading ? opacity : 1;
+      ctx.ellipse(p.x, p.y, p.r, p.r * 0.45, p.tilt, 0, Math.PI * 2);
+      ctx.fill();
+      p.y += p.d;
+      p.x += Math.sin(p.ta) * 1.5;
+      p.ta += p.ts;
+      p.tilt = Math.sin(p.ta) * 8;
+      if (p.y > cv.height) { p.y = -10; p.x = Math.random() * cv.width; }
+    });
+    ctx.globalAlpha = 1;
+    fr = requestAnimationFrame(draw);
+  }
+  draw();
+  setTimeout(() => { fading = true; }, 3000);
+}
+</script>
+</body>
+</html>

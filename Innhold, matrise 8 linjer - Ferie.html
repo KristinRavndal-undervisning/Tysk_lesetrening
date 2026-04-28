@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wie verbringst du deinen Urlaub?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #F4FBF7;
+    color: #1a1a1a;
+    min-height: 100vh;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  .page { max-width: 960px; margin: 0 auto; }
+
+  .header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #B8DFC8; }
+  .header-tag {
+    display: inline-block;
+    font-size: 10.5px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #0F5C2E; background: #C8F0D8; padding: 4px 12px; border-radius: 20px; margin-bottom: 0.75rem;
+  }
+  .header h1 {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 32px; font-weight: 500; color: #0A3D1F; letter-spacing: -0.4px;
+    margin-bottom: 0.5rem; line-height: 1.2;
+  }
+  .header p { font-size: 14px; color: #4a4a4a; line-height: 1.6; }
+
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start; }
+
+  .person-block {
+    background: #fff; border: 1px solid #C8DDD0; border-radius: 12px;
+    padding: 1.25rem 1.5rem; margin-bottom: 1.25rem;
+  }
+  .person-block:last-child { margin-bottom: 0; }
+
+  .person-label {
+    display: inline-block; font-size: 10.5px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 3px 11px; border-radius: 20px; margin-bottom: 0.7rem;
+  }
+  .label-nina   { background: #FFF0C2; color: #7A4C00; }
+  .label-felix  { background: #DCEEFF; color: #0A3D6B; }
+  .label-mia    { background: #FFE0EC; color: #7A0033; }
+
+  .person-text {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 15.5px; line-height: 1.85; color: #1a1a1a;
+  }
+
+  .matrix-col { position: sticky; top: 1.5rem; }
+
+  .matrix-card {
+    background: #fff; border: 1px solid #B8DFC8; border-radius: 12px; overflow: hidden;
+  }
+
+  .matrix-card table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+
+  .matrix-card thead tr { background: #E8F8EF; }
+  .matrix-card thead th {
+    font-size: 11px; font-weight: 600; color: #0A3D1F;
+    padding: 10px 6px; text-align: center;
+    border-bottom: 1.5px solid #A8DFC0; letter-spacing: 0.05em;
+  }
+  .matrix-card thead th:first-child { text-align: left; padding-left: 14px; width: 44%; }
+
+  .matrix-card tbody tr { border-bottom: 1px solid #EAF4EE; transition: background 0.1s; }
+  .matrix-card tbody tr:last-child { border-bottom: none; }
+  .matrix-card tbody tr:hover { background: #F6FDF9; }
+
+  .matrix-card td { padding: 9px 6px; vertical-align: middle; text-align: center; }
+  .matrix-card td:first-child {
+    font-size: 12.5px; color: #1a1a1a; line-height: 1.5;
+    text-align: left; padding-left: 14px;
+  }
+
+  input[type="checkbox"] { width: 15px; height: 15px; cursor: pointer; accent-color: #0F5C2E; }
+
+  .correct-row td:first-child { color: #0F5C2E; font-weight: 500; }
+  .wrong-row   td:first-child { color: #C0002A; font-weight: 500; }
+
+  .footer { margin-top: 1rem; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+  .check-btn {
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    padding: 9px 22px; border-radius: 20px; border: none;
+    background: #0F5C2E; color: #fff; cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+  }
+  .check-btn:disabled { opacity: 0.28; cursor: default; }
+  .check-btn:not(:disabled):hover { background: #0A3D1F; }
+
+  .feedback { font-size: 12.5px; }
+
+  canvas#cc { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+  @media (max-width: 680px) {
+    .cols { grid-template-columns: 1fr; }
+    .matrix-col { position: static; }
+    .header h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="cc"></canvas>
+<div class="page">
+  <div class="header">
+    <span class="header-tag">Leseoppgave · Tysk</span>
+    <h1>Wie verbringst du deinen Urlaub?</h1>
+    <p>Les tekstene og sett kryss for hvem som passer til hver påstand. Flere navn kan gjelde – eller ingen.</p>
+  </div>
+  <div class="cols">
+    <div class="text-col">
+      <div class="person-block">
+        <span class="person-label label-nina">Nina</span>
+        <p class="person-text">Für mich bedeutet Urlaub vor allem eines: abschalten. Ich brauche keine vollen Terminkalender oder Sehenswürdigkeiten – ich möchte einfach irgendwo sein, wo ich nichts tun muss. Am liebsten miete ich ein kleines Haus auf dem Land, weit weg vom Stadtlärm. Ich lese viel, schlafe lange und genieße es, einfach loszulassen. Manchmal fühle ich mich nach solchen Ferien zum ersten Mal seit Monaten wirklich erholt. Aktivurlaub ist nichts für mich – ich komme davon eher gestresster zurück als vorher.</p>
+      </div>
+      <div class="person-block">
+        <span class="person-label label-felix">Felix</span>
+        <p class="person-text">Ich reise am liebsten mit dem Rucksack und ohne festen Plan. Das Spannende für mich ist das Ungewisse – ich weiß morgens oft nicht, wo ich abends schlafen werde. Ich suche immer neue Erfahrungen und lerne gerne Menschen aus anderen Kulturen kennen. Natürlich ist das manchmal anstrengend, aber genau das macht es für mich aus. Teure Hotels und Pauschalreisen wären für mich wie eine Gefangenschaft – ich brauche die Freiheit, spontan und nur für mich entscheiden zu können. Wenn ich nach Hause komme, bin ich zwar müde, aber gleichzeitig voller unvergesslicher und bereichernder Erfahrungen.</p>
+      </div>
+      <div class="person-block">
+        <span class="person-label label-mia">Mia</span>
+        <p class="person-text">Ferien bedeuten für mich, neue Städte zu entdecken. Ich plane im Voraus sehr genau, welche Museen, Restaurants und Viertel ich besuchen möchte. Spontanität ist nicht wirklich mein Ding – ich mag es, wenn ich weiß, was mich erwartet. Am meisten interessiert mich das kulturelle Angebot: Ausstellungen, Theater, lokale Märkte. Ich reise meistens alleine, was mir die Freiheit gibt, meinen eigenen Rhythmus zu haben. Nach dem Urlaub bin ich manchmal etwas erschöpft, doch das Gefühl, bereichert und inspiriert nach Hause zu kommen – das ist es, was zählt.</p>
+      </div>
+    </div>
+    <div class="matrix-col">
+      <div class="matrix-card">
+        <table id="matrix">
+          <thead>
+            <tr>
+              <th>Påstand</th>
+              <th>Nina</th>
+              <th>Felix</th>
+              <th>Mia</th>
+              <th>Ingen</th>
+            </tr>
+          </thead>
+          <tbody id="mbody"></tbody>
+        </table>
+      </div>
+      <div class="footer">
+        <button class="check-btn" id="cbtn" disabled>Sjekk svar</button>
+        <span class="feedback" id="fb"></span>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const stmts = [
+  { t: "Foretrekker å reise uten fast plan.",                              c: ["Felix"] },
+  { t: "Kommer hjem mer sliten enn uthvilt.",                              c: ["Felix","Mia"] },
+  { t: "Liker å planlegge ferien nøye på forhånd.",                        c: ["Mia"] },
+  { t: "Ønsker seg ro og hvile i ferien.",                                 c: ["Nina"] },
+  { t: "Synes det er kjekt å møte mennesker med ulike bakgrunner.",        c: ["Felix"] },
+  { t: "Reiser helst alene.",                                              c: ["Felix","Mia"] },
+  { t: "Foretrekker pakkereiser med alle måltider og aktiviteter inkludert.", c: ["Ingen"] },
+  { t: "Føler seg beriket av ferieopplevelsene.",                     c: ["Felix","Mia"] }
+];
+
+const names = ["Nina","Felix","Mia","Ingen"];
+const tbody = document.getElementById("mbody");
+const btn   = document.getElementById("cbtn");
+const fb    = document.getElementById("fb");
+
+stmts.forEach((s, i) => {
+  const tr = document.createElement("tr");
+  tr.dataset.i = i;
+  let h = `<td>${s.t}</td>`;
+  names.forEach(n => { h += `<td><input type="checkbox" data-r="${i}" data-n="${n}" aria-label="${n}"></td>`; });
+  tr.innerHTML = h;
+  tbody.appendChild(tr);
+});
+
+function checked(r) { return tbody.querySelectorAll(`input[data-r="${r}"]:checked`).length; }
+function allDone()  { return stmts.every((_, i) => checked(i) >= 1); }
+
+document.getElementById("matrix").addEventListener("change", () => {
+  btn.disabled = !allDone();
+  stmts.forEach((_, i) => tbody.querySelector(`tr[data-i="${i}"]`).classList.remove("correct-row","wrong-row"));
+  fb.textContent = "";
+});
+
+btn.addEventListener("click", () => {
+  let ok = true;
+  stmts.forEach((s, i) => {
+    const tr = tbody.querySelector(`tr[data-i="${i}"]`);
+    tr.classList.remove("correct-row","wrong-row");
+    const got = [...tbody.querySelectorAll(`input[data-r="${i}"]:checked`)].map(x => x.dataset.n);
+    if (got.slice().sort().join(",") === s.c.slice().sort().join(",")) tr.classList.add("correct-row");
+    else { tr.classList.add("wrong-row"); ok = false; }
+  });
+  if (ok) { fb.textContent = "Alle svar er riktige!"; fb.style.color = "#0F5C2E"; confetti(); }
+  else     { fb.textContent = "Noen svar er feil – prøv igjen."; fb.style.color = "#C0002A"; }
+});
+
+function confetti() {
+  const cv = document.getElementById("cc");
+  const ctx = cv.getContext("2d");
+  cv.width = window.innerWidth; cv.height = window.innerHeight;
+  const ps = Array.from({length: 130}, () => ({
+    x: Math.random()*cv.width, y: Math.random()*cv.height - cv.height,
+    r: 4+Math.random()*6, d: 1.5+Math.random()*2.5,
+    col: ["#0F5C2E","#E8A800","#C0002A","#0A3D6B","#D4537E","#1D9E75"][Math.floor(Math.random()*6)],
+    ta: 0, ts: 0.05+Math.random()*0.1, tilt: 0
+  }));
+  let fr, fading = false, opacity = 1;
+  function draw() {
+    if (fading) { opacity -= 0.018; if (opacity <= 0) { ctx.clearRect(0,0,cv.width,cv.height); return; } }
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.globalAlpha = fading ? opacity : 1;
+    ps.forEach(p => {
+      ctx.beginPath(); ctx.fillStyle = p.col;
+      ctx.ellipse(p.x, p.y, p.r, p.r*0.45, p.tilt, 0, Math.PI*2); ctx.fill();
+      p.y += p.d; p.x += Math.sin(p.ta)*1.5; p.ta += p.ts; p.tilt = Math.sin(p.ta)*8;
+      if (p.y > cv.height) { p.y = -10; p.x = Math.random()*cv.width; }
+    });
+    ctx.globalAlpha = 1;
+    fr = requestAnimationFrame(draw);
+  }
+  draw();
+  setTimeout(() => { fading = true; }, 3000);
+}
+</script>
+</body>
+</html>

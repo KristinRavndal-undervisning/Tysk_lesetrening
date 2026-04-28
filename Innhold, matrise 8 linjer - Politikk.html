@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Politik – muss das sein?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #F7F4FF;
+    color: #1a1a1a;
+    min-height: 100vh;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  .page { max-width: 960px; margin: 0 auto; }
+
+  .header { margin-bottom: 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #D8B4FE; }
+  .header-tag {
+    display: inline-block;
+    font-size: 10.5px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #4A1080; background: #F3E8FF; padding: 4px 12px; border-radius: 20px; margin-bottom: 0.75rem;
+  }
+  .header h1 {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 32px; font-weight: 500; color: #33075C; letter-spacing: -0.4px;
+    margin-bottom: 0.5rem; line-height: 1.2;
+  }
+  .header p { font-size: 14px; color: #4a4a4a; line-height: 1.6; }
+
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start; }
+
+  .person-block {
+    background: #fff; border: 1px solid #E9D5FF; border-radius: 12px;
+    padding: 1.25rem 1.5rem; margin-bottom: 1.25rem;
+  }
+  .person-block:last-child { margin-bottom: 0; }
+
+  .person-label {
+    display: inline-block; font-size: 10.5px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 3px 11px; border-radius: 20px; margin-bottom: 0.7rem;
+  }
+  .label-jana   { background: #F3E8FF; color: #4A1080; }
+  .label-tobias { background: #FFF3CD; color: #7A4C00; }
+  .label-emre   { background: #E0F0FF; color: #0A3D6B; }
+
+  .person-text {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 15.5px; line-height: 1.85; color: #1a1a1a;
+  }
+
+  .matrix-col { position: sticky; top: 1.5rem; }
+
+  .matrix-card {
+    background: #fff; border: 1px solid #D8B4FE; border-radius: 12px; overflow: hidden;
+  }
+
+  .matrix-card table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+
+  .matrix-card thead tr { background: #F3E8FF; }
+  .matrix-card thead th {
+    font-size: 11px; font-weight: 600; color: #33075C;
+    padding: 10px 6px; text-align: center;
+    border-bottom: 1.5px solid #D8B4FE; letter-spacing: 0.05em;
+  }
+  .matrix-card thead th:first-child { text-align: left; padding-left: 14px; width: 44%; }
+
+  .matrix-card tbody tr { border-bottom: 1px solid #F3E8FF; transition: background 0.1s; }
+  .matrix-card tbody tr:last-child { border-bottom: none; }
+  .matrix-card tbody tr:hover { background: #FAF5FF; }
+
+  .matrix-card td { padding: 9px 6px; vertical-align: middle; text-align: center; }
+  .matrix-card td:first-child {
+    font-size: 12.5px; color: #1a1a1a; line-height: 1.5;
+    text-align: left; padding-left: 14px;
+  }
+
+  input[type="checkbox"] { width: 15px; height: 15px; cursor: pointer; accent-color: #4A1080; }
+
+  .correct-row td:first-child { color: #0F5C2E; font-weight: 500; }
+  .wrong-row   td:first-child { color: #C0002A; font-weight: 500; }
+
+  .footer { margin-top: 1rem; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+  .check-btn {
+    font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600;
+    padding: 9px 22px; border-radius: 20px; border: none;
+    background: #4A1080; color: #fff; cursor: pointer;
+    transition: background 0.15s, opacity 0.15s;
+  }
+  .check-btn:disabled { opacity: 0.28; cursor: default; }
+  .check-btn:not(:disabled):hover { background: #33075C; }
+
+  .feedback { font-size: 12.5px; }
+
+  canvas#cc { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+  @media (max-width: 680px) {
+    .cols { grid-template-columns: 1fr; }
+    .matrix-col { position: static; }
+    .header h1 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="cc"></canvas>
+<div class="page">
+  <div class="header">
+    <span class="header-tag">Leseoppgave · Tysk</span>
+    <h1>Politik – muss das sein?</h1>
+    <p>Les tekstene og sett kryss for hvem som passer til hver påstand. Flere navn kan gjelde – eller ingen.</p>
+  </div>
+  <div class="cols">
+    <div class="text-col">
+      <div class="person-block">
+        <span class="person-label label-jana">Jana</span>
+        <p class="person-text">Ich bin seit zwei Jahren Mitglied in einer Jugendpartei und engagiere mich dort aktiv. Für mich ist Politik keine Option, sondern eine Pflicht. Wenn niemand mitmacht, entscheiden andere über unser Leben – und das kann ich nicht akzeptieren. Ich gehe zu Demonstrationen, verfolge die Nachrichten täglich und diskutiere gerne mit anderen, auch wenn wir unterschiedlicher Meinung sind. Manchmal finde ich es frustrierend, wie wenig sich junge Menschen für Politik interessieren. Aber ich gebe nicht auf, denn ich glaube daran, dass wir etwas verändern können. Ob ich mich in zehn Jahren genauso stark engagiere, weiß ich nicht – das Leben wird komplizierter. Aber im Moment habe ich die Energie dazu, und die nutze ich.</p>
+      </div>
+      <div class="person-block">
+        <span class="person-label label-tobias">Tobias</span>
+        <p class="person-text">Ich verfolge die Nachrichten regelmäßig und habe meine eigenen politischen Ansichten, aber ich halte mich lieber im Hintergrund. Demonstrationen und Parteimitgliedschaften sind nichts für mich – ich finde es wichtiger, im Alltag das Richtige zu tun, zum Beispiel bewusst einzukaufen oder Energie zu sparen. Ob das politisch ist oder nicht – ich weiß es nicht genau. Ich glaube, jeder sollte selbst entscheiden, wie er sich engagiert. Laute Politik nervt mich ehrlich gesagt manchmal – ich bevorzuge ruhige, sachliche Gespräche.</p>
+      </div>
+      <div class="person-block">
+        <span class="person-label label-emre">Emre</span>
+        <p class="person-text">Politik interessiert mich kaum. Ich weiß, dass es wichtige Themen gibt, aber ich habe das Gefühl, dass meine Stimme sowieso nichts verändert. Die Politiker machen doch, was sie wollen. Deshalb kümmere ich mich lieber um mein eigenes Leben – Schule, Freunde, Sport. Vielleicht ändert sich das, wenn ich älter bin. Aber im Moment fühlt sich Politik wie eine andere Welt an, die nichts mit mir zu tun hat. Ich finde es auch anstrengend, sich über Dinge aufzuregen, die man ohnehin nicht kontrollieren kann.</p>
+      </div>
+    </div>
+    <div class="matrix-col">
+      <div class="matrix-card">
+        <table id="matrix">
+          <thead>
+            <tr>
+              <th>Påstand</th>
+              <th>Jana</th>
+              <th>Tobias</th>
+              <th>Emre</th>
+              <th>Ingen</th>
+            </tr>
+          </thead>
+          <tbody id="mbody"></tbody>
+        </table>
+      </div>
+      <div class="footer">
+        <button class="check-btn" id="cbtn" disabled>Sjekk svar</button>
+        <span class="feedback" id="fb"></span>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+const stmts = [
+  { t: "Er aktivt medlem i en politisk organisasjon.",                                 c: ["Jana"] },
+  { t: "Uttrykker engasjement gjennom bevisste forbrukervalg.",                       c: ["Tobias"] },
+  { t: "Tror ikke at én persons stemme utgjør en forskjell.",                         c: ["Emre"] },
+  { t: "Følger med på nyheter regelmessig.",                                          c: ["Jana","Tobias"] },
+  { t: "Har opplevd problemer på grunn av meningene sine.",                           c: ["Ingen"] },
+  { t: "Mener at politisk engasjement er en plikt.",                                  c: ["Jana"] },
+  { t: "Synes det er bortkastet energi å engasjere seg i ting man ikke kan påvirke.", c: ["Emre"] },
+  { t: "Er åpen for at holdningen kan endre seg med alderen.",                        c: ["Jana","Emre"] }
+];
+
+const names = ["Jana","Tobias","Emre","Ingen"];
+const tbody = document.getElementById("mbody");
+const btn   = document.getElementById("cbtn");
+const fb    = document.getElementById("fb");
+
+stmts.forEach((s, i) => {
+  const tr = document.createElement("tr");
+  tr.dataset.i = i;
+  let h = `<td>${s.t}</td>`;
+  names.forEach(n => { h += `<td><input type="checkbox" data-r="${i}" data-n="${n}" aria-label="${n}"></td>`; });
+  tr.innerHTML = h;
+  tbody.appendChild(tr);
+});
+
+function checked(r) { return tbody.querySelectorAll(`input[data-r="${r}"]:checked`).length; }
+function allDone()  { return stmts.every((_, i) => checked(i) >= 1); }
+
+document.getElementById("matrix").addEventListener("change", () => {
+  btn.disabled = !allDone();
+  stmts.forEach((_, i) => tbody.querySelector(`tr[data-i="${i}"]`).classList.remove("correct-row","wrong-row"));
+  fb.textContent = "";
+});
+
+btn.addEventListener("click", () => {
+  let ok = true;
+  stmts.forEach((s, i) => {
+    const tr = tbody.querySelector(`tr[data-i="${i}"]`);
+    tr.classList.remove("correct-row","wrong-row");
+    const got = [...tbody.querySelectorAll(`input[data-r="${i}"]:checked`)].map(x => x.dataset.n);
+    if (got.slice().sort().join(",") === s.c.slice().sort().join(",")) tr.classList.add("correct-row");
+    else { tr.classList.add("wrong-row"); ok = false; }
+  });
+  if (ok) { fb.textContent = "Alle svar er riktige!"; fb.style.color = "#0F5C2E"; confetti(); }
+  else     { fb.textContent = "Noen svar er feil – prøv igjen."; fb.style.color = "#C0002A"; }
+});
+
+function confetti() {
+  const cv = document.getElementById("cc");
+  const ctx = cv.getContext("2d");
+  cv.width = window.innerWidth; cv.height = window.innerHeight;
+  const ps = Array.from({length: 130}, () => ({
+    x: Math.random()*cv.width, y: Math.random()*cv.height - cv.height,
+    r: 4+Math.random()*6, d: 1.5+Math.random()*2.5,
+    col: ["#4A1080","#F59E0B","#0A3D6B","#D4537E","#1D9E75","#C0002A"][Math.floor(Math.random()*6)],
+    ta: 0, ts: 0.05+Math.random()*0.1, tilt: 0
+  }));
+  let fr, fading = false, opacity = 1;
+  function draw() {
+    if (fading) { opacity -= 0.018; if (opacity <= 0) { ctx.clearRect(0,0,cv.width,cv.height); return; } }
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.globalAlpha = fading ? opacity : 1;
+    ps.forEach(p => {
+      ctx.beginPath(); ctx.fillStyle = p.col;
+      ctx.ellipse(p.x, p.y, p.r, p.r*0.45, p.tilt, 0, Math.PI*2); ctx.fill();
+      p.y += p.d; p.x += Math.sin(p.ta)*1.5; p.ta += p.ts; p.tilt = Math.sin(p.ta)*8;
+      if (p.y > cv.height) { p.y = -10; p.x = Math.random()*cv.width; }
+    });
+    ctx.globalAlpha = 1;
+    fr = requestAnimationFrame(draw);
+  }
+  draw();
+  setTimeout(() => { fading = true; }, 3000);
+}
+</script>
+</body>
+</html>
