@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Der richtige Hund – Leseoppgave</title>
+<link href="https://fonts.googleapis.com/css2?family=Righteous&family=Nunito:ital,wght@0,400;0,600;0,700;1,400&family=Fraunces:ital,wght@0,400;1,300;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fdf6e8;
+    --brown: #3b1f0e;
+    --orange: #e8640c;
+    --yellow: #f5c842;
+    --green: #3a7d44;
+    --red: #c0392b;
+    --sand: #e8d5b0;
+    --dark-sand: #c9b48a;
+    --mid: #7a5c3a;
+    --white: #fffef9;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--cream);
+    color: var(--brown);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--brown);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-top {
+    background: var(--orange);
+    padding: 10px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .paw-strip {
+    font-size: 1.1rem;
+    letter-spacing: 6px;
+    opacity: 0.6;
+    display: inline-block;
+    padding: 0 12px;
+    animation: scroll-paws 18s linear infinite;
+  }
+
+  @keyframes scroll-paws {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .header-main {
+    padding: 24px 40px 20px;
+    position: relative;
+  }
+
+  .header-deco {
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 6rem;
+    opacity: 0.08;
+    line-height: 1;
+  }
+
+  .titel {
+    font-family: 'Righteous', sans-serif;
+    font-size: clamp(2rem, 5.5vw, 3.8rem);
+    color: var(--yellow);
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+  }
+
+  .titel .aktsent {
+    color: var(--orange);
+  }
+
+  .header-badge {
+    display: inline-block;
+    margin-top: 10px;
+    background: var(--yellow);
+    color: var(--brown);
+    font-family: 'Righteous', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+
+  .instruksjon {
+    background: var(--sand);
+    border-bottom: 3px solid var(--dark-sand);
+    padding: 11px 40px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--brown);
+  }
+
+  /* LAYOUT */
+  .innhold {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    min-height: calc(100vh - 160px);
+  }
+
+  /* TEXT COLUMN */
+  .tekst-kolonne {
+    padding: 36px 38px 36px 40px;
+    border-right: 3px solid var(--dark-sand);
+    background: var(--white);
+  }
+
+  .tekst-tittel {
+    font-family: 'Righteous', sans-serif;
+    font-size: 1.45rem;
+    color: var(--brown);
+    margin-bottom: 3px;
+  }
+
+  .tekst-undertittel {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--mid);
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px dashed var(--sand);
+  }
+
+  .tekst-kolonne p {
+    font-family: 'Fraunces', serif;
+    font-size: 1.02rem;
+    line-height: 1.85;
+    color: #2a1a0a;
+    margin-bottom: 18px;
+  }
+
+  .tekst-kolonne h3 {
+    font-family: 'Righteous', sans-serif;
+    font-size: 1.05rem;
+    color: var(--white);
+    background: var(--orange);
+    margin: 26px -8px 10px;
+    padding: 6px 16px;
+    border-radius: 4px;
+    display: inline-block;
+    letter-spacing: 0.04em;
+  }
+
+  .hund-kort {
+    background: var(--cream);
+    border: 2px solid var(--sand);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    position: relative;
+  }
+
+  .hund-navn {
+    font-family: 'Righteous', sans-serif;
+    font-size: 1rem;
+    color: var(--orange);
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .hund-navn::before {
+    content: "🐾";
+    font-size: 0.9rem;
+  }
+
+  .hund-kort p {
+    font-size: 0.93rem !important;
+    margin-bottom: 0 !important;
+    line-height: 1.6 !important;
+  }
+
+  .fotnote {
+    margin-top: 28px;
+    padding-top: 14px;
+    border-top: 2px dashed var(--sand);
+    font-size: 0.78rem;
+    color: var(--mid);
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  /* SPØRSMÅL COLUMN */
+  .sporsmal-kolonne {
+    padding: 30px 28px;
+    background: var(--brown);
+  }
+
+  .sporsmal-header {
+    font-family: 'Righteous', sans-serif;
+    font-size: 1.2rem;
+    color: var(--yellow);
+    letter-spacing: 0.06em;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px dashed #5a3520;
+  }
+
+  .sporsmal-item {
+    margin-bottom: 16px;
+    padding: 13px 15px;
+    background: #4a2810;
+    border-radius: 10px;
+    border: 2px solid #5a3520;
+    transition: border-color 0.2s;
+  }
+
+  .sporsmal-item.besvart {
+    border-color: var(--yellow);
+  }
+
+  .sporsmal-item.riktig {
+    border-color: var(--green);
+    background: #1e3a22;
+  }
+
+  .sporsmal-item.feil {
+    border-color: var(--red);
+    background: #3a1212;
+  }
+
+  .sporsmal-nummer {
+    font-family: 'Righteous', sans-serif;
+    font-size: 0.7rem;
+    color: var(--orange);
+    letter-spacing: 0.12em;
+    margin-bottom: 5px;
+  }
+
+  .sporsmal-tekst {
+    font-size: 0.86rem;
+    color: #f0e8d8;
+    line-height: 1.5;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .radio-gruppe {
+    display: flex;
+    gap: 8px;
+  }
+
+  .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 2px solid #6a4530;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #c8a888;
+    transition: all 0.15s;
+    user-select: none;
+    font-family: 'Nunito', sans-serif;
+  }
+
+  .radio-label:hover {
+    border-color: var(--yellow);
+    color: var(--yellow);
+  }
+
+  .radio-label input { display: none; }
+
+  .radio-label.valgt {
+    border-color: var(--yellow);
+    background: #5a3800;
+    color: var(--yellow);
+  }
+
+  .radio-label.riktig-valg {
+    border-color: var(--green);
+    background: #1a3a1e;
+    color: #6dcc80;
+  }
+
+  .radio-label.feil-valg {
+    border-color: var(--red);
+    background: #3a1010;
+    color: #e07070;
+  }
+
+  .feedback-ikon {
+    display: none;
+    font-size: 0.78rem;
+    margin-top: 7px;
+    font-style: italic;
+    line-height: 1.4;
+  }
+
+  .sporsmal-item.riktig .feedback-ikon { display: block; color: #6dcc80; }
+  .sporsmal-item.feil .feedback-ikon   { display: block; color: #e08080; }
+
+  /* KNAPPER */
+  .knapper {
+    margin-top: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #sjekk-btn {
+    font-family: 'Righteous', sans-serif;
+    font-size: 1.15rem;
+    letter-spacing: 0.08em;
+    padding: 13px 28px;
+    background: var(--orange);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  #sjekk-btn:disabled {
+    background: #5a3520;
+    color: #7a5a40;
+    cursor: not-allowed;
+  }
+
+  #sjekk-btn:not(:disabled):hover {
+    opacity: 0.88;
+    transform: translateY(-2px);
+  }
+
+  #prov-igjen-btn {
+    display: none;
+    font-family: 'Righteous', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    padding: 11px 28px;
+    background: transparent;
+    color: var(--yellow);
+    border: 2px solid var(--yellow);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  #prov-igjen-btn:hover { background: #3a2800; }
+
+  .resultat-melding {
+    display: none;
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    padding: 12px 14px;
+    border-radius: 8px;
+    line-height: 1.5;
+  }
+
+  .resultat-melding.suksess {
+    background: #1a3a1e;
+    color: #6dcc80;
+    border: 2px solid var(--green);
+  }
+
+  .resultat-melding.delvis {
+    background: #3a2800;
+    color: #e8c060;
+    border: 2px solid #8a6020;
+  }
+
+  /* CONFETTI */
+  #confetti-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  .confetti-bit {
+    position: absolute;
+    opacity: 0;
+    animation: fall 2.8s ease-in forwards;
+  }
+
+  @keyframes fall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  @media (max-width: 700px) {
+    .innhold { grid-template-columns: 1fr; }
+    .tekst-kolonne { border-right: none; border-bottom: 3px solid var(--dark-sand); }
+    header, .instruksjon, .tekst-kolonne, .sporsmal-kolonne { padding-left: 20px; padding-right: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-top">
+    <span class="paw-strip">🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾 🐾</span>
+  </div>
+  <div class="header-main">
+    <div class="header-deco">🐶</div>
+    <div class="titel">Der richtige <span class="aktsent">Hund</span><br>– für jeden Menschen</div>
+  </div>
+</header>
+
+<div class="instruksjon">
+  🐕 Les teksten til venstre og avgjør om påstandene til høyre er <strong>sanne</strong> eller <strong>usanne</strong>. Du må svare på alle spørsmålene før du kan sjekke svarene.
+</div>
+
+<div class="innhold">
+
+  <!-- TEKST -->
+  <div class="tekst-kolonne">
+    <div class="tekst-tittel">Welcher Hund passt zu mir?</div>
+    <div class="tekst-undertittel">Tipps für alle, die einen Hund kaufen oder adoptieren möchten</div>
+
+    <h3>Vor dem Kauf: Was muss man bedenken?</h3>
+    <p>Einen Hund zu kaufen ist eine große Entscheidung. Ein Hund kann bis zu 15 Jahre alt werden – das bedeutet eine lange Verpflichtung. Bevor man sich für eine Rasse entscheidet, sollte man ehrlich über seinen eigenen Lebensstil nachdenken: Wie viel Zeit hat man für Spaziergänge? Lebt man in einer Wohnung oder einem Haus mit Garten? Hat man Kinder oder andere Haustiere? Diese Fragen sind genauso wichtig wie der Wunsch nach einem bestimmten Aussehen.</p>
+
+    <h3>Bekannte Rassen und ihre Eigenschaften</h3>
+
+    <div class="hund-kort">
+      <div class="hund-navn">Golden Retriever</div>
+      <p>Der Golden Retriever ist freundlich, geduldig und liebt Menschen. Er ist ideal für Familien mit Kindern und braucht viel Bewegung. Wegen seines langen Fells muss er regelmäßig gebürstet werden.</p>
+    </div>
+
+    <div class="hund-kort">
+      <div class="hund-navn">Französische Bulldogge</div>
+      <p>Die Französische Bulldogge ist kompakt, verspielt und braucht wenig Bewegung – sie passt gut in eine Stadtwohnung. Allerdings kann sie aufgrund ihrer kurzen Schnauze Atemprobleme bekommen, besonders bei Hitze.</p>
+    </div>
+
+    <div class="hund-kort">
+      <div class="hund-navn">Border Collie</div>
+      <p>Der Border Collie gilt als die intelligenteste Hunderasse der Welt. Er braucht sehr viel geistige und körperliche Beschäftigung. Ohne Aufgaben und ausreichend Beschäftigung kann er unruhig und destruktiv werden. Er ist nichts für Anfänger.</p>
+    </div>
+
+    <div class="hund-kort">
+      <div class="hund-navn">Basset Hound</div>
+      <p>Der Basset Hound ist ruhig, gemütlich und eignet sich gut für weniger aktive Menschen. Er folgt jedoch hartnäckig interessanten Gerüchen und braucht deshalb immer eine Leine oder einen sicheren Zaun.</p>
+    </div>
+
+    <h3>Kaufen oder adoptieren?</h3>
+    <p>Viele Menschen entscheiden sich, einen Hund aus dem Tierheim zu adoptieren. Adoptierte Hunde sind oft schon stubenrein und haben Grundgehorsam gelernt. Außerdem rettet man damit einem Tier das Leben. Ein Hund vom Züchter kostet jedoch deutlich mehr, kann aber gesundheitlich besser dokumentiert sein, wenn man auf seriöse Züchter achtet.</p>
+
+    <h3>Kosten und Verantwortung</h3>
+    <p>Ein Hund kostet nicht nur beim Kauf Geld. Man muss auch an Tierarztbesuche, Futter, Versicherung und Zubehör denken. In Deutschland braucht man außerdem eine Hundesteuer und – je nach Bundesland – einen Sachkundenachweis für bestimmte Rassen.</p>
+
+    <div class="fotnote">
+      * Sachkundenachweis: dokumentasjon på at hundeeier har nødvendig kunnskap om stell og oppdragelse av hund.
+    </div>
+  </div>
+
+  <!-- SPØRSMÅL -->
+  <div class="sporsmal-kolonne">
+    <div class="sporsmal-header">🐾 Sann eller usann?</div>
+    <div id="sporsmal-liste"></div>
+    <div class="knapper">
+      <button id="sjekk-btn" disabled onclick="sjekkSvar()">SJEKK SVARENE</button>
+      <div class="resultat-melding" id="resultat-melding"></div>
+      <button id="prov-igjen-btn" onclick="provIgjen()">↺ PRØV IGJEN</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="confetti-container"></div>
+
+<script>
+const sporsmal = [
+  {
+    tekst: "Det er viktig å tenke på livsstilen sin før man velger rase.",
+    svar: true,
+    forklaring: "Riktig – teksten sier man bør tenke ærlig over sin egen livsstil før man velger rase."
+  },
+  {
+    tekst: "Teksten påpeker at man bør tenke over hvor mange hunder man ønsker å anskaffe.",
+    svar: false,
+    forklaring: "Usant – teksten spør om man har andre husdyr (som et hensyn å ta), ikke om antall hunder man vil anskaffe."
+  },
+  {
+    tekst: "Golden Retrieveren er spesielt egnet for barnefamilier fordi den klarer seg med lite mosjon.",
+    svar: false,
+    forklaring: "Usant – Golden Retrieveren passer for barnefamilier, men teksten sier den trenger mye bevegelse, ikke lite."
+  },
+  {
+    tekst: "Den franske bulldoggen kan få pusteproblemer og liker derfor ikke særlig godt å leke.",
+    svar: false,
+    forklaring: "Usant – teksten sier den er verspielt (lekende), men at pusteproblemer kan oppstå særlig i varmt vær. Lekelysten nevnes ikke som et problem."
+  },
+  {
+    tekst: "Border Collien kan bli problematisk hvis den kjeder seg.",
+    svar: true,
+    // "destruktiv" og "unruhig" uten oppgaver = problematisk når den kjeder seg
+    forklaring: "Riktig – uten nok stimulering kan den bli urolig og destruktiv, ifølge teksten."
+  },
+  {
+    tekst: "En Basset Hound kan slippes løs uten problemer fordi den er rolig.",
+    svar: false,
+    // Den følger lukter stadig og trenger alltid bånd eller sikker innhegning
+    forklaring: "Usant – til tross for rolig temperament følger den likevel iherdig spennende lukter og trenger alltid bånd eller sikker innhegning."
+  },
+  {
+    tekst: "En hund fra dyrehjemmet kan ha lært grunnleggende lydighet allerede.",
+    svar: true,
+    // "Grundgehorsam gelernt" = lært grunnleggende lydighet
+    forklaring: "Riktig – teksten nevner at adopterte hunder ofte allerede har lært grunnlydighet."
+  },
+  {
+    tekst: "I Tyskland er det gratis å eie hund – man betaler kun for selve dyret.",
+    svar: false,
+    // Hundeskatt, forsikring, veterinær, utstyr nevnes alle
+    forklaring: "Usant – teksten nevner blant annet hundeskatt, forsikring, veterinærbesøk og utstyr som løpende utgifter."
+  }
+];
+
+let besvarelser = new Array(sporsmal.length).fill(null);
+let sjekket = false;
+
+function byggSporsmal() {
+  const liste = document.getElementById('sporsmal-liste');
+  liste.innerHTML = '';
+  sporsmal.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'sporsmal-item';
+    div.id = `item-${i}`;
+    div.innerHTML = `
+      <div class="sporsmal-nummer">SPØRSMÅL ${i + 1}</div>
+      <div class="sporsmal-tekst">${s.tekst}</div>
+      <div class="radio-gruppe">
+        <label class="radio-label" id="sant-${i}">
+          <input type="radio" name="sp${i}" value="true" onchange="velg(${i}, true)"> ✓ Sann
+        </label>
+        <label class="radio-label" id="usant-${i}">
+          <input type="radio" name="sp${i}" value="false" onchange="velg(${i}, false)"> ✗ Usann
+        </label>
+      </div>
+      <div class="feedback-ikon" id="feedback-${i}"></div>
+    `;
+    liste.appendChild(div);
+  });
+}
+
+function velg(i, verdi) {
+  if (sjekket) return;
+  besvarelser[i] = verdi;
+  document.getElementById(`sant-${i}`).classList.toggle('valgt', verdi === true);
+  document.getElementById(`usant-${i}`).classList.toggle('valgt', verdi === false);
+  document.getElementById(`item-${i}`).classList.add('besvart');
+  document.getElementById('sjekk-btn').disabled = !besvarelser.every(b => b !== null);
+}
+
+function sjekkSvar() {
+  sjekket = true;
+  let riktige = 0;
+  sporsmal.forEach((s, i) => {
+    const item = document.getElementById(`item-${i}`);
+    const feedback = document.getElementById(`feedback-${i}`);
+    const erRiktig = besvarelser[i] === s.svar;
+    if (erRiktig) {
+      riktige++;
+      item.classList.add('riktig');
+      feedback.textContent = '✓ ' + s.forklaring;
+      document.getElementById(s.svar ? `sant-${i}` : `usant-${i}`).classList.add('riktig-valg');
+    } else {
+      item.classList.add('feil');
+      feedback.textContent = '✗ ' + s.forklaring;
+      document.getElementById(besvarelser[i] ? `sant-${i}` : `usant-${i}`).classList.add('feil-valg');
+      document.getElementById(s.svar ? `sant-${i}` : `usant-${i}`).classList.add('riktig-valg');
+    }
+    document.querySelectorAll(`input[name="sp${i}"]`).forEach(el => el.disabled = true);
+  });
+
+  const melding = document.getElementById('resultat-melding');
+  melding.style.display = 'block';
+  document.getElementById('sjekk-btn').disabled = true;
+
+  if (riktige === sporsmal.length) {
+    melding.className = 'resultat-melding suksess';
+    melding.textContent = `🎉 Perfekt! Du fikk alle ${sporsmal.length} riktige!`;
+    kastKonfetti();
+  } else {
+    melding.className = 'resultat-melding delvis';
+    melding.textContent = `Du fikk ${riktige} av ${sporsmal.length} riktige. Les forklaringene og prøv igjen!`;
+    document.getElementById('prov-igjen-btn').style.display = 'block';
+  }
+}
+
+function provIgjen() {
+  besvarelser = new Array(sporsmal.length).fill(null);
+  sjekket = false;
+  document.getElementById('resultat-melding').style.display = 'none';
+  document.getElementById('prov-igjen-btn').style.display = 'none';
+  document.getElementById('sjekk-btn').disabled = true;
+  byggSporsmal();
+}
+
+function kastKonfetti() {
+  const container = document.getElementById('confetti-container');
+  container.innerHTML = '';
+  for (let i = 0; i < 60; i++) {
+    const bit = document.createElement('div');
+    bit.style.cssText = `
+      position: absolute;
+      left: ${Math.random() * 100}vw;
+      top: -40px;
+      font-size: ${18 + Math.random() * 22}px;
+      opacity: 0;
+      animation: fall ${2.2 + Math.random() * 1.8}s ease-in forwards;
+      animation-delay: ${Math.random() * 1.6}s;
+    `;
+    bit.textContent = '🐾';
+    container.appendChild(bit);
+  }
+  setTimeout(() => container.innerHTML = '', 7000);
+}
+
+byggSporsmal();
+</script>
+</body>
+</html>

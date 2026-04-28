@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beschwerde – Leseoppgave</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,300;1,400&family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1c1a18;
+    --paper: #faf8f4;
+    --warm-white: #fffef9;
+    --crimson: #9e1b1b;
+    --crimson-light: #c02020;
+    --gold: #b8922a;
+    --light-gold: #e8c96a;
+    --grey: #6a6560;
+    --light-grey: #e8e4dc;
+    --border: #d0c8b8;
+    --stamp-red: #b01010;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #2a2420;
+    color: var(--ink);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--ink);
+    border-bottom: 4px solid var(--crimson);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header-texture {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      rgba(255,255,255,0.015) 8px,
+      rgba(255,255,255,0.015) 9px
+    );
+  }
+
+  .header-inner {
+    padding: 26px 44px 22px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .over-titel {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    color: var(--crimson-light);
+    text-transform: uppercase;
+    margin-bottom: 7px;
+  }
+
+  .titel {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--paper);
+    line-height: 1.0;
+    font-weight: 700;
+  }
+
+  .titel em {
+    color: var(--light-gold);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .header-deco {
+    font-size: 4.5rem;
+    opacity: 0.12;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .anger-strip {
+    background: var(--crimson);
+    padding: 8px 0;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  .anger-inner {
+    display: inline-block;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    color: rgba(255,255,255,0.85);
+    text-transform: uppercase;
+    animation: scroll-anger 22s linear infinite;
+  }
+
+  @keyframes scroll-anger {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* INSTRUKSJON */
+  .instruksjon {
+    background: var(--light-gold);
+    padding: 11px 44px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--ink);
+    border-bottom: 3px solid var(--gold);
+  }
+
+  /* LAYOUT */
+  .innhold {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    min-height: calc(100vh - 180px);
+  }
+
+  /* TEXT COLUMN */
+  .tekst-kolonne {
+    background: #2a2420;
+    padding: 32px 36px;
+    border-right: 3px solid #3a3028;
+  }
+
+  /* LETTER PAPER */
+  .brev-paper {
+    background: var(--paper);
+    border-radius: 2px;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.5), 0 1px 4px rgba(0,0,0,0.3);
+    padding: 38px 42px 32px;
+    position: relative;
+  }
+
+  /* Folding lines */
+  .brev-paper::before,
+  .brev-paper::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    background: rgba(0,0,0,0.06);
+  }
+  .brev-paper::before { top: 33.33%; }
+  .brev-paper::after  { top: 66.66%; }
+
+  /* STAMP */
+  .stamp {
+    position: absolute;
+    top: 28px;
+    right: 36px;
+    width: 64px;
+    height: 64px;
+    border: 3px solid var(--stamp-red);
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.55rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--stamp-red);
+    opacity: 0.65;
+    transform: rotate(3deg);
+    line-height: 1.3;
+    text-align: center;
+    padding: 4px;
+  }
+
+  .stamp-emoji { font-size: 1.4rem; margin-bottom: 2px; }
+
+  .brev-absender {
+    font-size: 0.78rem;
+    line-height: 1.7;
+    color: var(--grey);
+    font-family: 'Cormorant Garamond', serif;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .brev-absender strong {
+    font-size: 0.92rem;
+    color: var(--ink);
+    display: block;
+    font-weight: 600;
+  }
+
+  .empfaenger {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .datum {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--grey);
+    margin-bottom: 18px;
+  }
+
+  .betreff {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--crimson);
+    margin-bottom: 18px;
+    padding: 8px 12px;
+    border-left: 3px solid var(--crimson);
+    background: rgba(158,27,27,0.05);
+    border-radius: 0 3px 3px 0;
+    line-height: 1.3;
+  }
+
+  .betreff-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 3px;
+    font-family: 'Barlow Condensed', sans-serif;
+  }
+
+  .brev-body p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem;
+    line-height: 1.82;
+    color: #1e1c1a;
+    margin-bottom: 15px;
+  }
+
+  .brev-body p.anrede {
+    margin-bottom: 14px;
+  }
+
+  .brev-footer {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+
+  .underskrift {
+    font-style: italic;
+    color: var(--grey);
+    font-size: 0.88rem;
+    margin-top: 6px;
+  }
+
+  .fotnote {
+    margin-top: 20px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+    font-size: 0.75rem;
+    color: var(--grey);
+    line-height: 1.7;
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  /* SPØRSMÅL COLUMN */
+  .sporsmal-kolonne {
+    padding: 30px 26px;
+    background: #221e1a;
+  }
+
+  .sporsmal-header {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--light-gold);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #3a3028;
+  }
+
+  .sporsmal-item {
+    margin-bottom: 13px;
+    padding: 12px 14px;
+    background: #2e2820;
+    border-radius: 4px;
+    border: 2px solid #3e3428;
+    transition: border-color 0.2s;
+  }
+
+  .sporsmal-item.besvart  { border-color: var(--gold); }
+  .sporsmal-item.riktig   { border-color: #4a9a5a; background: #1a2a1e; }
+  .sporsmal-item.feil     { border-color: var(--crimson); background: #2a1a18; }
+
+  .sporsmal-nummer {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.67rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 5px;
+  }
+
+  .sporsmal-tekst {
+    font-size: 0.84rem;
+    font-family: 'Barlow', sans-serif;
+    color: #ddd8d0;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+
+  .radio-gruppe { display: flex; gap: 8px; }
+
+  .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 5px 12px;
+    border-radius: 3px;
+    border: 1.5px solid #4a4038;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: #9a9080;
+    transition: all 0.15s;
+    user-select: none;
+    font-family: 'Barlow Condensed', sans-serif;
+    text-transform: uppercase;
+  }
+
+  .radio-label:hover       { border-color: var(--light-gold); color: var(--light-gold); }
+  .radio-label input       { display: none; }
+  .radio-label.valgt       { border-color: var(--gold); background: #2e2200; color: var(--light-gold); }
+  .radio-label.riktig-valg { border-color: #4a9a5a; background: #142018; color: #70cc80; }
+  .radio-label.feil-valg   { border-color: var(--crimson); background: #2a1010; color: #e07070; }
+
+  .feedback-ikon {
+    display: none;
+    font-size: 0.76rem;
+    margin-top: 7px;
+    line-height: 1.45;
+    font-family: 'Barlow', sans-serif;
+    font-style: italic;
+  }
+
+  .sporsmal-item.riktig .feedback-ikon { display: block; color: #70cc80; }
+  .sporsmal-item.feil   .feedback-ikon { display: block; color: #e08080; }
+
+  .knapper { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+
+  #sjekk-btn {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 13px 28px;
+    background: var(--crimson);
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  #sjekk-btn:disabled     { background: #3a3028; color: #5a5040; cursor: not-allowed; }
+  #sjekk-btn:not(:disabled):hover { opacity: 0.88; transform: translateY(-2px); }
+
+  #prov-igjen-btn {
+    display: none;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 11px 28px;
+    background: transparent;
+    color: var(--light-gold);
+    border: 2px solid var(--gold);
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  #prov-igjen-btn:hover { background: #2a1e08; }
+
+  .resultat-melding {
+    display: none;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    padding: 12px 14px;
+    border-radius: 3px;
+    line-height: 1.5;
+  }
+
+  .resultat-melding.suksess { background: #142018; color: #70cc80; border: 2px solid #4a9a5a; }
+  .resultat-melding.delvis  { background: #221a08; color: #e8c060; border: 2px solid #8a6020; }
+
+  /* CONFETTI */
+  #confetti-container {
+    position: fixed; top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none; z-index: 999;
+  }
+
+  @keyframes fall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(540deg); opacity: 0; }
+  }
+
+  @media (max-width: 700px) {
+    .innhold { grid-template-columns: 1fr; }
+    .tekst-kolonne { border-right: none; border-bottom: 3px solid #3a3028; }
+    .tekst-kolonne, .sporsmal-kolonne { padding: 20px; }
+    .header-inner { padding: 20px; }
+    .instruksjon  { padding: 11px 20px; }
+    .brev-paper   { padding: 26px 22px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-texture"></div>
+  <div class="header-inner">
+    <div>
+      <div class="over-titel">Formeller Brief · Leseoppgave</div>
+      <div class="titel">Eine <em>Beschwerde</em><br>an die Jury</div>
+    </div>
+    <div class="header-deco">💃</div>
+  </div>
+
+</header>
+
+<div class="instruksjon">
+  ✉️ Les brevet til venstre og avgjør om påstandene til høyre er <strong>sanne</strong> eller <strong>usanne</strong>. Du må svare på alle spørsmålene før du kan sjekke svarene.
+</div>
+
+<div class="innhold">
+
+  <!-- TEKST: BREV -->
+  <div class="tekst-kolonne">
+    <div class="brev-paper">
+
+      <div class="stamp">
+        <span class="stamp-emoji">📮</span>
+        Einschreiben
+      </div>
+
+      <div class="brev-absender">
+        <strong>Andrea Hoffmann</strong>
+        Rosenweg 7, 70376 Stuttgart<br>
+        a.hoffmann@web.de · Tel: 0711 / 44 38 21
+      </div>
+
+      <div class="empfaenger">
+        <strong>Jury des Regionalwettbewerbs „Tanzstern Baden-Württemberg"</strong><br>
+        z. Hd. Juryvorsitzende Frau Dr. Petra Müller<br>
+        Kulturzentrum Ludwigsburg, Schillerplatz 4<br>
+        71634 Ludwigsburg
+      </div>
+
+      <div class="datum">Stuttgart, den 18. März 2025</div>
+
+      <div class="betreff">
+        <span class="betreff-label">Betreff</span>
+        Beschwerde bezüglich der Nichtqualifikation von Lena Hoffmann – Vorrunde vom 15. März 2025
+      </div>
+
+      <div class="brev-body">
+        <p class="anrede">Sehr geehrte Frau Dr. Müller, sehr geehrte Jurymitglieder,</p>
+
+        <p>ich wende mich an Sie, weil ich die Entscheidung Ihrer Jury für falsch und nicht nachvollziehbar halte. Meine Tochter Lena Hoffmann, 14 Jahre alt, hat bei der Vorrunde des Regionalwettbewerbs „Tanzstern Baden-Württemberg" am 15. März teilgenommen und wurde trotz einer – meiner Meinung nach – hervorragenden Darbietung nicht für das Regionalfinale ausgewählt. Das halte ich für einen schwerwiegenden Fehler.</p>
+
+        <p>Lena trainiert seit neun Jahren und hat in diesem Jahr bereits drei regionale Auszeichnungen erhalten. Sie hat für diesen Wettbewerb wochenlang täglich mehrere Stunden geübt. Andere Teilnehmerinnen, die weitergekommen sind, haben nach meiner Einschätzung deutlich weniger Ausdruck und technische Präzision gezeigt. Ich fordere Sie daher auf zu erklären, nach welchen Kriterien Ihre Jury bewertet hat.</p>
+
+        <p>Ich verlange außerdem die schriftliche Bewertung, die Lena von der Jury erhalten hat, sowie eine Auflistung der Punkte, die sie in jeder Kategorie erzielt hat. Laut den Wettbewerbsregeln haben alle Teilnehmerinnen das Recht auf eine detaillierte Rückmeldung. Diesem Recht wurde bisher nicht nachgekommen.</p>
+
+        <p>Sollte ich bis zum <strong>31. März</strong> keine zufriedenstellende Antwort erhalten, sehe ich mich gezwungen, mich an den Landesverband für Tanzsport zu wenden und den Vorfall öffentlich zu machen.</p>
+      </div>
+
+      <div class="brev-footer">
+        Ich erwarte Ihre baldige Rückmeldung.<br><br>
+        Mit freundlichen Grüßen<br>
+        <div class="underskrift">Andrea Hoffmann<br>(Mutter von Lena Hoffmann, Teilnehmerin Nr. 47)</div>
+      </div>
+
+      <div class="fotnote">
+        * Einschreiben: rekommandert brev (brev med bekreftelse på levering)<br>
+        * z. Hd. (zu Händen): att. (til attention) – brukt i formell adressering for å angi hvem brevet skal til<br>
+        * Landesverband: regional organisasjon / forbund på delstatsnivå
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SPØRSMÅL -->
+  <div class="sporsmal-kolonne">
+    <div class="sporsmal-header">✉️ Sann eller usann?</div>
+    <div id="sporsmal-liste"></div>
+    <div class="knapper">
+      <button id="sjekk-btn" disabled onclick="sjekkSvar()">SJEKK SVARENE</button>
+      <div class="resultat-melding" id="resultat-melding"></div>
+      <button id="prov-igjen-btn" onclick="provIgjen()">↺ PRØV IGJEN</button>
+    </div>
+  </div>
+
+</div>
+
+<div id="confetti-container"></div>
+
+<script>
+const sporsmal = [
+  {
+    tekst: "Lena deltok i en nasjonal dansekonkurranse.",
+    svar: false,
+    // "Regionalwettbewerb" = regional konkurranse, ikke nasjonal
+    forklaring: "Usant – brevet omhandler en regional konkurranse («Regionalwettbewerb»), ikke en nasjonal."
+  },
+  {
+    tekst: "Ifølge moren har Lena vunnet priser i andre konkurranser samme år.",
+    svar: true,
+    // "hat in diesem Jahr bereits drei regionale Auszeichnungen erhalten"
+    // "vunnet priser" ↔ "Auszeichnungen erhalten"
+    forklaring: "Riktig – brevet nevner at Lena allerede har mottatt tre regionale utmerkelser dette året."
+  },
+  {
+    tekst: "Moren aksepterer juryens avgjørelse, men ber om en bedre begrunnelse.",
+    svar: false,
+    // Hun kaller det en "schwerwiegenden Fehler" og "falsch" – aksepterer ikke
+    forklaring: "Usant – moren kaller beslutningen en alvorlig feil og avviser den fullstendig."
+  },
+  {
+    tekst: "Lena har trent intensivt spesielt i forkant av denne konkurransen.",
+    svar: true,
+    // "wochenlang täglich mehrere Stunden geübt" = trent intensivt i ukesvis
+    // "intensivt i forkant" ↔ "wochenlang täglich mehrere Stunden"
+    forklaring: "Riktig – brevet sier at Lena øvde i ukevis, flere timer daglig, frem mot konkurransen."
+  },
+  {
+    tekst: "Moren krever å få se den skriftlige tilbakemeldingen fra juryen.",
+    svar: true,
+    // "die schriftliche Bewertung... sowie eine Auflistung der Punkte"
+    forklaring: "Riktig – moren krever den skriftlige vurderingen og en oversikt over poengene i hver kategori."
+  },
+  {
+    tekst: "Tonen i brevet er høflig og forståelsesfull.",
+    svar: false,
+    // Tonen er frustrert, konfronterende og truende – ikke forståelsesfull
+    forklaring: "Usant – tonen er gjennomgående frustrert og direkte, med klare trusler om å gå videre til forbundet og offentligheten."
+  },
+  {
+    tekst: "Dersom moren ikke får svar innen fristen, har hun en plan for å ta saken videre.",
+    svar: true,
+    // Hun truer med å kontakte Landesverband og gjøre det offentlig – altså en klar plan
+    forklaring: "Riktig – moren varsler at hun vil kontakte delstatsforbundet for dansesport og gjøre hendelsen offentlig dersom hun ikke får svar innen 31. mars."
+  },
+  {
+    tekst: "Moren mener at reglene for konkurransen gir deltakerne rett til tilbakemelding.",
+    svar: true,
+    // "Laut den Wettbewerbsregeln haben alle Teilnehmerinnen das Recht auf eine detaillierte Rückmeldung"
+    // "reglene for konkurransen gir rett" ↔ "laut den Wettbewerbsregeln... das Recht"
+    forklaring: "Riktig – brevet viser til konkurransereglene, som gir alle deltakere rett til detaljert tilbakemelding."
+  }
+];
+
+let besvarelser = new Array(sporsmal.length).fill(null);
+let sjekket = false;
+
+function byggSporsmal() {
+  const liste = document.getElementById('sporsmal-liste');
+  liste.innerHTML = '';
+  sporsmal.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'sporsmal-item';
+    div.id = `item-${i}`;
+    div.innerHTML = `
+      <div class="sporsmal-nummer">Spørsmål ${i + 1}</div>
+      <div class="sporsmal-tekst">${s.tekst}</div>
+      <div class="radio-gruppe">
+        <label class="radio-label" id="sant-${i}">
+          <input type="radio" name="sp${i}" value="true" onchange="velg(${i}, true)"> ✓ Sann
+        </label>
+        <label class="radio-label" id="usant-${i}">
+          <input type="radio" name="sp${i}" value="false" onchange="velg(${i}, false)"> ✗ Usann
+        </label>
+      </div>
+      <div class="feedback-ikon" id="feedback-${i}"></div>
+    `;
+    liste.appendChild(div);
+  });
+}
+
+function velg(i, verdi) {
+  if (sjekket) return;
+  besvarelser[i] = verdi;
+  document.getElementById(`sant-${i}`).classList.toggle('valgt', verdi === true);
+  document.getElementById(`usant-${i}`).classList.toggle('valgt', verdi === false);
+  document.getElementById(`item-${i}`).classList.add('besvart');
+  document.getElementById('sjekk-btn').disabled = !besvarelser.every(b => b !== null);
+}
+
+function sjekkSvar() {
+  sjekket = true;
+  let riktige = 0;
+  sporsmal.forEach((s, i) => {
+    const item = document.getElementById(`item-${i}`);
+    const feedback = document.getElementById(`feedback-${i}`);
+    const erRiktig = besvarelser[i] === s.svar;
+    if (erRiktig) {
+      riktige++;
+      item.classList.add('riktig');
+      feedback.textContent = '✓ ' + s.forklaring;
+      document.getElementById(s.svar ? `sant-${i}` : `usant-${i}`).classList.add('riktig-valg');
+    } else {
+      item.classList.add('feil');
+      feedback.textContent = '✗ ' + s.forklaring;
+      document.getElementById(besvarelser[i] ? `sant-${i}` : `usant-${i}`).classList.add('feil-valg');
+      document.getElementById(s.svar ? `sant-${i}` : `usant-${i}`).classList.add('riktig-valg');
+    }
+    document.querySelectorAll(`input[name="sp${i}"]`).forEach(el => el.disabled = true);
+  });
+
+  const melding = document.getElementById('resultat-melding');
+  melding.style.display = 'block';
+  document.getElementById('sjekk-btn').disabled = true;
+
+  if (riktige === sporsmal.length) {
+    melding.className = 'resultat-melding suksess';
+    melding.textContent = `🎉 Perfekt! Du fikk alle ${sporsmal.length} riktige!`;
+    kastKonfetti();
+  } else {
+    melding.className = 'resultat-melding delvis';
+    melding.textContent = `Du fikk ${riktige} av ${sporsmal.length} riktige. Les forklaringene og prøv igjen!`;
+    document.getElementById('prov-igjen-btn').style.display = 'block';
+  }
+}
+
+function provIgjen() {
+  besvarelser = new Array(sporsmal.length).fill(null);
+  sjekket = false;
+  document.getElementById('resultat-melding').style.display = 'none';
+  document.getElementById('prov-igjen-btn').style.display = 'none';
+  document.getElementById('sjekk-btn').disabled = true;
+  byggSporsmal();
+}
+
+function kastKonfetti() {
+  const container = document.getElementById('confetti-container');
+  container.innerHTML = '';
+  const emojis = ['⭐'];
+  for (let i = 0; i < 55; i++) {
+    const bit = document.createElement('div');
+    bit.style.cssText = `
+      position: absolute;
+      left: ${Math.random() * 100}vw;
+      top: -40px;
+      font-size: ${16 + Math.random() * 22}px;
+      opacity: 0;
+      animation: fall ${2.4 + Math.random() * 1.8}s ease-in forwards;
+      animation-delay: ${Math.random() * 1.6}s;
+    `;
+    bit.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    container.appendChild(bit);
+  }
+  setTimeout(() => container.innerHTML = '', 7000);
+}
+
+byggSporsmal();
+</script>
+</body>
+</html>

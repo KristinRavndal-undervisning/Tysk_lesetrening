@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schwarzfahren – Leseoppgave</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0f0f0f;
+    --white: #f5f2eb;
+    --yellow: #f5c800;
+    --red: #d63a2f;
+    --green: #2a7a4b;
+    --grey: #2a2a2a;
+    --mid: #888;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--white);
+    color: var(--black);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 0 0 60px 0;
+  }
+
+  /* HEADER */
+  header {
+    background: var(--black);
+    color: var(--yellow);
+    padding: 28px 40px 22px;
+    position: relative;
+    overflow: hidden;
+    border-bottom: 5px solid var(--yellow);
+  }
+
+  header::before {
+    content: "🚇";
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 5rem;
+    opacity: 0.12;
+  }
+
+  .titel {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    letter-spacing: 0.06em;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+
+  .titel span {
+    color: var(--red);
+  }
+
+  .undertittel {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: #aaa;
+    margin-top: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  .instruksjon {
+    background: var(--yellow);
+    color: var(--black);
+    padding: 12px 40px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    border-bottom: 3px solid var(--black);
+    letter-spacing: 0.01em;
+  }
+
+  /* LAYOUT */
+  .innhold {
+    display: grid;
+    grid-template-columns: 55% 45%;
+    min-height: calc(100vh - 140px);
+  }
+
+  /* TEXT COLUMN */
+  .tekst-kolonne {
+    padding: 36px 40px 36px 40px;
+    border-right: 3px solid var(--black);
+    background: var(--white);
+  }
+
+  .tekst-tittel {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+    color: var(--black);
+  }
+
+  .tekst-undertittel {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 0.82rem;
+    color: var(--mid);
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1.5px solid #ccc;
+  }
+
+  .tekst-kolonne p {
+    font-family: 'Source Serif 4', serif;
+    font-size: 1.02rem;
+    line-height: 1.8;
+    color: #1a1a1a;
+    margin-bottom: 18px;
+  }
+
+  .tekst-kolonne h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.15rem;
+    letter-spacing: 0.06em;
+    color: var(--black);
+    margin: 24px 0 8px;
+    padding-left: 10px;
+    border-left: 4px solid var(--yellow);
+  }
+
+  .fotnote {
+    margin-top: 28px;
+    padding-top: 14px;
+    border-top: 1.5px solid #ccc;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    color: var(--mid);
+    line-height: 1.5;
+  }
+
+  /* SPØRSMÅL COLUMN */
+  .sporsmal-kolonne {
+    padding: 32px 30px;
+    background: #1a1a1a;
+  }
+
+  .sporsmal-header {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.3rem;
+    color: var(--yellow);
+    letter-spacing: 0.08em;
+    margin-bottom: 22px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #333;
+  }
+
+  .sporsmal-item {
+    margin-bottom: 22px;
+    padding: 14px 16px;
+    background: #242424;
+    border-radius: 6px;
+    border-left: 3px solid #444;
+    transition: border-color 0.2s;
+  }
+
+  .sporsmal-item.besvart {
+    border-left-color: var(--yellow);
+  }
+
+  .sporsmal-item.riktig {
+    border-left-color: var(--green);
+    background: #1b2d22;
+  }
+
+  .sporsmal-item.feil {
+    border-left-color: var(--red);
+    background: #2d1b1b;
+  }
+
+  .sporsmal-tekst {
+    font-size: 0.87rem;
+    color: #e0ddd6;
+    line-height: 1.5;
+    margin-bottom: 11px;
+    font-weight: 500;
+  }
+
+  .sporsmal-nummer {
+    font-family: 'Bebas Neue', sans-serif;
+    color: var(--yellow);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+
+  .radio-gruppe {
+    display: flex;
+    gap: 10px;
+  }
+
+  .radio-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 6px 14px;
+    border-radius: 4px;
+    border: 1.5px solid #444;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #ccc;
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .radio-label:hover {
+    border-color: var(--yellow);
+    color: var(--yellow);
+  }
+
+  .radio-label input {
+    display: none;
+  }
+
+  .radio-label.valgt {
+    border-color: var(--yellow);
+    background: #2e2900;
+    color: var(--yellow);
+  }
+
+  .radio-label.riktig-valg {
+    border-color: var(--green);
+    background: #152b1e;
+    color: #5ecb85;
+  }
+
+  .radio-label.feil-valg {
+    border-color: var(--red);
+    background: #2d1515;
+    color: #e07070;
+  }
+
+  .feedback-ikon {
+    display: none;
+    font-size: 0.8rem;
+    margin-top: 6px;
+    color: #999;
+    font-style: italic;
+  }
+
+  .sporsmal-item.riktig .feedback-ikon,
+  .sporsmal-item.feil .feedback-ikon {
+    display: block;
+  }
+
+  .sporsmal-item.riktig .feedback-ikon { color: #5ecb85; }
+  .sporsmal-item.feil .feedback-ikon { color: #e07070; }
+
+  /* KNAPPER */
+  .knapper {
+    margin-top: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #sjekk-btn {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    padding: 14px 28px;
+    background: var(--yellow);
+    color: var(--black);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+
+  #sjekk-btn:disabled {
+    background: #444;
+    color: #777;
+    cursor: not-allowed;
+  }
+
+  #sjekk-btn:not(:disabled):hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+
+  #prov-igjen-btn {
+    display: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    padding: 12px 28px;
+    background: transparent;
+    color: var(--yellow);
+    border: 2px solid var(--yellow);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  #prov-igjen-btn:hover {
+    background: #2a2200;
+  }
+
+  .resultat-melding {
+    display: none;
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    padding: 12px 14px;
+    border-radius: 4px;
+    line-height: 1.5;
+  }
+
+  .resultat-melding.suksess {
+    background: #152b1e;
+    color: #5ecb85;
+    border: 1px solid var(--green);
+  }
+
+  .resultat-melding.delvis {
+    background: #2d2010;
+    color: #e0a050;
+    border: 1px solid #a06020;
+  }
+
+  /* CONFETTI */
+  #confetti-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  .confetti-bit {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    opacity: 0;
+    animation: fall 2.5s ease-in forwards;
+  }
+
+  @keyframes fall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  @media (max-width: 700px) {
+    .innhold { grid-template-columns: 1fr; }
+    .tekst-kolonne { border-right: none; border-bottom: 3px solid var(--black); }
+    header { padding: 20px; }
+    .tekst-kolonne, .sporsmal-kolonne { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="titel">Schwarz<span>fahren</span><br>– Gratis oder kriminell?</div>
+</header>
+
+<div class="instruksjon">
+  Les den tyske teksten til venstre, og svar deretter på om påstandene til høyre er <strong>sanne</strong> eller <strong>usanne</strong> ut fra det som står i teksten. Alle spørsmål må besvares før du kan sjekke svarene.
+</div>
+
+<div class="innhold">
+
+  <!-- TEKST -->
+  <div class="tekst-kolonne">
+    <div class="tekst-tittel">Schwarzfahren in Deutschland</div>
+    <div class="tekst-undertittel">Ein verbreitetes Phänomen im öffentlichen Nahverkehr</div>
+
+    <h3>Was ist Schwarzfahren?</h3>
+    <p>Schwarzfahren bedeutet, mit öffentlichen Verkehrsmitteln – also mit Bus, Straßenbahn, U-Bahn oder S-Bahn – zu fahren, ohne ein gültiges Ticket zu haben. Das Wort klingt harmlos, aber in Deutschland ist Schwarzfahren eine Straftat. Wer erwischt wird, muss ein erhöhtes Beförderungsentgelt (EBE) von 60 Euro bezahlen.</p>
+
+    <h3>Wer fährt schwarz – und warum?</h3>
+    <p>Studien zeigen, dass vor allem junge Menschen zwischen 16 und 25 Jahren häufig ohne Fahrschein fahren. Die häufigsten Gründe sind hohe Ticketpreise und Vergesslichkeit. Manche Fahrgäste glauben auch, dass die Wahrscheinlichkeit, kontrolliert zu werden, sehr gering ist. In Großstädten wie Berlin oder Hamburg gibt es jedoch regelmäßige Kontrollen durch Kontrolleure in Zivil, die sogenannten „Schwarzen Sheriffs".</p>
+
+    <h3>Die rechtlichen Konsequenzen</h3>
+    <p>Schwarzfahren gilt laut Gesetz als Straftat (§ 265a StGB). Bei Wiederholungstätern kann dies zu einer Geldstrafe oder sogar zu einer Freiheitsstrafe von bis zu einem Jahr führen. Wer dreimal erwischt wird, erhält meistens eine Vorladung vor Gericht. Außerdem kann ein Eintrag im Führungszeugnis die Jobsuche erschweren.</p>
+
+    <h3>Die Debatte: Entkriminalisierung?</h3>
+    <p>In einigen Städten und Ländern wird diskutiert, ob Schwarzfahren entkriminalisiert werden sollte – also ob es nur noch als Ordnungswidrigkeit und nicht mehr als Straftat gelten sollte. Befürworter argumentieren, dass viele Schwarzfahrer sozial benachteiligt sind und sich Fahrkarten einfach nicht leisten können. Kritiker hingegen betonen, dass der öffentliche Nahverkehr durch Schwarzfahren jährlich Millionen von Euro verliert.</p>
+
+    <div class="fotnote">* EBE = erhöhtes Beförderungsentgelt: gebyr som ilegges reisende uten gyldig billett.<br>* Führungszeugnis: politiattest som kan kreves ved jobbsøking i Tyskland.</div>
+  </div>
+
+  <!-- SPØRSMÅL -->
+  <div class="sporsmal-kolonne">
+    <div class="sporsmal-header">🎫 Sann eller usann?</div>
+
+    <div id="sporsmal-liste"></div>
+
+    <div class="knapper">
+      <button id="sjekk-btn" disabled onclick="sjekkSvar()">SJEKK SVARENE</button>
+      <div class="resultat-melding" id="resultat-melding"></div>
+      <button id="prov-igjen-btn" onclick="provIgjen()">↺ PRØV IGJEN</button>
+    </div>
+  </div>
+</div>
+
+<div id="confetti-container"></div>
+
+<script>
+const sporsmal = [
+  {
+    tekst: "Å reise uten billett i kollektivtransport er ulovlig i Tyskland.",
+    svar: true,
+    // "Straftat" = ulovlig/straffbar handling — spørsmålet bruker "ulovlig", ikke "Straftat"
+    forklaring: "Riktig – teksten sier at Schwarzfahren er en «Straftat» (straffbar handling)."
+  },
+  {
+    tekst: "De som oftest kjører uten billett er tenåringer og unge voksne.",
+    svar: true,
+    // "Junge Menschen zwischen 16 und 25" = tenåringer og unge voksne — parafrasert
+    forklaring: "Riktig – teksten nevner unge mellom 16 og 25 år."
+  },
+  {
+    tekst: "Folk sniker sjelden på grunn av billettprisene.",
+    svar: false,
+    // "hohe Ticketpreise" er én av de hyppigste grunnene — altså tvert imot
+    forklaring: "Usant – høye billettpriser («hohe Ticketpreise») er én av de vanligste grunnene oppgitt i teksten."
+  },
+  {
+    tekst: "Kontrollørene i storbyene er alltid i uniform slik at de er lette å gjenkjenne.",
+    svar: false,
+    // "in Zivil" = sivil/ikke uniform — spørsmålet sier det motsatte
+    forklaring: "Usant – kontrollørene arbeider «in Zivil», altså i sivile klær."
+  },
+  {
+    tekst: "En person som blir tatt for billettsniking gjentatte ganger kan bli innkalt for retten.",
+    svar: true,
+    // "Vorladung vor Gericht" = innkalling til rettsmøte — "gjentatte ganger" = "dreimal"
+    forklaring: "Riktig – teksten sier at den som tas tre ganger normalt får en rettssak."
+  },
+  {
+    tekst: "En strafferegistrering kan gjøre det vanskeligere å få seg jobb.",
+    svar: true,
+    // "Führungszeugnis" og "Jobsuche erschweren" — spørsmålet bruker "strafferegistrering" og "jobb"
+    forklaring: "Riktig – et notat i politiattesten («Führungszeugnis») kan vanskeliggjøre jobbsøking."
+  },
+  {
+    tekst: "Alle er enige om at snylting på kollektivtransport bør forbli en straffbar handling.",
+    svar: false,
+    // Teksten beskriver en aktiv debatt der noen ønsker entkriminalisering
+    forklaring: "Usant – teksten beskriver en debatt der noen mener det ikke lenger bør være en straffbar handling."
+  },
+  {
+    tekst: "Bøter er en viktig inntektskilde for kollektivtransporten.",
+    svar: false,
+    // Teksten nevner tap, ikke at bøteinntekter kompenserer — de taper millioner
+    forklaring: "Usant – teksten sier at kollektivtransporten taper millioner av euro på grunn av snylting, ikke at bøtene dekker dette."
+  }
+];
+
+let besvarelser = new Array(sporsmal.length).fill(null);
+let sjekket = false;
+
+function byggSporsmal() {
+  const liste = document.getElementById('sporsmal-liste');
+  liste.innerHTML = '';
+  sporsmal.forEach((s, i) => {
+    const div = document.createElement('div');
+    div.className = 'sporsmal-item';
+    div.id = `item-${i}`;
+    div.innerHTML = `
+      <div class="sporsmal-nummer">SPØRSMÅL ${i + 1}</div>
+      <div class="sporsmal-tekst">${s.tekst}</div>
+      <div class="radio-gruppe">
+        <label class="radio-label" id="sant-${i}">
+          <input type="radio" name="sp${i}" value="true" onchange="velg(${i}, true)"> ✓ Sann
+        </label>
+        <label class="radio-label" id="usant-${i}">
+          <input type="radio" name="sp${i}" value="false" onchange="velg(${i}, false)"> ✗ Usann
+        </label>
+      </div>
+      <div class="feedback-ikon" id="feedback-${i}"></div>
+    `;
+    liste.appendChild(div);
+  });
+}
+
+function velg(i, verdi) {
+  if (sjekket) return;
+  besvarelser[i] = verdi;
+  document.getElementById(`sant-${i}`).classList.toggle('valgt', verdi === true);
+  document.getElementById(`usant-${i}`).classList.toggle('valgt', verdi === false);
+  document.getElementById(`item-${i}`).classList.add('besvart');
+
+  const alleBesvart = besvarelser.every(b => b !== null);
+  document.getElementById('sjekk-btn').disabled = !alleBesvart;
+}
+
+function sjekkSvar() {
+  sjekket = true;
+  let riktige = 0;
+
+  sporsmal.forEach((s, i) => {
+    const item = document.getElementById(`item-${i}`);
+    const feedback = document.getElementById(`feedback-${i}`);
+    const erRiktig = besvarelser[i] === s.svar;
+
+    if (erRiktig) {
+      riktige++;
+      item.classList.add('riktig');
+      feedback.textContent = '✓ ' + s.forklaring;
+      const riktigLabel = s.svar ? document.getElementById(`sant-${i}`) : document.getElementById(`usant-${i}`);
+      riktigLabel.classList.add('riktig-valg');
+    } else {
+      item.classList.add('feil');
+      feedback.textContent = '✗ ' + s.forklaring;
+      const feilLabel = besvarelser[i] ? document.getElementById(`sant-${i}`) : document.getElementById(`usant-${i}`);
+      feilLabel.classList.add('feil-valg');
+      const riktigLabel = s.svar ? document.getElementById(`sant-${i}`) : document.getElementById(`usant-${i}`);
+      riktigLabel.classList.add('riktig-valg');
+    }
+
+    // Disable inputs
+    document.querySelectorAll(`input[name="sp${i}"]`).forEach(el => el.disabled = true);
+  });
+
+  const melding = document.getElementById('resultat-melding');
+  melding.style.display = 'block';
+  document.getElementById('sjekk-btn').disabled = true;
+
+  if (riktige === sporsmal.length) {
+    melding.className = 'resultat-melding suksess';
+    melding.textContent = `🎉 Perfekt! Du fikk ${riktige} av ${sporsmal.length} riktige!`;
+    kastKonfetti();
+  } else {
+    melding.className = 'resultat-melding delvis';
+    melding.textContent = `Du fikk ${riktige} av ${sporsmal.length} riktige. Les forklaringene og prøv igjen!`;
+    document.getElementById('prov-igjen-btn').style.display = 'block';
+  }
+}
+
+function provIgjen() {
+  besvarelser = new Array(sporsmal.length).fill(null);
+  sjekket = false;
+  document.getElementById('resultat-melding').style.display = 'none';
+  document.getElementById('prov-igjen-btn').style.display = 'none';
+  document.getElementById('sjekk-btn').disabled = true;
+  byggSporsmal();
+}
+
+function kastKonfetti() {
+  const container = document.getElementById('confetti-container');
+  container.innerHTML = '';
+  const farger = ['#f5c800', '#d63a2f', '#2a7a4b', '#fff', '#ff9f00', '#4fc3f7'];
+  const former = ['circle', 'square', 'rect'];
+  for (let i = 0; i < 120; i++) {
+    const bit = document.createElement('div');
+    bit.className = 'confetti-bit';
+    const farge = farger[Math.floor(Math.random() * farger.length)];
+    const form = former[Math.floor(Math.random() * former.length)];
+    const storrelse = 6 + Math.random() * 8;
+    bit.style.cssText = `
+      left: ${Math.random() * 100}vw;
+      top: -20px;
+      width: ${form === 'rect' ? storrelse * 2 : storrelse}px;
+      height: ${storrelse}px;
+      background: ${farge};
+      border-radius: ${form === 'circle' ? '50%' : '2px'};
+      animation-delay: ${Math.random() * 1.2}s;
+      animation-duration: ${2 + Math.random() * 1.5}s;
+    `;
+    container.appendChild(bit);
+  }
+  setTimeout(() => container.innerHTML = '', 5000);
+}
+
+byggSporsmal();
+</script>
+</body>
+</html>
