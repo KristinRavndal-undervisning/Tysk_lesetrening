@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sikkert på sjøen – Tysk leseforståelse</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d2b45;
+    --navy-mid: #163d5e;
+    --navy-light: #1e5276;
+    --gold: #c8a84b;
+    --cream: #f5f0e8;
+    --white: #ffffff;
+    --text-dark: #0d1f2d;
+    --text-mid: #2c4a61;
+    --correct: #2a7a4b;
+    --wrong: #a83232;
+    --border: #b8cfe0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    background: var(--navy);
+    overflow: hidden;
+    padding: 2.2rem 2rem 2rem;
+    text-align: center;
+  }
+  .wave-wrap {
+    position: absolute; bottom: 0; left: 0;
+    width: 100%; height: 48px; overflow: hidden;
+  }
+  .wave-svg {
+    width: 200%; height: 100%;
+    animation: waveScroll 8s linear infinite;
+  }
+  .wave-svg2 {
+    position: absolute; bottom: 0; left: 0;
+    width: 200%; height: 100%;
+    animation: waveScroll 13s linear infinite reverse;
+    opacity: 0.4;
+  }
+  @keyframes waveScroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .header-inner { position: relative; z-index: 2; }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+    color: var(--white);
+    letter-spacing: 0.03em;
+    text-shadow: 0 2px 14px rgba(0,0,0,0.45);
+  }
+  header h1 span { color: var(--gold); }
+  header .subtitle {
+    margin-top: 0.4rem;
+    font-size: 0.92rem;
+    color: rgba(255,255,255,0.58);
+    font-style: italic;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── INSTRUCTION BAR ── */
+  .instruction-bar {
+    background: var(--navy-mid);
+    color: rgba(255,255,255,0.88);
+    text-align: center;
+    padding: 0.65rem 1.5rem;
+    font-size: 0.92rem;
+    font-style: italic;
+    border-bottom: 2px solid var(--gold);
+  }
+
+  /* ── PAGE ── */
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2.8rem 2.5rem 5rem;
+  }
+
+  /* ── BLOCK = one card containing both dropdown and paragraph ── */
+  .block {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 1.3rem 1.6rem 1.4rem;
+    margin-bottom: 1.8rem;
+    box-shadow: 0 1px 8px rgba(13,43,69,0.06);
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  /* ── HEADER ROW inside card: number badge + dropdown + icon ── */
+  .block-header {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid #dce8f0;
+  }
+
+  .block-nr {
+    flex-shrink: 0;
+    background: var(--navy);
+    color: var(--gold);
+    font-family: 'Playfair Display', serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 0.22rem 0.6rem;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  /* Dropdown: width fits content automatically */
+  select {
+    /* width is set to auto so it sizes to its content */
+    width: auto;
+    padding: 0.38rem 2rem 0.38rem 0.7rem;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.95rem;
+    color: var(--text-dark);
+    background: #f0f6fc;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%230d2b45' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.65rem center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  select:focus { outline: none; border-color: var(--navy-light); }
+
+  .feedback-icon {
+    font-size: 1.1rem;
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  /* ── PARAGRAPH TEXT ── */
+  .abschnitt-text {
+    font-size: 0.98rem;
+    line-height: 1.82;
+    color: var(--text-dark);
+    font-weight: 300;
+  }
+
+  /* ── CORRECT / WRONG STATES ── */
+  .block.correct {
+    border-color: var(--correct);
+    background: #edf7f1;
+  }
+  .block.correct select {
+    background: #d4edd9;
+    border-color: var(--correct);
+    color: var(--correct);
+    font-weight: 600;
+  }
+  .block.correct .block-nr { background: var(--correct); }
+  .block.correct .block-header { border-bottom-color: #b4dfc2; }
+
+  .block.wrong {
+    border-color: var(--wrong);
+    background: #fdf2f2;
+  }
+  .block.wrong select {
+    background: #f9dada;
+    border-color: var(--wrong);
+  }
+  .block.wrong .block-nr { background: var(--wrong); color: #fff; }
+  .block.wrong .block-header { border-bottom-color: #f0c0c0; }
+
+  .block.correct .feedback-icon,
+  .block.wrong   .feedback-icon { opacity: 1; }
+
+  /* ── BUTTON ── */
+  .btn-wrap {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  #check-btn {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    color: var(--white);
+    background: var(--navy);
+    border: 2px solid var(--navy);
+    padding: 0.7rem 2.2rem;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  #check-btn:hover:not(:disabled) { background: var(--navy-light); transform: translateY(-2px); }
+  #check-btn:disabled { background: #9aacba; border-color: #9aacba; cursor: not-allowed; }
+
+  #result-msg {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: var(--text-mid);
+  }
+  #result-msg.all-correct { color: var(--correct); font-weight: 600; font-style: normal; }
+  #result-msg.has-errors  { color: var(--wrong); }
+
+  /* ── CONFETTI ── */
+  .confetti-piece {
+    position: fixed;
+    opacity: 0;
+    animation: confettiFall 2.8s ease-in forwards;
+    pointer-events: none;
+    z-index: 9999;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    80%  { opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  @media (max-width: 520px) {
+    .page { padding: 1.8rem 1rem 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wave-wrap">
+    <svg class="wave-svg" viewBox="0 0 1800 48" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,24 C150,48 300,0 450,24 C600,48 750,0 900,24 C1050,48 1200,0 1350,24 C1500,48 1650,0 1800,24 L1800,48 L0,48 Z" fill="rgba(200,168,75,0.22)"/>
+    </svg>
+    <svg class="wave-svg2" viewBox="0 0 1800 48" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,30 C200,6 400,46 600,26 C800,6 1000,46 1200,26 C1400,6 1600,46 1800,26 L1800,48 L0,48 Z" fill="rgba(255,255,255,0.08)"/>
+    </svg>
+  </div>
+  <div class="header-inner">
+    <h1>Sicher auf dem <span>Wasser</span></h1>
+    <div class="subtitle">Ratschläge für sicheres Fahren mit Kleinbooten</div>
+  </div>
+</header>
+
+<div class="instruction-bar">
+  📋 Les hvert avsnitt og velg den overskriften som passer best. Trykk «Sjekk svarene» når alle seks er besvart.
+</div>
+
+<div class="page">
+
+  <!-- BLOCK 1 -->
+  <div class="block" id="block1">
+    <div class="block-header">
+      <span class="block-nr">AVSNITT 1</span>
+      <select id="sel1" onchange="updateButton()">
+        <option value="">— Überschrift wählen —</option>
+        <option value="wrong">Promillegrenzen</option>
+        <option value="wrong">Motorenkenntnisse</option>
+        <option value="correct">Wettervorhersage</option>
+        <option value="wrong">Bootsversicherung</option>
+        <option value="wrong">Navigationskenntnisse</option>
+        <option value="wrong">Notfallkommunikation</option>
+        <option value="wrong">Rettungswesten</option>
+        <option value="wrong">Fischereiregeln</option>
+        <option value="wrong">Bootsführerpflichten</option>
+      </select>
+      <span class="feedback-icon" id="icon1"></span>
+    </div>
+    <div class="abschnitt-text">
+      Bevor Sie mit einem Kleinboot auf das Wasser fahren, sollten Sie sich unbedingt über die aktuellen Vorhersagen informieren. Wetterbedingungen auf dem Meer können sich schnell und unvorhersehbar verändern. Starker Wind und hohe Wellen können selbst erfahrene Bootsfahrer in ernsthafte Schwierigkeiten bringen. Informieren Sie sich daher immer vor der Abfahrt und verzichten Sie auf Ausfahrten bei ungünstigen Bedingungen. Im Zweifel gilt: Sicherheit geht vor.
+    </div>
+  </div>
+
+  <!-- BLOCK 2 -->
+  <div class="block" id="block2">
+    <div class="block-header">
+      <span class="block-nr">AVSNITT 2</span>
+      <select id="sel2" onchange="updateButton()">
+        <option value="">— Überschrift wählen —</option>
+        <option value="wrong">Promillegrenzen</option>
+        <option value="wrong">Motorenkenntnisse</option>
+        <option value="wrong">Wettervorhersage</option>
+        <option value="wrong">Bootsversicherung</option>
+        <option value="wrong">Navigationskenntnisse</option>
+        <option value="wrong">Notfallkommunikation</option>
+        <option value="correct">Rettungswesten</option>
+        <option value="wrong">Fischereiregeln</option>
+        <option value="wrong">Bootsführerpflichten</option>
+      </select>
+      <span class="feedback-icon" id="icon2"></span>
+    </div>
+    <div class="abschnitt-text">
+      Alle an Bord müssen geeignete *** tragen – und zwar zu jeder Zeit auf dem Wasser. Viele Unfälle auf See enden tödlich, weil die Betroffenen keine *** trugen. Für Kinder gilt eine besondere Tragepflicht, die in den meisten Ländern gesetzlich verankert ist. Wählen Sie immer die richtige Größe und überprüfen Sie regelmäßig den Zustand der Ausrüstung. Ein schlecht gewartetes Gerät kann im Ernstfall versagen.
+    </div>
+  </div>
+
+  <!-- BLOCK 3 -->
+  <div class="block" id="block3">
+    <div class="block-header">
+      <span class="block-nr">AVSNITT 3</span>
+      <select id="sel3" onchange="updateButton()">
+        <option value="">— Überschrift wählen —</option>
+        <option value="wrong">Promillegrenzen</option>
+        <option value="wrong">Motorenkenntnisse</option>
+        <option value="wrong">Wettervorhersage</option>
+        <option value="wrong">Bootsversicherung</option>
+        <option value="wrong">Navigationskenntnisse</option>
+        <option value="wrong">Notfallkommunikation</option>
+        <option value="wrong">Rettungswesten</option>
+        <option value="wrong">Fischereiregeln</option>
+        <option value="correct">Bootsführerpflichten</option>
+      </select>
+      <span class="feedback-icon" id="icon3"></span>
+    </div>
+    <div class="abschnitt-text">
+      Als Bootsführer tragen Sie die volle Verantwortung für alle Personen an Bord. Dazu gehört es, sicherzustellen, dass das Boot nicht überladen ist und dass alle Passagiere mit den grundlegenden Sicherheitsregeln vertraut sind. Sie sollten auch wissen, wo sich die Sicherheitsausrüstung befindet und wie sie zu benutzen ist. Teilen Sie außerdem jemandem an Land Ihren geplanten Kurs und Ihre voraussichtliche Rückkehrzeit mit, bevor Sie ablegen. Im Notfall kann diese Information Leben retten.
+    </div>
+  </div>
+
+  <!-- BLOCK 4 -->
+  <div class="block" id="block4">
+    <div class="block-header">
+      <span class="block-nr">AVSNITT 4</span>
+      <select id="sel4" onchange="updateButton()">
+        <option value="">— Überschrift wählen —</option>
+        <option value="wrong">Promillegrenzen</option>
+        <option value="wrong">Motorenkenntnisse</option>
+        <option value="wrong">Wettervorhersage</option>
+        <option value="wrong">Bootsversicherung</option>
+        <option value="wrong">Navigationskenntnisse</option>
+        <option value="correct">Notfallkommunikation</option>
+        <option value="wrong">Rettungswesten</option>
+        <option value="wrong">Fischereiregeln</option>
+        <option value="wrong">Bootsführerpflichten</option>
+      </select>
+      <span class="feedback-icon" id="icon4"></span>
+    </div>
+    <div class="abschnitt-text">
+      Auf dem Wasser ist es besonders wichtig, immer erreichbar zu sein und im Notfall schnell Hilfe anfordern zu können. Ein UKW-Funkgerät ermöglicht die direkte Verbindung zur Seenotrettung und ist für Bootsfahrer dringend empfohlen. Zusätzlich sollte eine automatische Notsignalboje an Bord sein: Sie sendet im Ernstfall Ihre genaue Position an die Rettungskräfte – auch wenn Sie selbst nicht mehr handlungsfähig sind. Prüfen Sie vor der Abfahrt, ob alle Geräte voll aufgeladen und einsatzbereit sind.
+    </div>
+  </div>
+
+  <!-- BLOCK 5 -->
+  <div class="block" id="block5">
+    <div class="block-header">
+      <span class="block-nr">AVSNITT 5</span>
+      <select id="sel5" onchange="updateButton()">
+        <option value="">— Überschrift wählen —</option>
+        <option value="correct">Promillegrenzen</option>
+        <option value="wrong">Motorenkenntnisse</option>
+        <option value="wrong">Wettervorhersage</option>
+        <option value="wrong">Bootsversicherung</option>
+        <option value="wrong">Navigationskenntnisse</option>
+        <option value="wrong">Notfallkommunikation</option>
+        <option value="wrong">Rettungswesten</option>
+        <option value="wrong">Fischereiregeln</option>
+        <option value="wrong">Bootsführerpflichten</option>
+      </select>
+      <span class="feedback-icon" id="icon5"></span>
+    </div>
+    <div class="abschnitt-text">
+      Das Fahren unter Einfluss ist verboten, weil man sich selbst und alle an Bord gefährdet. Alkohol beeinträchtigt die Reaktionsfähigkeit, das Gleichgewicht und das Urteilsvermögen – Fähigkeiten, die auf dem Wasser besonders wichtig sind. In den meisten Ländern gibt es klare gesetzliche Regelungen, die das Fahren unter Alkoholeinfluss unter Strafe stellen. Sprechen Sie das Thema offen an, bevor Sie ablegen – eine klare Absprache mit allen Mitfahrenden kann im Ernstfall Leben retten.
+    </div>
+  </div>
+
+  <!-- BLOCK 6 -->
+  <div class="block" id="block6">
+    <div class="block-header">
+      <span class="block-nr">AVSNITT 6</span>
+      <select id="sel6" onchange="updateButton()">
+        <option value="">— Überschrift wählen —</option>
+        <option value="wrong">Promillegrenzen</option>
+        <option value="wrong">Motorenkenntnisse</option>
+        <option value="wrong">Wettervorhersage</option>
+        <option value="wrong">Bootsversicherung</option>
+        <option value="correct">Navigationskenntnisse</option>
+        <option value="wrong">Notfallkommunikation</option>
+        <option value="wrong">Rettungswesten</option>
+        <option value="wrong">Fischereiregeln</option>
+        <option value="wrong">Bootsführerpflichten</option>
+      </select>
+      <span class="feedback-icon" id="icon6"></span>
+    </div>
+    <div class="abschnitt-text">
+      Wer mit einem Boot auf dem Meer unterwegs ist, sollte grundlegende *** besitzen. Dazu gehören das Lesen von Seekarten, das Verstehen von Fahrwassermarkierungen sowie Kenntnisse der wichtigsten Regeln zur Kollisionsverhütung. Viele Unfälle entstehen, weil Bootsführer den Kurs anderer Schiffe nicht respektieren oder Hindernisse unter Wasser nicht kennen. Ein Kurs bei einem anerkannten Bootsführerscheinanbieter ist eine empfehlenswerte Vorbereitung für alle, die regelmäßig auf dem Wasser unterwegs sind.
+    </div>
+  </div>
+
+  <!-- BUTTON -->
+  <div class="btn-wrap">
+    <button id="check-btn" onclick="checkAnswers()" disabled>Sjekk svarene</button>
+    <div id="result-msg"></div>
+  </div>
+
+</div>
+
+<script>
+  const TOTAL = 6;
+
+  // Shuffle options in all selects on load (keep placeholder first)
+  function shuffleSelects() {
+    for (let i = 1; i <= TOTAL; i++) {
+      const sel = document.getElementById('sel' + i);
+      const opts = Array.from(sel.options).slice(1);
+      for (let j = opts.length - 1; j > 0; j--) {
+        const k = Math.floor(Math.random() * (j + 1));
+        [opts[j], opts[k]] = [opts[k], opts[j]];
+      }
+      while (sel.options.length > 1) sel.remove(1);
+      opts.forEach(o => sel.appendChild(o));
+    }
+  }
+  shuffleSelects();
+
+  function updateButton() {
+    let filled = 0;
+    for (let i = 1; i <= TOTAL; i++) {
+      if (document.getElementById('sel' + i).value !== '') filled++;
+    }
+    document.getElementById('check-btn').disabled = (filled < TOTAL);
+  }
+
+  function checkAnswers() {
+    let correct = 0;
+    for (let i = 1; i <= TOTAL; i++) {
+      const sel   = document.getElementById('sel' + i);
+      const block = document.getElementById('block' + i);
+      const icon  = document.getElementById('icon' + i);
+      block.classList.remove('correct', 'wrong');
+      if (sel.value === 'correct') {
+        block.classList.add('correct');
+        icon.textContent = '✅';
+        correct++;
+      } else {
+        block.classList.add('wrong');
+        icon.textContent = '❌';
+      }
+    }
+    const msg = document.getElementById('result-msg');
+    if (correct === TOTAL) {
+      msg.textContent = 'Utmerket! Alle svar er riktige!';
+      msg.className = 'all-correct';
+      launchConfetti();
+    } else {
+      msg.textContent = `${correct} av ${TOTAL} riktige – prøv igjen på de merkede avsnittene!`;
+      msg.className = 'has-errors';
+    }
+  }
+
+  function launchConfetti() {
+    const colors = ['#0d2b45','#c8a84b','#1e5276','#e2c97e','#2a7a4b','#ffffff','#163d5e'];
+    for (let i = 0; i < 130; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.top = '-20px';
+      el.style.background = colors[Math.floor(Math.random() * colors.length)];
+      el.style.width  = (6 + Math.random() * 10) + 'px';
+      el.style.height = (6 + Math.random() * 10) + 'px';
+      el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      el.style.animationDelay    = (Math.random() * 1.6) + 's';
+      el.style.animationDuration = (2 + Math.random() * 2) + 's';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 5000);
+    }
+  }
+</script>
+</body>
+</html>

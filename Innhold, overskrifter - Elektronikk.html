@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Im Elektronikmarkt – Tysk leseforståelse</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f0f2f5;
+    --surface: #ffffff;
+    --surface-alt: #e8ebef;
+    --border: #d0d4da;
+    --text: #18191c;
+    --text-mid: #52565e;
+    --accent: #1a6ef0;
+    --accent-mid: #1158c7;
+    --accent-light: #e6effe;
+    --badge: #18191c;
+    --badge-text: #f0f2f5;
+    --correct: #2e6b4a;
+    --correct-bg: #eaf4ee;
+    --correct-border: #a8d4b8;
+    --wrong: #8b3a2f;
+    --wrong-bg: #fdf0ee;
+    --wrong-border: #d4a8a0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-weight: 300;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  /* Subtle circuit-board dot grid */
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, #c8d0e0 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.5;
+  }
+
+  /* Blue accent bar at top */
+  .header-stripe {
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), #4a9ef5, var(--accent));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+  }
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .header-inner {
+    position: relative;
+    z-index: 2;
+    padding: 2.4rem 2rem 2rem;
+    text-align: center;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.7rem, 4vw, 2.8rem);
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: 0.01em;
+    line-height: 1.15;
+  }
+  header h1 em { font-style: italic; color: var(--accent); }
+
+  header .subtitle {
+    margin-top: 0.5rem;
+    font-size: 0.82rem;
+    color: var(--text-mid);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  /* ── INSTRUCTION BAR ── */
+  .instruction-bar {
+    background: var(--accent);
+    color: rgba(255,255,255,0.93);
+    text-align: center;
+    padding: 0.7rem 1.5rem;
+    font-size: 0.88rem;
+    font-weight: 300;
+  }
+
+  /* ── PAGE ── */
+  .page {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 2.8rem 2rem 5rem;
+  }
+
+  /* ── BLOCK ── */
+  .block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 3px;
+    padding: 1.4rem 1.8rem 1.6rem;
+    margin-bottom: 1.4rem;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .block-header {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .block-nr {
+    flex-shrink: 0;
+    background: var(--badge);
+    color: var(--badge-text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  select {
+    width: auto;
+    padding: 0.38rem 2rem 0.38rem 0.7rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 300;
+    color: var(--text);
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2352565e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.65rem center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  select:focus { outline: none; border-color: var(--accent); background: var(--surface); }
+
+  .feedback-icon {
+    font-size: 1rem;
+    opacity: 0;
+    transition: opacity 0.25s;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .abschnitt-text {
+    font-size: 0.97rem;
+    line-height: 1.82;
+    color: var(--text);
+    font-weight: 300;
+  }
+
+  /* ── STATES ── */
+  .block.correct {
+    border-color: var(--correct-border);
+    border-left-color: var(--correct);
+    background: var(--correct-bg);
+  }
+  .block.correct .block-header { border-bottom-color: var(--correct-border); }
+  .block.correct .block-nr { background: var(--correct); }
+  .block.correct select { border-color: var(--correct-border); background: #d8eee1; color: var(--correct); font-weight: 500; }
+  .block.correct .feedback-icon { opacity: 1; }
+
+  .block.wrong {
+    border-color: var(--wrong-border);
+    border-left-color: var(--wrong);
+    background: var(--wrong-bg);
+  }
+  .block.wrong .block-header { border-bottom-color: var(--wrong-border); }
+  .block.wrong .block-nr { background: var(--wrong); }
+  .block.wrong select { border-color: var(--wrong-border); background: #f5ddd9; }
+  .block.wrong .feedback-icon { opacity: 1; }
+
+  /* ── BUTTON ── */
+  .btn-wrap {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  #check-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: var(--accent);
+    border: none;
+    padding: 0.75rem 2.2rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  #check-btn:hover:not(:disabled) { background: var(--accent-mid); transform: translateY(-1px); }
+  #check-btn:disabled { background: #b0b4bc; cursor: not-allowed; }
+
+  #result-msg {
+    font-size: 0.92rem;
+    color: var(--text-mid);
+    font-style: italic;
+  }
+  #result-msg.all-correct { color: var(--correct); font-weight: 500; font-style: normal; }
+  #result-msg.has-errors  { color: var(--wrong); font-style: normal; }
+
+  /* ── LIGHTNING ── */
+  .lightning-flash {
+    position: fixed;
+    inset: 0;
+    background: white;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 9997;
+    animation: flashBg 0.4s ease-out forwards;
+  }
+  @keyframes flashBg {
+    0%   { opacity: 0.7; }
+    100% { opacity: 0; }
+  }
+
+  .lightning-bolt {
+    position: fixed;
+    top: -10px;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    filter: drop-shadow(0 0 8px #4af) drop-shadow(0 0 20px #08f);
+    animation: boltFall 1s ease-in forwards;
+  }
+  @keyframes boltFall {
+    0%   { opacity: 0; transform: translateY(0) scaleY(0.2); }
+    15%  { opacity: 1; transform: translateY(0) scaleY(1); }
+    80%  { opacity: 1; }
+    100% { opacity: 0; transform: translateY(100vh) scaleY(1); }
+  }
+
+  @media (max-width: 520px) {
+    .page { padding: 1.8rem 1rem 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header-stripe"></div>
+<header>
+  <div class="header-inner">
+    <h1>Willkommen im <em>Elektronikmarkt</em></h1>
+    <div class="subtitle">Produktbeschreibungen – Was wird hier verkauft?</div>
+  </div>
+</header>
+
+<div class="instruction-bar">
+  Les hvert avsnitt og velg produktet som beskrives. Trykk «Sjekk svarene» når alle ti er besvart.
+</div>
+
+<div class="page">
+
+  <!-- BLOCK 1: Flachbildfernseher -->
+  <div class="block" id="block1">
+    <div class="block-header">
+      <span class="block-nr">Avsnitt 1</span>
+      <select id="sel1" onchange="updateButton()">
+        <option value="">— Produkt wählen —</option>
+        <option value="correct">Flachbildfernseher</option>
+        <option value="wrong">Soundbar</option>
+        <option value="wrong">Beamer</option>
+        <option value="wrong">Geschirrspüler</option>
+        <option value="wrong">Wäschetrockner</option>
+        <option value="wrong">Kaffeemaschine</option>
+        <option value="wrong">Smartwatch</option>
+        <option value="wrong">Digitalkamera</option>
+        <option value="wrong">Tablet</option>
+        <option value="wrong">Staubsaugerroboter</option>
+        <option value="wrong">Kühlschrank</option>
+        <option value="wrong">Kopfhörer</option>
+        <option value="wrong">Laptop</option>
+        <option value="wrong">Spielkonsole</option>
+      </select>
+      <span class="feedback-icon" id="icon1"></span>
+    </div>
+    <div class="abschnitt-text">
+      Dieses Gerät ist das Herzstück jedes Wohnzimmers. Mit einer Bildschirmdiagonale von 55 bis 75 Zoll und einer 4K-Auflösung liefert es gestochen scharfe Bilder – ob beim Filmabend mit der Familie oder beim Fußballspiel mit Freunden. Dank integrierter WLAN-Funktion lassen sich Streaming-Dienste wie Netflix oder YouTube direkt ohne zusätzliches Gerät nutzen. Für die beste Erfahrung empfehlen wir, das Gerät mit einer hochwertigen Audioanlage zu kombinieren.
+    </div>
+  </div>
+
+  <!-- BLOCK 2: Soundbar -->
+  <div class="block" id="block2">
+    <div class="block-header">
+      <span class="block-nr">Avsnitt 2</span>
+      <select id="sel2" onchange="updateButton()">
+        <option value="">— Produkt wählen —</option>
+        <option value="wrong">Flachbildfernseher</option>
+        <option value="correct">Soundbar</option>
+        <option value="wrong">Beamer</option>
+        <option value="wrong">Geschirrspüler</option>
+        <option value="wrong">Wäschetrockner</option>
+        <option value="wrong">Kaffeemaschine</option>
+        <option value="wrong">Smartwatch</option>
+        <option value="wrong">Digitalkamera</option>
+        <option value="wrong">Tablet</option>
+        <option value="wrong">Staubsaugerroboter</option>
+        <option value="wrong">Kühlschrank</option>
+        <option value="wrong">Kopfhörer</option>
+        <option value="wrong">Laptop</option>
+        <option value="wrong">Spielkonsole</option>
+      </select>
+      <span class="feedback-icon" id="icon2"></span>
+    </div>
+    <div class="abschnitt-text">
+      Wer den Klang seines Fernsehers deutlich verbessern möchte, ohne ein komplettes Surround-System zu kaufen, findet hier die ideale Lösung. Man stellt es einfach unter den Bildschirm oder montiert es an der Wand und verbindet es per Bluetooth oder HDMI. Mit satten Bässen und klarem Klang verwandelt es jeden Film in ein Kinoerlebnis. Viele Modelle unterstützen zudem Sprachassistenten wie Alexa oder Google Assistant.
+    </div>
+  </div>
+
+  <!-- BLOCK 3: Beamer -->
+  <div class="block" id="block3">
+    <div class="block-header">
+      <span class="block-nr">Avsnitt 3</span>
+      <select id="sel3" onchange="updateButton()">
+        <option value="">— Produkt wählen —</option>
+        <option value="wrong">Flachbildfernseher</option>
+        <option value="wrong">Soundbar</option>
+        <option value="correct">Beamer</option>
+        <option value="wrong">Geschirrspüler</option>
+        <option value="wrong">Wäschetrockner</option>
+        <option value="wrong">Kaffeemaschine</option>
+        <option value="wrong">Smartwatch</option>
+        <option value="wrong">Digitalkamera</option>
+        <option value="wrong">Tablet</option>
+        <option value="wrong">Staubsaugerroboter</option>
+        <option value="wrong">Kühlschrank</option>
+        <option value="wrong">Kopfhörer</option>
+        <option value="wrong">Laptop</option>
+        <option value="wrong">Spielkonsole</option>
+      </select>
+      <span class="feedback-icon" id="icon3"></span>
+    </div>
+    <div class="abschnitt-text">
+      Für alle, die ein echtes Kinoerlebnis zu Hause oder unterwegs genießen möchten, ist dieses Gerät die perfekte Wahl. Es projiziert Bilder auf eine weiße Wand oder Leinwand – in Größen, die kein Fernsehgerät erreichen kann. Moderne Modelle sind kompakt und leicht, sodass man sie problemlos mit auf Reisen nehmen kann. Besonders beliebt ist das Gerät auch für Präsentationen im Büro oder im Unterricht.
+    </div>
+  </div>
+
+  <!-- BLOCK 4: Geschirrspüler -->
+  <div class="block" id="block4">
+    <div class="block-header">
+      <span class="block-nr">Avsnitt 4</span>
+      <select id="sel4" onchange="updateButton()">
+        <option value="">— Produkt wählen —</option>
+        <option value="wrong">Flachbildfernseher</option>
+        <option value="wrong">Soundbar</option>
+        <option value="wrong">Beamer</option>
+        <option value="correct">Geschirrspüler</option>
+        <option value="wrong">Wäschetrockner</option>
+        <option value="wrong">Kaffeemaschine</option>
+        <option value="wrong">Smartwatch</option>
+        <option value="wrong">Digitalkamera</option>
+        <option value="wrong">Tablet</option>
+        <option value="wrong">Staubsaugerroboter</option>
+        <option value="wrong">Kühlschrank</option>
+        <option value="wrong">Kopfhörer</option>
+        <option value="wrong">Laptop</option>
+        <option value="wrong">Spielkonsole</option>
+      </select>
+      <span class="feedback-icon" id="icon4"></span>
+    </div>
+    <div class="abschnitt-text">
+      Dieses Haushaltsgerät spart täglich Zeit und Wasser – und reinigt dabei gründlicher als jede Handwäsche. Es fasst Geschirr für bis zu 14 Personen und verfügt über verschiedene Programme, unter anderem ein Kurzprogramm für leicht verschmutztes Geschirr und ein Hygieneprogramm mit besonders hoher Temperatur. Dank Energieklasse A ist es auch im Dauerbetrieb günstig im Verbrauch. Die einfache Bedienung macht es für alle Haushaltsgrößen geeignet.
+    </div>
+  </div>
+
+  <!-- BLOCK 5: Wäschetrockner -->
+  <div class="block" id="block5">
+    <div class="block-header">
+      <span class="block-nr">Avsnitt 5</span>
+      <select id="sel5" onchange="updateButton()">
+        <option value="">— Produkt wählen —</option>
+        <option value="wrong">Flachbildfernseher</option>
+        <option value="wrong">Soundbar</option>
+        <option value="wrong">Beamer</option>
+        <option value="wrong">Geschirrspüler</option>
+        <option value="correct">Wäschetrockner</option>
+        <option value="wrong">Kaffeemaschine</option>
+        <option value="wrong">Smartwatch</option>
+        <option value="wrong">Digitalkamera</option>
+        <option value="wrong">Tablet</option>
+        <option value="wrong">Staubsaugerroboter</option>
+        <option value="wrong">Kühlschrank</option>
+        <option value="wrong">Kopfhörer</option>
+        <option value="wrong">Laptop</option>
+        <option value="wrong">Spielkonsole</option>
+      </select>
+      <span class="feedback-icon" id="icon5"></span>
+    </div>
+    <div class="abschnitt-text">
+      Kein Aufhängen, kein Warten – dieses Gerät macht frische, weiche Wäsche in kürzester Zeit möglich, unabhängig vom Wetter draußen. Das Wärmepumpensystem arbeitet besonders energieeffizient und schont gleichzeitig die Fasern der Kleidung. Ein Sensor erkennt automatisch, wann die Wäsche trocken ist, und schaltet das Gerät ab. Ideal für Familien oder alle, die wenig Platz zum Wäschetrocknen haben.
+    </div>
+  </div>
+
+  <!-- BLOCK 6: Kaffeemaschine -->
+  <div class="block" id="block6">
+    <div class="block-header">
+      <span class="block-nr">Avsnitt 6</span>
+      <select id="sel6" onchange="updateButton()">
+        <option value="">— Produkt wählen —</option>
+        <option value="wrong">Flachbildfernseher</option>
+        <option value="wrong">Soundbar</option>
+        <option value="wrong">Beamer</option>
+        <option value="wrong">Geschirrspüler</option>
+        <option value="wrong">Wäschetrockner</option>
+        <option value="correct">Kaffeemaschine</option>
+        <option value="wrong">Smartwatch</option>
+        <option value="wrong">Digitalkamera</option>
+        <option value="wrong">Tablet</option>
+        <option value="wrong">Staubsaugerroboter</option>
+        <option value="wrong">Kühlschrank</option>
+        <option value="wrong">Kopfhörer</option>
+        <option value="wrong">Laptop</option>
+        <option value="wrong">Spielkonsole</option>
+      </select>
+      <span class="feedback-icon" id="icon6"></span>
+    </div>
+    <div class="abschnitt-text">
+      Mit diesem Gerät beginnt der perfekte Morgen. Es mahlt die Bohnen frisch und brüht auf Knopfdruck einen aromatischen Espresso, Cappuccino oder Americano – ganz nach Geschmack. Der eingebaute Milchaufschäumer sorgt für cremigen Schaum, und die Stärke sowie die Tassengröße lassen sich individuell einstellen. Dank der einfachen Reinigungsfunktion bleibt der Wartungsaufwand minimal.
+    </div>
+  </div>
+
+  <!-- BLOCK 7: Smartwatch -->
+  <div class="block" id="block7">
+    <div class="block-header">
+      <span class="block-nr">Avsnitt 7</span>
+      <select id="sel7" onchange="updateButton()">
+        <option value="">— Produkt wählen —</option>
+        <option value="wrong">Flachbildfernseher</option>
+        <option value="wrong">Soundbar</option>
+        <option value="wrong">Beamer</option>
+        <option value="wrong">Geschirrspüler</option>
+        <option value="wrong">Wäschetrockner</option>
+        <option value="wrong">Kaffeemaschine</option>
+        <option value="correct">Smartwatch</option>
+        <option value="wrong">Digitalkamera</option>
+        <option value="wrong">Tablet</option>
+        <option value="wrong">Staubsaugerroboter</option>
+        <option value="wrong">Kühlschrank</option>
+        <option value="wrong">Kopfhörer</option>
+        <option value="wrong">Laptop</option>
+        <option value="wrong">Spielkonsole</option>
+      </select>
+      <span class="feedback-icon" id="icon7"></span>
+    </div>
+    <div class="abschnitt-text">
+      Dieses Gerät trägt man am Handgelenk und hat damit immer den Überblick – über Nachrichten, Anrufe, Fitnessdaten und mehr. Es misst kontinuierlich Herzfrequenz, Schlaf und Schritte und gibt personalisierte Gesundheitshinweise. Beim Sport motiviert es mit Live-Daten und kann sogar ohne Smartphone GPS-Routen aufzeichnen. Mit einer Akkulaufzeit von bis zu zwei Wochen ist es ein zuverlässiger Begleiter im Alltag.
+    </div>
+  </div>
+
+  <!-- BLOCK 8: Digitalkamera -->
+  <div class="block" id="block8">
+    <div class="block-header">
+      <span class="block-nr">Avsnitt 8</span>
+      <select id="sel8" onchange="updateButton()">
+        <option value="">— Produkt wählen —</option>
+        <option value="wrong">Flachbildfernseher</option>
+        <option value="wrong">Soundbar</option>
+        <option value="wrong">Beamer</option>
+        <option value="wrong">Geschirrspüler</option>
+        <option value="wrong">Wäschetrockner</option>
+        <option value="wrong">Kaffeemaschine</option>
+        <option value="wrong">Smartwatch</option>
+        <option value="correct">Digitalkamera</option>
+        <option value="wrong">Tablet</option>
+        <option value="wrong">Staubsaugerroboter</option>
+        <option value="wrong">Kühlschrank</option>
+        <option value="wrong">Kopfhörer</option>
+        <option value="wrong">Laptop</option>
+        <option value="wrong">Spielkonsole</option>
+      </select>
+      <span class="feedback-icon" id="icon8"></span>
+    </div>
+    <div class="abschnitt-text">
+      Für alle, die mehr aus ihren Fotos herausholen möchten als ein Smartphone erlaubt, ist dieses Gerät die richtige Wahl. Mit einem großen Bildsensor, wechselbaren Objektiven und manuellen Einstellungsmöglichkeiten lassen sich auch anspruchsvolle Motive perfekt einfangen – ob Landschaften, Porträts oder Sportaufnahmen. Der optische Bildstabilisator sorgt auch bei wenig Licht für scharfe Ergebnisse. Leicht und kompakt genug für jede Reise.
+    </div>
+  </div>
+
+  <!-- BLOCK 9: Tablet -->
+  <div class="block" id="block9">
+    <div class="block-header">
+      <span class="block-nr">Avsnitt 9</span>
+      <select id="sel9" onchange="updateButton()">
+        <option value="">— Produkt wählen —</option>
+        <option value="wrong">Flachbildfernseher</option>
+        <option value="wrong">Soundbar</option>
+        <option value="wrong">Beamer</option>
+        <option value="wrong">Geschirrspüler</option>
+        <option value="wrong">Wäschetrockner</option>
+        <option value="wrong">Kaffeemaschine</option>
+        <option value="wrong">Smartwatch</option>
+        <option value="wrong">Digitalkamera</option>
+        <option value="correct">Tablet</option>
+        <option value="wrong">Staubsaugerroboter</option>
+        <option value="wrong">Kühlschrank</option>
+        <option value="wrong">Kopfhörer</option>
+        <option value="wrong">Laptop</option>
+        <option value="wrong">Spielkonsole</option>
+      </select>
+      <span class="feedback-icon" id="icon9"></span>
+    </div>
+    <div class="abschnitt-text">
+      Zwischen Smartphone und Laptop angesiedelt, bietet dieses Gerät einen großen, berührungsempfindlichen Bildschirm, der ideal zum Surfen, Streamen, Lesen und Zeichnen geeignet ist. Mit einer optionalen Tastatur wird es zur vollwertigen Arbeitsstation für unterwegs. Kinder nutzen es zum Lernen und Spielen, Erwachsene für Videokonferenzen und digitale Notizen. Der lange Akku hält problemlos einen ganzen Tag durch.
+    </div>
+  </div>
+
+  <!-- BLOCK 10: Staubsaugerroboter -->
+  <div class="block" id="block10">
+    <div class="block-header">
+      <span class="block-nr">Avsnitt 10</span>
+      <select id="sel10" onchange="updateButton()">
+        <option value="">— Produkt wählen —</option>
+        <option value="wrong">Flachbildfernseher</option>
+        <option value="wrong">Soundbar</option>
+        <option value="wrong">Beamer</option>
+        <option value="wrong">Geschirrspüler</option>
+        <option value="wrong">Wäschetrockner</option>
+        <option value="wrong">Kaffeemaschine</option>
+        <option value="wrong">Smartwatch</option>
+        <option value="wrong">Digitalkamera</option>
+        <option value="wrong">Tablet</option>
+        <option value="correct">Staubsaugerroboter</option>
+        <option value="wrong">Kühlschrank</option>
+        <option value="wrong">Kopfhörer</option>
+        <option value="wrong">Laptop</option>
+        <option value="wrong">Spielkonsole</option>
+      </select>
+      <span class="feedback-icon" id="icon10"></span>
+    </div>
+    <div class="abschnitt-text">
+      Dieses intelligente Gerät reinigt Böden vollautomatisch – auch wenn niemand zu Hause ist. Mithilfe von Sensoren navigiert es durch Räume, weicht Hindernissen aus und kehrt selbstständig zur Ladestation zurück, sobald der Akku leer ist. Per App lassen sich Reinigungszeiten planen und bestimmte Bereiche sperren. Besonders praktisch für Haushalte mit Haustieren, da es täglich Haare und Staub aufnimmt, ohne dass man selbst Hand anlegen muss.
+    </div>
+  </div>
+
+  <div class="btn-wrap">
+    <button id="check-btn" onclick="checkAnswers()" disabled>Sjekk svarene</button>
+    <div id="result-msg"></div>
+  </div>
+
+</div>
+
+<script>
+  const TOTAL = 10;
+
+  function shuffleSelects() {
+    for (let i = 1; i <= TOTAL; i++) {
+      const sel = document.getElementById('sel' + i);
+      const opts = Array.from(sel.options).slice(1);
+      for (let j = opts.length - 1; j > 0; j--) {
+        const k = Math.floor(Math.random() * (j + 1));
+        [opts[j], opts[k]] = [opts[k], opts[j]];
+      }
+      while (sel.options.length > 1) sel.remove(1);
+      opts.forEach(o => sel.appendChild(o));
+    }
+  }
+  shuffleSelects();
+
+  function updateButton() {
+    let filled = 0;
+    for (let i = 1; i <= TOTAL; i++) {
+      if (document.getElementById('sel' + i).value !== '') filled++;
+    }
+    document.getElementById('check-btn').disabled = (filled < TOTAL);
+  }
+
+  function checkAnswers() {
+    let correct = 0;
+    for (let i = 1; i <= TOTAL; i++) {
+      const sel   = document.getElementById('sel' + i);
+      const block = document.getElementById('block' + i);
+      const icon  = document.getElementById('icon' + i);
+      block.classList.remove('correct', 'wrong');
+      if (sel.value === 'correct') {
+        block.classList.add('correct');
+        icon.textContent = '✅';
+        correct++;
+      } else {
+        block.classList.add('wrong');
+        icon.textContent = '❌';
+      }
+    }
+    const msg = document.getElementById('result-msg');
+    if (correct === TOTAL) {
+      msg.textContent = 'Utmerket! Alle svar er riktige!';
+      msg.className = 'all-correct';
+      launchConfetti();
+    } else {
+      msg.textContent = `${correct} av ${TOTAL} riktige – prøv igjen på de merkede avsnittene!`;
+      msg.className = 'has-errors';
+    }
+  }
+
+  function launchConfetti() {
+    // Screen flash
+    const flash = document.createElement('div');
+    flash.className = 'lightning-flash';
+    document.body.appendChild(flash);
+    setTimeout(() => flash.remove(), 500);
+
+    // SVG zigzag bolt function
+    function makeBolt(xPos, delay) {
+      const svgNS = 'http://www.w3.org/2000/svg';
+      const svg = document.createElementNS(svgNS, 'svg');
+      svg.setAttribute('width', '40');
+      svg.setAttribute('height', '320');
+      svg.setAttribute('viewBox', '0 0 40 320');
+      svg.classList.add('lightning-bolt');
+      svg.style.left = xPos + 'vw';
+      svg.style.animationDelay = delay + 's';
+
+      // Zigzag path
+      const path = document.createElementNS(svgNS, 'path');
+      path.setAttribute('d', 'M20,0 L5,80 L22,80 L2,180 L24,180 L0,320');
+      path.setAttribute('stroke', '#60cfff');
+      path.setAttribute('stroke-width', '3');
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke-linecap', 'round');
+      path.setAttribute('stroke-linejoin', 'round');
+
+      // White core
+      const pathCore = document.createElementNS(svgNS, 'path');
+      pathCore.setAttribute('d', 'M20,0 L5,80 L22,80 L2,180 L24,180 L0,320');
+      pathCore.setAttribute('stroke', 'white');
+      pathCore.setAttribute('stroke-width', '1.2');
+      pathCore.setAttribute('fill', 'none');
+      pathCore.setAttribute('stroke-linecap', 'round');
+      pathCore.setAttribute('stroke-linejoin', 'round');
+
+      svg.appendChild(path);
+      svg.appendChild(pathCore);
+      document.body.appendChild(svg);
+      setTimeout(() => svg.remove(), 1500 + delay * 1000);
+    }
+
+    // Fire several bolts across the screen
+    const positions = [10, 28, 46, 64, 82];
+    positions.forEach((x, i) => makeBolt(x, i * 0.18));
+  }
+</script>
+</body>
+</html>

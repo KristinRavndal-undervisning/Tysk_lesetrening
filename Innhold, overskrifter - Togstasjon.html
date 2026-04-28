@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Am Bahnhof – Tysk leseforståelse</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f2efe9;
+    --surface: #ffffff;
+    --surface-alt: #ece8e1;
+    --border: #d4cfc6;
+    --text: #1a1a18;
+    --text-mid: #5a5650;
+    --accent: #b02020;
+    --accent-light: #f5e8e8;
+    --accent-mid: #8a1818;
+    --badge: #1a1a18;
+    --badge-text: #f2efe9;
+    --stripe: #2a2a28;
+    --correct: #2e6b4a;
+    --correct-bg: #eaf4ee;
+    --correct-border: #a8d4b8;
+    --wrong: #8b3a2f;
+    --wrong-bg: #fdf0ee;
+    --wrong-border: #d4a8a0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-weight: 300;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--stripe);
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Animated departure board flicker lines */
+  .board-lines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      180deg,
+      transparent,
+      transparent 3px,
+      rgba(255,255,255,0.03) 3px,
+      rgba(255,255,255,0.03) 4px
+    );
+    pointer-events: none;
+  }
+
+  /* Red top stripe like Deutsche Bahn signage */
+  .header-stripe {
+    background: var(--accent);
+    height: 6px;
+    width: 100%;
+  }
+
+  .header-inner {
+    position: relative;
+    z-index: 2;
+    padding: 2.6rem 2rem 2.2rem;
+    text-align: center;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 400;
+    color: #f2efe9;
+    letter-spacing: 0.01em;
+    line-height: 1.15;
+  }
+
+  header h1 em {
+    font-style: italic;
+    color: #e08080;
+  }
+
+  header .subtitle {
+    margin-top: 0.55rem;
+    font-size: 0.82rem;
+    color: rgba(242,239,233,0.5);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  /* Blinking clock dot – subtle animation */
+  .clock-dot {
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    background: var(--accent);
+    border-radius: 50%;
+    vertical-align: middle;
+    margin: 0 0.4rem;
+    animation: blink 2s step-end infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0; }
+  }
+
+  /* ── INSTRUCTION BAR ── */
+  .instruction-bar {
+    background: var(--accent);
+    color: rgba(255,255,255,0.92);
+    text-align: center;
+    padding: 0.7rem 1.5rem;
+    font-size: 0.88rem;
+    letter-spacing: 0.01em;
+    font-weight: 300;
+  }
+
+  /* ── PAGE ── */
+  .page {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 2.8rem 2rem 5rem;
+  }
+
+  /* ── BLOCK ── */
+  .block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--stripe);
+    border-radius: 2px;
+    padding: 1.4rem 1.8rem 1.6rem;
+    margin-bottom: 1.4rem;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  /* ── BLOCK HEADER ── */
+  .block-header {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .block-nr {
+    flex-shrink: 0;
+    background: var(--badge);
+    color: var(--badge-text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  select {
+    width: auto;
+    padding: 0.38rem 2rem 0.38rem 0.7rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 300;
+    color: var(--text);
+    background: var(--surface-alt);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%235a5650' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.65rem center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  select:focus { outline: none; border-color: var(--accent); background: var(--surface); }
+
+  .feedback-icon {
+    font-size: 1rem;
+    opacity: 0;
+    transition: opacity 0.25s;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  /* ── TEXT ── */
+  .abschnitt-text {
+    font-size: 0.97rem;
+    line-height: 1.82;
+    color: var(--text);
+    font-weight: 300;
+  }
+
+  /* ── STATES ── */
+  .block.correct {
+    border-color: var(--correct-border);
+    border-left-color: var(--correct);
+    background: var(--correct-bg);
+  }
+  .block.correct .block-header { border-bottom-color: var(--correct-border); }
+  .block.correct .block-nr { background: var(--correct); }
+  .block.correct select { border-color: var(--correct-border); background: #d8eee1; color: var(--correct); font-weight: 500; }
+  .block.correct .feedback-icon { opacity: 1; }
+
+  .block.wrong {
+    border-color: var(--wrong-border);
+    border-left-color: var(--wrong);
+    background: var(--wrong-bg);
+  }
+  .block.wrong .block-header { border-bottom-color: var(--wrong-border); }
+  .block.wrong .block-nr { background: var(--wrong); }
+  .block.wrong select { border-color: var(--wrong-border); background: #f5ddd9; }
+  .block.wrong .feedback-icon { opacity: 1; }
+
+  /* ── BUTTON ── */
+  .btn-wrap {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  #check-btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ffffff;
+    background: var(--accent);
+    border: none;
+    padding: 0.75rem 2.2rem;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+  }
+  #check-btn:hover:not(:disabled) { background: var(--accent-mid); transform: translateY(-1px); }
+  #check-btn:disabled { background: #b0aca6; cursor: not-allowed; }
+
+  #result-msg {
+    font-size: 0.92rem;
+    color: var(--text-mid);
+    font-style: italic;
+  }
+  #result-msg.all-correct { color: var(--correct); font-weight: 500; font-style: normal; }
+  #result-msg.has-errors  { color: var(--wrong); font-style: normal; }
+
+  .train {
+    position: fixed;
+    font-size: 2.8rem;
+    top: 45%;
+    left: -5%;
+    animation: trainRide 4.4s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+    pointer-events: none;
+    z-index: 9999;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+  }
+  @keyframes trainRide {
+    0%   { left: -8%; opacity: 1; }
+    85%  { opacity: 1; }
+    100% { left: 108%; opacity: 0; }
+  }
+  .confetti-piece {
+    position: fixed;
+    opacity: 0;
+    animation: confettiFall 2.8s ease-in forwards;
+    pointer-events: none;
+    z-index: 9999;
+  }
+  @keyframes confettiFall {
+    0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    80%  { opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  @media (max-width: 520px) {
+    .page { padding: 1.8rem 1rem 4rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-stripe"></div>
+  <div class="board-lines"></div>
+  <div class="header-inner">
+    <h1>Willkommen am <em>Bahnhof</em></h1>
+    <div class="subtitle">Informationen für Reisende <span class="clock-dot"></span></div>
+  </div>
+</header>
+
+<div class="instruction-bar">
+  Les hvert avsnitt og velg den overskriften som passer best. Trykk «Sjekk svarene» når alle seks er besvart.
+</div>
+
+<div class="page">
+
+  <!-- BLOCK 1 -->
+  <div class="block" id="block1">
+    <div class="block-header">
+      <span class="block-nr">Avsnitt 1</span>
+      <select id="sel1" onchange="updateButton()">
+        <option value="">— Überschrift wählen —</option>
+        <option value="correct">Abfahrt und Ankunft</option>
+        <option value="wrong">Fahrkarten</option>
+        <option value="wrong">Gepäck</option>
+        <option value="wrong">Imbiss und Café</option>
+        <option value="wrong">Barrierefreiheit</option>
+        <option value="wrong">Fundbüro</option>
+        <option value="wrong">Reisezentrum</option>
+        <option value="wrong">Parkplätze</option>
+        <option value="wrong">Sicherheit</option>
+      </select>
+      <span class="feedback-icon" id="icon1"></span>
+    </div>
+    <div class="abschnitt-text">
+      Die aktuellen Zeiten für alle Züge finden Sie auf den digitalen Anzeigetafeln in der Haupthalle sowie auf dem Bahnsteig. Bei Verzögerungen erfolgen Durchsagen und die Tafeln werden sofort aktualisiert. Wir empfehlen außerdem, die offizielle App der Bahn zu nutzen, die Sie in Echtzeit über Änderungen informiert. Bitte beachten Sie, dass Fernzüge in der Regel einige Minuten vor der planmäßigen Zeit bereitstehen.
+    </div>
+  </div>
+
+  <!-- BLOCK 2 -->
+  <div class="block" id="block2">
+    <div class="block-header">
+      <span class="block-nr">Avsnitt 2</span>
+      <select id="sel2" onchange="updateButton()">
+        <option value="">— Überschrift wählen —</option>
+        <option value="wrong">Abfahrt und Ankunft</option>
+        <option value="correct">Fahrkarten</option>
+        <option value="wrong">Gepäck</option>
+        <option value="wrong">Imbiss und Café</option>
+        <option value="wrong">Barrierefreiheit</option>
+        <option value="wrong">Fundbüro</option>
+        <option value="wrong">Reisezentrum</option>
+        <option value="wrong">Parkplätze</option>
+        <option value="wrong">Sicherheit</option>
+      </select>
+      <span class="feedback-icon" id="icon2"></span>
+    </div>
+    <div class="abschnitt-text">
+      *** können am Automaten, am Schalter oder bequem über die App erworben werden. Wer online kauft, spart oft Zeit und Geld. Bitte achten Sie darauf, die richtige Tarifzone und Zugart zu wählen – bei Fragen hilft das Personal am Schalter gerne weiter. Kinder unter sechs Jahren reisen in Begleitung eines Erwachsenen kostenlos.
+    </div>
+  </div>
+
+  <!-- BLOCK 3 -->
+  <div class="block" id="block3">
+    <div class="block-header">
+      <span class="block-nr">Avsnitt 3</span>
+      <select id="sel3" onchange="updateButton()">
+        <option value="">— Überschrift wählen —</option>
+        <option value="wrong">Abfahrt und Ankunft</option>
+        <option value="wrong">Fahrkarten</option>
+        <option value="correct">Gepäck</option>
+        <option value="wrong">Imbiss und Café</option>
+        <option value="wrong">Barrierefreiheit</option>
+        <option value="wrong">Fundbüro</option>
+        <option value="wrong">Reisezentrum</option>
+        <option value="wrong">Parkplätze</option>
+        <option value="wrong">Sicherheit</option>
+      </select>
+      <span class="feedback-icon" id="icon3"></span>
+    </div>
+    <div class="abschnitt-text">
+      Im Untergeschoss stehen abschließbare Schließfächer in verschiedenen Größen zur Verfügung – ideal für Reisende mit Zwischenstopp oder längeren Wartezeiten. Die Nutzung ist stundenweise abrechenbar und kann kontaktlos bezahlt werden. Bitte denken Sie daran, keine wertvollen Gegenstände unbeaufsichtigt stehen zu lassen, auch nicht für kurze Zeit.
+    </div>
+  </div>
+
+  <!-- BLOCK 4 -->
+  <div class="block" id="block4">
+    <div class="block-header">
+      <span class="block-nr">Avsnitt 4</span>
+      <select id="sel4" onchange="updateButton()">
+        <option value="">— Überschrift wählen —</option>
+        <option value="wrong">Abfahrt und Ankunft</option>
+        <option value="wrong">Fahrkarten</option>
+        <option value="wrong">Gepäck</option>
+        <option value="correct">Imbiss und Café</option>
+        <option value="wrong">Barrierefreiheit</option>
+        <option value="wrong">Fundbüro</option>
+        <option value="wrong">Reisezentrum</option>
+        <option value="wrong">Parkplätze</option>
+        <option value="wrong">Sicherheit</option>
+      </select>
+      <span class="feedback-icon" id="icon4"></span>
+    </div>
+    <div class="abschnitt-text">
+      In der Haupthalle finden Sie einen Bäcker, einen Imbiss sowie ein ruhigeres Café mit Sitzgelegenheiten. Die meisten Anbieter sind täglich von 6 bis 22 Uhr geöffnet – das Café auch an Sonn- und Feiertagen. Warme Mahlzeiten, belegte Brötchen und eine Auswahl an Heißgetränken stehen den ganzen Tag zur Verfügung. Bezahlung ist sowohl bar als auch mit Karte möglich.
+    </div>
+  </div>
+
+  <!-- BLOCK 5 -->
+  <div class="block" id="block5">
+    <div class="block-header">
+      <span class="block-nr">Avsnitt 5</span>
+      <select id="sel5" onchange="updateButton()">
+        <option value="">— Überschrift wählen —</option>
+        <option value="wrong">Abfahrt und Ankunft</option>
+        <option value="wrong">Fahrkarten</option>
+        <option value="wrong">Gepäck</option>
+        <option value="wrong">Imbiss und Café</option>
+        <option value="correct">Barrierefreiheit</option>
+        <option value="wrong">Fundbüro</option>
+        <option value="wrong">Reisezentrum</option>
+        <option value="wrong">Parkplätze</option>
+        <option value="wrong">Sicherheit</option>
+      </select>
+      <span class="feedback-icon" id="icon5"></span>
+    </div>
+    <div class="abschnitt-text">
+      Alle Bahnsteige sind über Aufzüge und Rampen erreichbar. Rollstuhlfahrer und Reisende mit eingeschränkter Mobilität können den Mobilitätsservice der Bahn in Anspruch nehmen – eine vorherige Anmeldung wird empfohlen. Markierungen am Boden und kontrastreiche Beschilderung helfen sehbehinderten Reisenden, sich sicher im Bahnhof zu orientieren. Für weitere Unterstützung steht das Personal am Infopoint immer zur Verfügung.
+    </div>
+  </div>
+
+  <!-- BLOCK 6 -->
+  <div class="block" id="block6">
+    <div class="block-header">
+      <span class="block-nr">Avsnitt 6</span>
+      <select id="sel6" onchange="updateButton()">
+        <option value="">— Überschrift wählen —</option>
+        <option value="wrong">Abfahrt und Ankunft</option>
+        <option value="wrong">Fahrkarten</option>
+        <option value="wrong">Gepäck</option>
+        <option value="wrong">Imbiss und Café</option>
+        <option value="wrong">Barrierefreiheit</option>
+        <option value="correct">Fundbüro</option>
+        <option value="wrong">Reisezentrum</option>
+        <option value="wrong">Parkplätze</option>
+        <option value="wrong">Sicherheit</option>
+      </select>
+      <span class="feedback-icon" id="icon6"></span>
+    </div>
+    <div class="abschnitt-text">
+      Haben Sie etwas im Zug oder auf dem Bahnhof liegen lassen? Unser Büro für verlorene Gegenstände befindet sich im Erdgeschoss, Raum 12, und ist montags bis freitags von 8 bis 18 Uhr geöffnet. Gegenstände, die im Zug gefunden werden, werden zunächst zum Endbahnhof gebracht und danach zentral erfasst. Eine Online-Suchanfrage ist ebenfalls über die Website der Bahn möglich.
+    </div>
+  </div>
+
+  <!-- BUTTON -->
+  <div class="btn-wrap">
+    <button id="check-btn" onclick="checkAnswers()" disabled>Sjekk svarene</button>
+    <div id="result-msg"></div>
+  </div>
+
+</div>
+
+<script>
+  const TOTAL = 6;
+
+  function shuffleSelects() {
+    for (let i = 1; i <= TOTAL; i++) {
+      const sel = document.getElementById('sel' + i);
+      const opts = Array.from(sel.options).slice(1);
+      for (let j = opts.length - 1; j > 0; j--) {
+        const k = Math.floor(Math.random() * (j + 1));
+        [opts[j], opts[k]] = [opts[k], opts[j]];
+      }
+      while (sel.options.length > 1) sel.remove(1);
+      opts.forEach(o => sel.appendChild(o));
+    }
+  }
+  shuffleSelects();
+
+  function updateButton() {
+    let filled = 0;
+    for (let i = 1; i <= TOTAL; i++) {
+      if (document.getElementById('sel' + i).value !== '') filled++;
+    }
+    document.getElementById('check-btn').disabled = (filled < TOTAL);
+  }
+
+  function checkAnswers() {
+    let correct = 0;
+    for (let i = 1; i <= TOTAL; i++) {
+      const sel   = document.getElementById('sel' + i);
+      const block = document.getElementById('block' + i);
+      const icon  = document.getElementById('icon' + i);
+      block.classList.remove('correct', 'wrong');
+      if (sel.value === 'correct') {
+        block.classList.add('correct');
+        icon.textContent = '✅';
+        correct++;
+      } else {
+        block.classList.add('wrong');
+        icon.textContent = '❌';
+      }
+    }
+    const msg = document.getElementById('result-msg');
+    if (correct === TOTAL) {
+      msg.textContent = 'Utmerket! Alle svar er riktige!';
+      msg.className = 'all-correct';
+      launchConfetti();
+    } else {
+      msg.textContent = `${correct} av ${TOTAL} riktige – prøv igjen på de merkede avsnittene!`;
+      msg.className = 'has-errors';
+    }
+  }
+
+  function launchConfetti() {
+    const train = document.createElement('div');
+    train.className = 'train';
+    train.textContent = '🚂';
+    train.style.transform = 'scaleX(-1)';
+    document.body.appendChild(train);
+    setTimeout(() => train.remove(), 4800);
+
+    const colors = ['#b02020','#1a1a18','#f2efe9','#2e6b4a','#e08080','#8a1818'];
+    for (let i = 0; i < 120; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.top = '-20px';
+      el.style.background = colors[Math.floor(Math.random() * colors.length)];
+      el.style.width  = (6 + Math.random() * 9) + 'px';
+      el.style.height = (6 + Math.random() * 9) + 'px';
+      el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+      el.style.animationDelay    = (Math.random() * 1.5) + 's';
+      el.style.animationDuration = (2 + Math.random() * 2) + 's';
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 5000);
+    }
+  }
+</script>
+</body>
+</html>
