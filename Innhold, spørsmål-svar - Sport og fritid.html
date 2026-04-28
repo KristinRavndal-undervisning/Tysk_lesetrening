@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tysk 2 – Sport und Freizeit</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue:        #1a3a5c;
+    --blue-mid:    #2a5f8f;
+    --blue-light:  #d0e8f5;
+    --blue-pale:   #eef6fb;
+    --orange:      #e85d04;
+    --orange-mid:  #f48c42;
+    --orange-pale: #fdf0e6;
+    --slate:       #f0f4f8;
+    --slate-dark:  #dce6ef;
+    --ink:         #0d1f2d;
+    --ink-mid:     #2d4a5f;
+    --ink-light:   #6a8fa8;
+    --white:       #fdfeff;
+    --correct:     #2d6a4f;
+    --wrong:       #9b2226;
+    --shadow:      rgba(13,31,45,0.12);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--slate);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--blue);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px, transparent 60px,
+      rgba(255,255,255,0.03) 60px, rgba(255,255,255,0.03) 61px
+    );
+    animation: track 8s linear infinite;
+  }
+  @keyframes track {
+    0%   { background-position: 0 0; }
+    100% { background-position: 61px 0; }
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--orange), var(--blue-mid), var(--orange));
+  }
+
+  .header-inner {
+    position: relative;
+    z-index: 1;
+    padding: 28px 44px 26px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .tag {
+    display: inline-block;
+    background: rgba(232,93,4,0.25);
+    border: 1px solid rgba(232,93,4,0.45);
+    color: #f48c42;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    color: #fff;
+    line-height: 1;
+    letter-spacing: 0.04em;
+  }
+  header h1 span { color: var(--orange-mid); }
+
+  .header-sub {
+    font-size: 0.84rem;
+    color: var(--blue-light);
+    margin-top: 6px;
+    font-weight: 300;
+  }
+
+  .pulse-wrap {
+    flex-shrink: 0;
+    position: relative;
+    width: 60px; height: 60px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .pulse-ring {
+    position: absolute;
+    width: 60px; height: 60px;
+    border: 2px solid rgba(232,93,4,0.4);
+    border-radius: 50%;
+    animation: pulse-out 2.5s ease-out infinite;
+  }
+  .pulse-ring:nth-child(2) { animation-delay: .8s; }
+  .pulse-ring:nth-child(3) { animation-delay: 1.6s; }
+  @keyframes pulse-out {
+    0%   { transform: scale(0.6); opacity: 0.8; }
+    100% { transform: scale(1.6); opacity: 0; }
+  }
+  .pulse-icon { font-size: 26px; position: relative; z-index: 1; }
+
+  .instruksjon {
+    background: var(--slate-dark);
+    border-left: 3px solid var(--blue-mid);
+    padding: 10px 44px;
+    font-size: 0.84rem;
+    color: var(--ink-mid);
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    min-height: calc(100vh - 130px);
+  }
+
+  .tekst-panel {
+    padding: 36px 44px;
+    background: var(--white);
+    border-right: 1px solid var(--slate-dark);
+  }
+
+  .panel-heading {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.14em;
+    color: var(--blue-mid);
+    margin-bottom: 22px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .panel-heading::after {
+    content: '';
+    flex: 1; height: 1px;
+    background: linear-gradient(to right, var(--slate-dark), transparent);
+  }
+
+  .svar-kort {
+    background: var(--blue-pale);
+    border: 1px solid var(--blue-light);
+    border-left: 3px solid var(--blue-light);
+    border-radius: 0 6px 6px 0;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    transition: border-left-color 0.2s, box-shadow 0.2s;
+  }
+  .svar-kort:hover {
+    border-left-color: var(--orange);
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+
+  .svar-nummer {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--blue-mid);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
+  .svar-tekst {
+    font-size: 0.92rem;
+    line-height: 1.74;
+    color: var(--ink);
+    font-weight: 300;
+  }
+
+  .oppgave-panel {
+    padding: 36px 44px;
+    background: var(--slate);
+  }
+
+  .sporsmal-kort {
+    background: var(--white);
+    border: 1px solid var(--slate-dark);
+    border-radius: 6px;
+    padding: 15px 17px;
+    margin-bottom: 13px;
+    transition: box-shadow 0.2s;
+  }
+  .sporsmal-kort.riktig { border-color: var(--correct); background: #f0faf4; }
+  .sporsmal-kort.feil   { border-color: var(--wrong);   background: #fdf0f0; }
+
+  .sporsmal-num {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--ink-light);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .sporsmal-tekst {
+    font-size: 0.93rem;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.35;
+  }
+
+  select {
+    width: 100%;
+    padding: 8px 12px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.87rem;
+    font-weight: 300;
+    color: var(--ink);
+    background: var(--blue-pale);
+    border: 1px solid var(--blue-light);
+    border-radius: 4px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232a5f8f' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  select:focus {
+    outline: none;
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(232,93,4,0.12);
+  }
+  .sporsmal-kort.riktig select { border-color: var(--correct); background-color: #f0faf4; }
+  .sporsmal-kort.feil   select { border-color: var(--wrong);   background-color: #fdf0f0; }
+
+  .feedback-ikon {
+    float: right;
+    margin-left: 8px;
+    line-height: 1.35;
+  }
+
+  .knapp-rad {
+    margin-top: 22px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .sjekk-knapp {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 11px 26px;
+    background: var(--orange);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(232,93,4,0.3);
+  }
+  .sjekk-knapp:hover:not(:disabled) {
+    background: var(--blue);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(26,58,92,0.3);
+  }
+  .sjekk-knapp:active:not(:disabled) { transform: translateY(0); }
+  .sjekk-knapp:disabled {
+    background: var(--slate-dark);
+    color: var(--ink-light);
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .resultat-tekst {
+    font-size: 0.87rem;
+    font-style: italic;
+    color: var(--ink-mid);
+  }
+
+  .konfetti-container {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 999; overflow: hidden;
+  }
+  .konfetti-bit {
+    position: absolute; opacity: 0;
+    animation: fall 2.5s ease-in forwards;
+  }
+  @keyframes fall {
+    0%   { opacity: 1; transform: translateY(-20px) rotate(0deg); }
+    100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+  }
+
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
+    .tekst-panel { border-right: none; border-bottom: 1px solid var(--slate-dark); }
+    .header-inner, .instruksjon, .tekst-panel, .oppgave-panel { padding-left: 20px; padding-right: 20px; }
+    .pulse-wrap { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-text">
+      <div class="tag">Leseforståelse</div>
+      <h1>Sport und <span>Freizeit</span></h1>
+      <p class="header-sub">Trening, hvile og hva som gir energi</p>
+    </div>
+    <div class="pulse-wrap">
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+      <div class="pulse-ring"></div>
+      <div class="pulse-icon">🏃</div>
+    </div>
+  </div>
+</header>
+
+<div class="instruksjon">
+  Les svarene til venstre, og koble hvert spørsmål til høyre med det svaret som passer best. To spørsmål hører ikke til noen av svarene.
+</div>
+
+<div class="layout">
+
+  <div class="tekst-panel">
+    <div class="panel-heading">Svar</div>
+
+    <div class="svar-kort">
+      <div class="svar-nummer">Svar 1</div>
+      <div class="svar-tekst">Ich laufe jeden Tag – morgens vor der Arbeit, manchmal auch abends. Ich weiß, dass es ein bisschen viel ist, aber ich fühle mich einfach besser, wenn ich mich bewege. An Tagen ohne Training bin ich ehrlich gesagt schlechter gelaunt.</div>
+    </div>
+
+    <div class="svar-kort">
+      <div class="svar-nummer">Svar 2</div>
+      <div class="svar-tekst">Ich treibe eigentlich keinen Sport – und das stört mich auch nicht weiter. Nach der Arbeit lese ich lieber oder schaue mir einen Film an. Ich finde, man muss nicht sportlich sein, um sich wohlzufühlen.</div>
+    </div>
+
+    <div class="svar-kort">
+      <div class="svar-nummer">Svar 3</div>
+      <div class="svar-tekst">Als Kind und Teenager war ich sehr aktiv – ich habe Handball gespielt und bin geklettert. Dann hatte ich eine Knieverletzung, und seitdem ist es nie wieder so geworden wie früher. Manchmal vermisse ich es wirklich.</div>
+    </div>
+
+    <div class="svar-kort">
+      <div class="svar-nummer">Svar 4</div>
+      <div class="svar-tekst">Fast jeden Sonntag spielen wir Fußball – eine wilde Mischung aus Freunden, Kollegen und Nachbarn. Ob wir gewinnen oder verlieren, ist mir eigentlich egal. Das Wichtigste ist, dass wir danach zusammen essen gehen.</div>
+    </div>
+
+    <div class="svar-kort">
+      <div class="svar-nummer">Svar 5</div>
+      <div class="svar-tekst">Ich brauche keine Sporthalle und keinen Verein. Am liebsten bin ich draußen – wandern, klettern, Rad fahren. Je weiter weg von der Stadt, desto besser. Organisierter Sport ist nichts für mich.</div>
+    </div>
+
+    <div class="svar-kort">
+      <div class="svar-nummer">Svar 6</div>
+      <div class="svar-tekst">Ich habe jetzt dreimal ein Fitnessstudio-Abo gekauft – und habe jedes Mal nach ein paar Wochen wieder aufgehört. Die Motivation fehlt einfach. Ich weiß, dass ich mehr machen sollte, aber der Anfang ist immer das Schwierigste.</div>
+    </div>
+
+  </div>
+
+  <div class="oppgave-panel">
+    <div class="panel-heading">Spørsmål</div>
+
+    <div class="sporsmal-kort" id="sk1">
+      <div class="sporsmal-num">Spørsmål 1</div>
+      <div class="sporsmal-tekst">Nimmst du aktiv an Wettkämpfen teil?</div>
+      <select id="sp1" onchange="oppdaterKnapp()">
+        <option value="">– Velg svar –</option>
+        <option value="1">Svar 1</option><option value="2">Svar 2</option><option value="3">Svar 3</option>
+        <option value="4">Svar 4</option><option value="5">Svar 5</option><option value="6">Svar 6</option>
+        <option value="ingen">Ingen av svarene</option>
+      </select>
+    </div>
+
+    <div class="sporsmal-kort" id="sk2">
+      <div class="sporsmal-num">Spørsmål 2</div>
+      <div class="sporsmal-tekst">Wie wichtig ist dir das Soziale beim Sport?</div>
+      <select id="sp2" onchange="oppdaterKnapp()">
+        <option value="">– Velg svar –</option>
+        <option value="1">Svar 1</option><option value="2">Svar 2</option><option value="3">Svar 3</option>
+        <option value="4">Svar 4</option><option value="5">Svar 5</option><option value="6">Svar 6</option>
+        <option value="ingen">Ingen av svarene</option>
+      </select>
+    </div>
+
+    <div class="sporsmal-kort" id="sk3">
+      <div class="sporsmal-num">Spørsmål 3</div>
+      <div class="sporsmal-tekst">Bist du lieber drinnen oder draußen aktiv?</div>
+      <select id="sp3" onchange="oppdaterKnapp()">
+        <option value="">– Velg svar –</option>
+        <option value="1">Svar 1</option><option value="2">Svar 2</option><option value="3">Svar 3</option>
+        <option value="4">Svar 4</option><option value="5">Svar 5</option><option value="6">Svar 6</option>
+        <option value="ingen">Ingen av svarene</option>
+      </select>
+    </div>
+
+    <div class="sporsmal-kort" id="sk4">
+      <div class="sporsmal-num">Spørsmål 4</div>
+      <div class="sporsmal-tekst">Hast du früher mehr Sport getrieben als heute?</div>
+      <select id="sp4" onchange="oppdaterKnapp()">
+        <option value="">– Velg svar –</option>
+        <option value="1">Svar 1</option><option value="2">Svar 2</option><option value="3">Svar 3</option>
+        <option value="4">Svar 4</option><option value="5">Svar 5</option><option value="6">Svar 6</option>
+        <option value="ingen">Ingen av svarene</option>
+      </select>
+    </div>
+
+    <div class="sporsmal-kort" id="sk5">
+      <div class="sporsmal-num">Spørsmål 5</div>
+      <div class="sporsmal-tekst">Wie erholt du dich am liebsten nach einem langen Tag?</div>
+      <select id="sp5" onchange="oppdaterKnapp()">
+        <option value="">– Velg svar –</option>
+        <option value="1">Svar 1</option><option value="2">Svar 2</option><option value="3">Svar 3</option>
+        <option value="4">Svar 4</option><option value="5">Svar 5</option><option value="6">Svar 6</option>
+        <option value="ingen">Ingen av svarene</option>
+      </select>
+    </div>
+
+    <div class="sporsmal-kort" id="sk6">
+      <div class="sporsmal-num">Spørsmål 6</div>
+      <div class="sporsmal-tekst">Fällt es dir schwer, mit dem Training anzufangen?</div>
+      <select id="sp6" onchange="oppdaterKnapp()">
+        <option value="">– Velg svar –</option>
+        <option value="1">Svar 1</option><option value="2">Svar 2</option><option value="3">Svar 3</option>
+        <option value="4">Svar 4</option><option value="5">Svar 5</option><option value="6">Svar 6</option>
+        <option value="ingen">Ingen av svarene</option>
+      </select>
+    </div>
+
+    <div class="sporsmal-kort" id="sk7">
+      <div class="sporsmal-num">Spørsmål 7</div>
+      <div class="sporsmal-tekst">Fällt es dir schwer, Zeit für Sport zu finden?</div>
+      <select id="sp7" onchange="oppdaterKnapp()">
+        <option value="">– Velg svar –</option>
+        <option value="1">Svar 1</option><option value="2">Svar 2</option><option value="3">Svar 3</option>
+        <option value="4">Svar 4</option><option value="5">Svar 5</option><option value="6">Svar 6</option>
+        <option value="ingen">Ingen av svarene</option>
+      </select>
+    </div>
+
+    <div class="sporsmal-kort" id="sk8">
+      <div class="sporsmal-num">Spørsmål 8</div>
+      <div class="sporsmal-tekst">Treibst du regelmäßig Sport?</div>
+      <select id="sp8" onchange="oppdaterKnapp()">
+        <option value="">– Velg svar –</option>
+        <option value="1">Svar 1</option><option value="2">Svar 2</option><option value="3">Svar 3</option>
+        <option value="4">Svar 4</option><option value="5">Svar 5</option><option value="6">Svar 6</option>
+        <option value="ingen">Ingen av svarene</option>
+      </select>
+    </div>
+
+    <div class="knapp-rad">
+      <button class="sjekk-knapp" id="sjekkBtn" onclick="sjekkSvar()" disabled>Sjekk svarene</button>
+      <span class="resultat-tekst" id="resultatTekst"></span>
+    </div>
+  </div>
+</div>
+
+<div class="konfetti-container" id="konfettiContainer"></div>
+
+<script>
+  // Fasit:
+  // Sp1: Treibst du regelmäßig Sport? → 1 (løper nesten hver dag)
+  // Sp2: Wie wichtig ist dir das Soziale beim Sport? → 4 (det sosiale er viktigst)
+  // Sp3: Bist du lieber drinnen oder draußen aktiv? → 5 (alltid ute)
+  // Sp4: Hast du früher mehr Sport getrieben als heute? → 3 (aktiv som ung, skade)
+  // Sp5: Was machst du am liebsten in deiner Freizeit? → 2 (lesing/film)
+  // Sp6: Fällt es dir schwer, mit dem Training anzufangen? → 6 (mangler motivasjon)
+  // Sp7: Ist Sport für dich eher Pflicht oder Vergnügen? → ingen
+  // Sp8: Hast du schon mal an einem Wettkampf teilgenommen? → ingen
+
+  const fasit = {
+    sp1: 'ingen', sp2: '4', sp3: '5', sp4: '3',
+    sp5: '2', sp6: '6', sp7: 'ingen', sp8: '1'
+  };
+
+  const ALLE = ['sp1','sp2','sp3','sp4','sp5','sp6','sp7','sp8'];
+
+  function oppdaterKnapp() {
+    const allBesvart = ALLE.every(id => document.getElementById(id).value !== '');
+    document.getElementById('sjekkBtn').disabled = !allBesvart;
+  }
+
+  function sjekkSvar() {
+    let riktige = 0;
+    ALLE.forEach((id, i) => {
+      const kort = document.getElementById('sk' + (i + 1));
+      const sel  = document.getElementById(id);
+      const riktig = sel.value === fasit[id];
+      kort.classList.remove('riktig', 'feil');
+      kort.querySelectorAll('.feedback-ikon').forEach(e => e.remove());
+      const ikon = document.createElement('span');
+      ikon.className = 'feedback-ikon';
+      if (riktig) {
+        kort.classList.add('riktig');
+        ikon.textContent = '✓'; ikon.style.color = 'var(--correct)'; riktige++;
+      } else {
+        kort.classList.add('feil');
+        ikon.textContent = '✗'; ikon.style.color = 'var(--wrong)';
+      }
+      kort.querySelector('.sporsmal-tekst').prepend(ikon);
+    });
+
+    const resultat = document.getElementById('resultatTekst');
+    if (riktige === ALLE.length) {
+      resultat.textContent = 'Utmerket! Alt riktig! 🎉';
+      resultat.style.color = 'var(--correct)';
+      konfetti();
+    } else {
+      resultat.textContent = riktige + ' av ' + ALLE.length + ' riktige. Prøv igjen!';
+      resultat.style.color = 'var(--wrong)';
+    }
+  }
+
+  function konfetti() {
+    const container = document.getElementById('konfettiContainer');
+    container.innerHTML = '';
+    const farger = ['#1a3a5c','#e85d04','#f48c42','#d0e8f5','#2a5f8f','#ffffff','#fdf0e6'];
+    for (let i = 0; i < 90; i++) {
+      const bit = document.createElement('div');
+      bit.className = 'konfetti-bit';
+      const size = (6 + Math.random() * 8) + 'px';
+      bit.style.cssText = `left:${Math.random()*100}vw;top:-10px;width:${size};height:${size};background:${farger[Math.floor(Math.random()*farger.length)]};border-radius:${Math.random()>.5?'50%':'2px'};animation-delay:${Math.random()*1.2}s;animation-duration:${2+Math.random()*1.5}s;`;
+      container.appendChild(bit);
+    }
+    setTimeout(() => { container.innerHTML = ''; }, 4500);
+  }
+</script>
+</body>
+</html>

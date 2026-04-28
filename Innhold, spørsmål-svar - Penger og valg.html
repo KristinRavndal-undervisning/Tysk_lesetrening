@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tysk 2 – Wofür gibst du dein Geld aus?</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold:       #b8860b;
+    --gold-light: #d4a520;
+    --gold-pale:  #f5edc8;
+    --gold-muted: #e8d48a;
+    --ink:        #1a1208;
+    --ink-mid:    #3d2e10;
+    --ink-light:  #7a6230;
+    --cream:      #faf6ea;
+    --cream-dark: #f0e8d0;
+    --white:      #fffdf5;
+    --correct:    #2d6a4f;
+    --wrong:      #9b2226;
+    --shadow:     rgba(26,18,8,0.12);
+  }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 39px,
+        rgba(184,134,11,0.06) 39px,
+        rgba(184,134,11,0.06) 40px
+      );
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #1a1208 0%, #2e1f08 40%, #1a1208 100%);
+    color: var(--gold-pale);
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .header-inner {
+    padding: 28px 40px 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* animated coin shimmer */
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      60deg,
+      transparent 0px,
+      transparent 18px,
+      rgba(212,165,32,0.04) 18px,
+      rgba(212,165,32,0.04) 19px
+    );
+    animation: shimmer 6s linear infinite;
+    z-index: 0;
+  }
+  @keyframes shimmer {
+    0%   { background-position: 0 0; }
+    100% { background-position: 60px 60px; }
+  }
+
+  /* animated coin icons in header */
+  .coins-anim {
+    position: absolute;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 10px;
+    opacity: 0.35;
+    z-index: 1;
+  }
+  .coin {
+    width: 28px; height: 28px;
+    border: 2px solid var(--gold-light);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    color: var(--gold-light);
+    font-family: 'Playfair Display', serif;
+    animation: float 3s ease-in-out infinite;
+  }
+  .coin:nth-child(2) { animation-delay: .6s; width:22px; height:22px; }
+  .coin:nth-child(3) { animation-delay: 1.2s; width:34px; height:34px; font-size:13px; }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    color: var(--gold-pale);
+  }
+  header .subtitle {
+    font-size: 0.88rem;
+    color: var(--gold-muted);
+    margin-top: 4px;
+    font-style: italic;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+  }
+  .tag {
+    display: inline-block;
+    background: rgba(212,165,32,0.18);
+    border: 1px solid rgba(212,165,32,0.35);
+    color: var(--gold-muted);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 2px 10px;
+    border-radius: 2px;
+    margin-bottom: 8px;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  /* ── INSTRUKSJONS-BANNER ── */
+  .instruksjon {
+    background: var(--gold-pale);
+    border-left: 4px solid var(--gold);
+    padding: 10px 40px;
+    font-size: 0.85rem;
+    color: var(--ink-mid);
+    font-style: italic;
+  }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    min-height: calc(100vh - 120px);
+  }
+
+  /* ── LEFT: TEKST ── */
+  .tekst-panel {
+    padding: 36px 40px;
+    border-right: 1px solid rgba(184,134,11,0.2);
+    background: var(--white);
+  }
+
+  .tekst-panel h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .tekst-panel h2::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--gold-muted), transparent);
+  }
+
+  .svar-kort {
+    background: var(--cream);
+    border: 1px solid var(--cream-dark);
+    border-radius: 6px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    position: relative;
+    transition: box-shadow 0.2s;
+  }
+  .svar-kort:hover { box-shadow: 0 2px 12px var(--shadow); }
+
+  .svar-nummer {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .svar-tekst {
+    font-size: 0.93rem;
+    line-height: 1.75;
+    color: var(--ink);
+    font-weight: 300;
+  }
+
+  /* ── RIGHT: OPPGAVER ── */
+  .oppgave-panel {
+    padding: 36px 40px;
+    background: var(--cream);
+  }
+
+  .oppgave-panel h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .oppgave-panel h2::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--gold-muted), transparent);
+  }
+
+  .sporsmal-kort {
+    background: var(--white);
+    border: 1px solid var(--cream-dark);
+    border-radius: 6px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    transition: box-shadow 0.2s;
+  }
+  .sporsmal-kort.riktig  { border-color: var(--correct); background: #f0faf4; }
+  .sporsmal-kort.feil    { border-color: var(--wrong);   background: #fdf0f0; }
+
+  .sporsmal-tekst {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 10px;
+    line-height: 1.4;
+  }
+  .sporsmal-num {
+    font-size: 0.7rem;
+    color: var(--ink-light);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    font-family: 'Source Serif 4', serif;
+  }
+
+  select {
+    width: 100%;
+    padding: 8px 12px;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.88rem;
+    color: var(--ink);
+    background: var(--cream);
+    border: 1px solid rgba(184,134,11,0.3);
+    border-radius: 4px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23b8860b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(184,134,11,0.12);
+  }
+  .sporsmal-kort.riktig select { border-color: var(--correct); background-color: #f0faf4; }
+  .sporsmal-kort.feil   select { border-color: var(--wrong);   background-color: #fdf0f0; }
+
+  .feedback-ikon {
+    float: right;
+    font-size: 1rem;
+    margin-left: 8px;
+    line-height: 1.4;
+  }
+
+  /* ── KNAPP-OMRÅDE ── */
+  .knapp-rad {
+    margin-top: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .sjekk-knapp {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 12px 28px;
+    background: var(--gold);
+    color: var(--cream);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(184,134,11,0.25);
+  }
+  .sjekk-knapp:hover:not(:disabled) {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(184,134,11,0.3);
+  }
+  .sjekk-knapp:active:not(:disabled) { transform: translateY(0); }
+  .sjekk-knapp:disabled {
+    background: #c9b97a;
+    cursor: not-allowed;
+    opacity: 0.55;
+    box-shadow: none;
+  }
+
+  .resultat-tekst {
+    font-size: 0.88rem;
+    color: var(--ink-mid);
+    font-style: italic;
+  }
+
+  /* ── KONFETTI ── */
+  .konfetti-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 999;
+    overflow: hidden;
+  }
+  .konfetti-bit {
+    position: absolute;
+    width: 8px; height: 8px;
+    opacity: 0;
+    animation: fall 2.5s ease-in forwards;
+    border-radius: 1px;
+  }
+  @keyframes fall {
+    0%   { opacity: 1; transform: translateY(-20px) rotate(0deg); }
+    100% { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+  }
+
+  /* responsive */
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
+    .tekst-panel { border-right: none; border-bottom: 1px solid rgba(184,134,11,0.2); }
+    .header-inner { padding: 22px 20px 18px; }
+    .instruksjon, .tekst-panel, .oppgave-panel { padding-left: 20px; padding-right: 20px; }
+    .coins-anim { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="tag">Leseforståelse</div>
+    <h1>Wofür gibst du dein Geld aus?</h1>
+    <p class="subtitle">Penger, prioriteringer og forbruksvaner</p>
+  </div>
+  <div class="coins-anim">
+    <div class="coin">€</div>
+    <div class="coin">$</div>
+    <div class="coin">€</div>
+  </div>
+</header>
+
+<!-- INSTRUKSJON -->
+<div class="instruksjon">
+  Les svarene til venstre, og koble hvert spørsmål til høyre med det svaret som passer best. To spørsmål hører ikke til noen av svarene.
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+  <!-- VENSTRE: SVAR-TEKSTER -->
+  <div class="tekst-panel">
+    <h2>Svar</h2>
+
+    <div class="svar-kort">
+      <div class="svar-nummer">Svar 1</div>
+      <div class="svar-tekst">Ich koche eigentlich fast alles selbst – Restaurants sind mir zu teuer. Ich kaufe gern auf dem Wochenmarkt ein, weil das Gemüse dort frischer ist. Wenn ich spare, merke ich das zuerst beim Einkaufen.</div>
+    </div>
+
+    <div class="svar-kort">
+      <div class="svar-nummer">Svar 2</div>
+      <div class="svar-tekst">Klamotten, definitiv. Ich bin wirklich modebewusst und kaufe ziemlich oft ein. Für mich ist Second-Hand genauso gut wie neu – manchmal sogar besser. Trotzdem gebe ich wahrscheinlich zu viel aus.</div>
+    </div>
+
+    <div class="svar-kort">
+      <div class="svar-nummer">Svar 3</div>
+      <div class="svar-tekst">Das Geld, das ich verdiene, gebe ich sofort wieder aus – meistens für Konzerte und Festivals. Musik ist einfach meine Leidenschaft. Vielleicht erklärt das auch, warum auf meinem Sparkonto nie viel landet.</div>
+    </div>
+
+    <div class="svar-kort">
+      <div class="svar-nummer">Svar 4</div>
+      <div class="svar-tekst">Ich versuche jeden Monat einen festen Betrag auf mein Sparkonto zu überweisen, bevor ich irgendetwas anderes mache. Mein Ziel ist es, in zwei Jahren eine Reise nach Japan zu machen.</div>
+    </div>
+
+    <div class="svar-kort">
+      <div class="svar-nummer">Svar 5</div>
+      <div class="svar-tekst">Ich zahle sehr viel für meine Wohnung – leider. Die Miete ist in unserer Stadt in den letzten Jahren stark gestiegen. Dann bleibt nicht mehr so viel übrig, also muss ich bei anderen Sachen sparen. Und mein Handyvertrag ist auch nicht gerade billig.</div>
+    </div>
+
+    <div class="svar-kort">
+      <div class="svar-nummer">Svar 6</div>
+      <div class="svar-tekst">Sparen ist gar nicht so einfach, aber ich versuche es wirklich. Ich koche fast immer selbst, nehme Kaffee im Thermobecher mit und kaufe selten etwas spontan. Na ja – außer Büchern vielleicht. Das ist so meine größte Schwäche.</div>
+    </div>
+
+  </div><!-- /tekst-panel -->
+
+  <!-- HØYRE: SPØRSMÅL -->
+  <div class="oppgave-panel">
+    <h2>Spørsmål</h2>
+
+    <div class="sporsmal-kort" id="sk1">
+      <div class="sporsmal-num">Spørsmål 1</div>
+      <div class="sporsmal-tekst">Wofür gibst du am meisten Geld aus?</div>
+      <select id="sp1" onchange="oppdaterKnapp()">
+        <option value="">– Velg svar –</option>
+        <option value="1">Svar 1</option>
+        <option value="2">Svar 2</option>
+        <option value="3">Svar 3</option>
+        <option value="4">Svar 4</option>
+        <option value="5">Svar 5</option>
+        <option value="6">Svar 6</option>
+        <option value="ingen">Ingen av svarene</option>
+      </select>
+    </div>
+
+    <div class="sporsmal-kort" id="sk2">
+      <div class="sporsmal-num">Spørsmål 2</div>
+      <div class="sporsmal-tekst">Sparst du Geld? Wenn ja, wofür?</div>
+      <select id="sp2" onchange="oppdaterKnapp()">
+        <option value="">– Velg svar –</option>
+        <option value="1">Svar 1</option>
+        <option value="2">Svar 2</option>
+        <option value="3">Svar 3</option>
+        <option value="4">Svar 4</option>
+        <option value="5">Svar 5</option>
+        <option value="6">Svar 6</option>
+        <option value="ingen">Ingen av svarene</option>
+      </select>
+    </div>
+
+    <div class="sporsmal-kort" id="sk3">
+      <div class="sporsmal-num">Spørsmål 3</div>
+      <div class="sporsmal-tekst">Kaufst du lieber neu oder Second-Hand?</div>
+      <select id="sp3" onchange="oppdaterKnapp()">
+        <option value="">– Velg svar –</option>
+        <option value="1">Svar 1</option>
+        <option value="2">Svar 2</option>
+        <option value="3">Svar 3</option>
+        <option value="4">Svar 4</option>
+        <option value="5">Svar 5</option>
+        <option value="6">Svar 6</option>
+        <option value="ingen">Ingen av svarene</option>
+      </select>
+    </div>
+
+    <div class="sporsmal-kort" id="sk4">
+      <div class="sporsmal-num">Spørsmål 4</div>
+      <div class="sporsmal-tekst">Welche Kosten hast du jeden Monat fest?</div>
+      <select id="sp4" onchange="oppdaterKnapp()">
+        <option value="">– Velg svar –</option>
+        <option value="1">Svar 1</option>
+        <option value="2">Svar 2</option>
+        <option value="3">Svar 3</option>
+        <option value="4">Svar 4</option>
+        <option value="5">Svar 5</option>
+        <option value="6">Svar 6</option>
+        <option value="ingen">Ingen av svarene</option>
+      </select>
+    </div>
+
+    <div class="sporsmal-kort" id="sk5">
+      <div class="sporsmal-num">Spørsmål 5</div>
+      <div class="sporsmal-tekst">Wie wichtig ist dir Nachhaltigkeit beim Einkaufen?</div>
+      <select id="sp5" onchange="oppdaterKnapp()">
+        <option value="">– Velg svar –</option>
+        <option value="1">Svar 1</option>
+        <option value="2">Svar 2</option>
+        <option value="3">Svar 3</option>
+        <option value="4">Svar 4</option>
+        <option value="5">Svar 5</option>
+        <option value="6">Svar 6</option>
+        <option value="ingen">Ingen av svarene</option>
+      </select>
+    </div>
+
+    <div class="sporsmal-kort" id="sk6">
+      <div class="sporsmal-num">Spørsmål 6</div>
+      <div class="sporsmal-tekst">Gibst du viel für Kultur und Unterhaltung aus?</div>
+      <select id="sp6" onchange="oppdaterKnapp()">
+        <option value="">– Velg svar –</option>
+        <option value="1">Svar 1</option>
+        <option value="2">Svar 2</option>
+        <option value="3">Svar 3</option>
+        <option value="4">Svar 4</option>
+        <option value="5">Svar 5</option>
+        <option value="6">Svar 6</option>
+        <option value="ingen">Ingen av svarene</option>
+      </select>
+    </div>
+
+    <div class="sporsmal-kort" id="sk7">
+      <div class="sporsmal-num">Spørsmål 7</div>
+      <div class="sporsmal-tekst">Kochst du selbst oder gehst du oft essen?</div>
+      <select id="sp7" onchange="oppdaterKnapp()">
+        <option value="">– Velg svar –</option>
+        <option value="1">Svar 1</option>
+        <option value="2">Svar 2</option>
+        <option value="3">Svar 3</option>
+        <option value="4">Svar 4</option>
+        <option value="5">Svar 5</option>
+        <option value="6">Svar 6</option>
+        <option value="ingen">Ingen av svarene</option>
+      </select>
+    </div>
+
+    <div class="sporsmal-kort" id="sk8">
+      <div class="sporsmal-num">Spørsmål 8</div>
+      <div class="sporsmal-tekst">Was machst du, um im Alltag Geld zu sparen?</div>
+      <select id="sp8" onchange="oppdaterKnapp()">
+        <option value="">– Velg svar –</option>
+        <option value="1">Svar 1</option>
+        <option value="2">Svar 2</option>
+        <option value="3">Svar 3</option>
+        <option value="4">Svar 4</option>
+        <option value="5">Svar 5</option>
+        <option value="6">Svar 6</option>
+        <option value="ingen">Ingen av svarene</option>
+      </select>
+    </div>
+
+    <!-- KNAPPER -->
+    <div class="knapp-rad">
+      <button class="sjekk-knapp" id="sjekkBtn" onclick="sjekkSvar()" disabled>
+        Sjekk svarene
+      </button>
+      <span class="resultat-tekst" id="resultatTekst"></span>
+    </div>
+
+  </div><!-- /oppgave-panel -->
+</div><!-- /layout -->
+
+<!-- KONFETTI-CONTAINER -->
+<div class="konfetti-container" id="konfettiContainer"></div>
+
+<script>
+  // Fasit
+  // Sp1: Wofür gibst du am meisten Geld aus? → Svar 1 (mat/matlaging) ELLER Svar 2 (klær) ELLER 5 (husleie)
+  // Men vi trenger entydige svar. Tilpasset:
+  // Sp1: → 5 (størst utgiftspost = husleie)
+  // Sp2: Sparst du Geld? → 4 (fast beløp til sparekonto)
+  // Sp3: Kaufst du lieber neu oder Second-Hand? → 2 (motebevisst, Second-Hand)
+  // Sp4: Was sind deine größten festen Kosten? → 5 (husleie) — KONFLIKT med sp1 → la sp1 = ingen av svarene
+  // La oss bruke entydige svar:
+  // Sp1: Wofür gibst du am meisten Geld aus? → 2 (Kleider)
+  // Sp2: Sparst du Geld? Wenn ja, wofür? → 4 (Japan-reise)
+  // Sp3: Kaufst du lieber neu oder Second-Hand? → 2 KONFLIKT → ingen av svarene (ingen nevner eksplisitt preferanse for ny vs SH bortsett fra svar 2 som er brukt)
+  // Sp4: Was sind deine größten festen Kosten? → 5 (husleie)
+  // Sp5: Wie wichtig ist Nachhaltigkeit? → 2 KONFLIKT → ingen av svarene
+  // Sp6: Gibst du Geld für Kultur und Unterhaltung aus? → 3 (konserter/festivaler)
+  // Sp7: Kochst du selbst oder gehst du oft essen? → 1 (koker selv, handlerer på markedet)
+  // Sp8: Hast du schon mal einen Kredit aufgenommen? → ingen av svarene
+
+  // Final fasit - entydige, ikke-overlappende:
+  // Sp1 → 2
+  // Sp2 → 4
+  // Sp3 → ingen
+  // Sp4 → 5
+  // Sp5 → ingen
+  // Sp6 → 3
+  // Sp7 → 1
+  // Sp8 → ingen
+
+  const fasit = {
+    sp1: '2',
+    sp2: '4',
+    sp3: 'ingen',
+    sp4: '5',
+    sp5: 'ingen',
+    sp6: '3',
+    sp7: '1',
+    sp8: '6'
+  };
+
+  const ALLE = ['sp1','sp2','sp3','sp4','sp5','sp6','sp7','sp8'];
+
+  function oppdaterKnapp() {
+    const allBesvart = ALLE.every(id => document.getElementById(id).value !== '');
+    document.getElementById('sjekkBtn').disabled = !allBesvart;
+  }
+
+  function sjekkSvar() {
+    let riktige = 0;
+    ALLE.forEach((id, i) => {
+      const kort = document.getElementById('sk' + (i + 1));
+      const sel  = document.getElementById(id);
+      const riktig = sel.value === fasit[id];
+      kort.classList.remove('riktig', 'feil');
+
+      // Fjern gamle ikoner
+      kort.querySelectorAll('.feedback-ikon').forEach(e => e.remove());
+
+      if (riktig) {
+        kort.classList.add('riktig');
+        const ikon = document.createElement('span');
+        ikon.className = 'feedback-ikon';
+        ikon.textContent = '✓';
+        ikon.style.color = 'var(--correct)';
+        kort.querySelector('.sporsmal-tekst').prepend(ikon);
+        riktige++;
+      } else {
+        kort.classList.add('feil');
+        const ikon = document.createElement('span');
+        ikon.className = 'feedback-ikon';
+        ikon.textContent = '✗';
+        ikon.style.color = 'var(--wrong)';
+        kort.querySelector('.sporsmal-tekst').prepend(ikon);
+      }
+    });
+
+    const total = ALLE.length;
+    const resultat = document.getElementById('resultatTekst');
+
+    if (riktige === total) {
+      resultat.textContent = 'Utmerket! Alt riktig! 🎉';
+      resultat.style.color = 'var(--correct)';
+      konfetti();
+    } else {
+      resultat.textContent = riktige + ' av ' + total + ' riktige. Prøv igjen!';
+      resultat.style.color = 'var(--wrong)';
+    }
+  }
+
+  function konfetti() {
+    const container = document.getElementById('konfettiContainer');
+    container.innerHTML = '';
+    const farger = ['#b8860b','#d4a520','#f5edc8','#2d6a4f','#9b2226','#e8d48a','#1a1208'];
+    for (let i = 0; i < 90; i++) {
+      const bit = document.createElement('div');
+      bit.className = 'konfetti-bit';
+      bit.style.left      = Math.random() * 100 + 'vw';
+      bit.style.top       = '-10px';
+      bit.style.background = farger[Math.floor(Math.random() * farger.length)];
+      bit.style.transform  = 'rotate(' + Math.random() * 360 + 'deg)';
+      bit.style.width      = (6 + Math.random() * 8) + 'px';
+      bit.style.height     = (6 + Math.random() * 8) + 'px';
+      bit.style.animationDelay    = (Math.random() * 1.2) + 's';
+      bit.style.animationDuration = (2 + Math.random() * 1.5) + 's';
+      container.appendChild(bit);
+    }
+    setTimeout(() => { container.innerHTML = ''; }, 4500);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tysk 2 – Zu viele Nachrichten?</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:         #0f0f0f;
+    --bg-card:    #1a1a1a;
+    --bg-card2:   #222222;
+    --line:       #2e2e2e;
+    --red:        #e63946;
+    --red-dim:    #7a1f26;
+    --yellow:     #f4d35e;
+    --yellow-dim: #7a6820;
+    --cyan:       #48cae4;
+    --cyan-dim:   #1e5f6e;
+    --green:      #52b788;
+    --green-dim:  #1e5c3a;
+    --purple:     #c77dff;
+    --purple-dim: #5e2e8a;
+    --orange:     #ff9f1c;
+    --orange-dim: #7a4a0a;
+    --white:      #f0ede8;
+    --grey:       #888;
+    --correct:    #52b788;
+    --wrong:      #e63946;
+  }
+
+  body {
+    font-family: 'Newsreader', Georgia, serif;
+    background: var(--bg);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    padding: 36px 48px 28px;
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+
+  /* subtle scanline */
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent 0px, transparent 5px,
+      rgba(255,255,255,0.008) 5px, rgba(255,255,255,0.008) 6px
+    );
+    pointer-events: none;
+  }
+
+  /* very subtle glitch bar */
+  .glitch-bar {
+    position: absolute;
+    left: 0; right: 0;
+    height: 1px;
+    background: var(--red);
+    opacity: 0;
+    animation: glitch-sweep 10s ease-in-out infinite;
+  }
+  .glitch-bar:nth-child(2) { animation-delay: 4s; background: var(--cyan); }
+  .glitch-bar:nth-child(3) { animation-delay: 8s; background: var(--yellow); }
+  @keyframes glitch-sweep {
+    0%,95%,100% { opacity: 0; top: 0; }
+    96% { opacity: 0.3; top: 40%; }
+    99% { opacity: 0; top: 100%; }
+  }
+
+  .header-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--red);
+    border: 1px solid var(--red-dim);
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    background: rgba(230,57,70,0.08);
+  }
+
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--white);
+    letter-spacing: -0.01em;
+  }
+  header h1 em {
+    color: #c8848c;
+    font-style: normal;
+  }
+
+  .header-sub {
+    font-size: 0.88rem;
+    color: #999;
+    margin-top: 8px;
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .live {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: #666;
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .live-dot {
+    width: 6px; height: 6px;
+    background: var(--red);
+    border-radius: 50%;
+    opacity: 0.7;
+    animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%,100% { opacity: 0.7; }
+    50%      { opacity: 0.2; }
+  }
+
+  /* ── INSTRUKSJON ── */
+  .instruksjon {
+    padding: 10px 48px;
+    font-size: 0.83rem;
+    color: #999;
+    font-style: italic;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,0.02);
+  }
+
+  /* ── SPØRSMÅL-BOBLER ── */
+  .boble-seksjon {
+    padding: 28px 48px 20px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .boble-seksjon-tittel {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-bottom: 16px;
+  }
+
+  .boble-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 52px;
+  }
+
+  .boble {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 999px;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+    white-space: nowrap;
+    border: 1.5px solid;
+    letter-spacing: 0.01em;
+  }
+  .boble:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+  .boble:active { cursor: grabbing; transform: scale(0.97); }
+  .boble.dragging { opacity: 0.35; }
+  .boble.plassert { display: none; }
+
+  /* boble-farger - 50/50 gult og dus gammelrosa */
+  .boble[data-id="1"] { background: rgba(220,200,140,0.12); border-color: #8a7a40; color: #d4c278; }
+  .boble[data-id="2"] { background: rgba(185,165,158,0.12); border-color: #7a6560; color: #c0a8a0; }
+  .boble[data-id="3"] { background: rgba(215,200,145,0.12); border-color: #857840; color: #d0c070; }
+  .boble[data-id="4"] { background: rgba(182,162,158,0.12); border-color: #786068; color: #bca8a4; }
+  .boble[data-id="5"] { background: rgba(220,210,160,0.12); border-color: #888048; color: #d4c880; }
+  .boble[data-id="6"] { background: rgba(183,165,160,0.12); border-color: #786268; color: #bea8a4; }
+  .boble[data-id="7"] { background: rgba(210,198,148,0.10); border-color: #7a7038; color: #c8b868; }
+  .boble[data-id="8"] { background: rgba(180,162,156,0.10); border-color: #705e60; color: #b8a09c; }
+
+  /* ── SVAR-SEKSJON ── */
+  .svar-seksjon {
+    padding: 28px 48px 48px;
+  }
+
+  .svar-seksjon-tittel {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-bottom: 20px;
+  }
+
+  .svar-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .svar-kort {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 20px 20px 14px;
+    transition: border-color 0.2s;
+  }
+  .svar-kort.riktig { border-color: var(--correct); }
+  .svar-kort.feil   { border-color: var(--wrong); }
+
+  .svar-nummer {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-bottom: 8px;
+  }
+
+  .svar-tekst {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.95rem;
+    line-height: 1.82;
+    color: #c8c0b0;
+    font-weight: 400;
+    font-style: normal;
+    margin-bottom: 14px;
+  }
+
+  /* drop zone */
+  .drop-zone {
+    min-height: 40px;
+    border: 1.5px dashed var(--line);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.7rem;
+    color: #444;
+    letter-spacing: 0.05em;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .drop-zone.over {
+    border-color: var(--white);
+    background: rgba(255,255,255,0.04);
+    color: var(--white);
+  }
+  .drop-zone.har-boble {
+    border-style: solid;
+    color: transparent;
+    justify-content: flex-start;
+    padding: 4px 8px;
+  }
+  .drop-zone .fjern-knapp {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #555;
+    cursor: pointer;
+    font-size: 0.75rem;
+    padding: 2px 4px;
+    line-height: 1;
+    transition: color 0.15s;
+  }
+  .drop-zone .fjern-knapp:hover { color: var(--wrong); }
+
+  /* plassert boble i drop zone */
+  .drop-zone .boble-plassert {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 1.5px solid;
+    letter-spacing: 0.01em;
+    pointer-events: none;
+  }
+
+  /* ── KNAPP-RAD ── */
+  .knapp-seksjon {
+    padding: 0 48px 48px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .sjekk-knapp {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 28px;
+    background: var(--red);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .sjekk-knapp:hover:not(:disabled) { background: #c1121f; transform: translateY(-1px); }
+  .sjekk-knapp:disabled { background: var(--red-dim); color: #666; cursor: not-allowed; }
+
+  .resultat-tekst {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    font-style: normal;
+  }
+
+  /* ── BLITZ-FEIRING ── */
+  .konfetti-container {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 999;
+    display: none;
+  }
+  .konfetti-container.aktiv { display: block; }
+
+  .blitz-lag {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+  .blitz-lag.hvit {
+    background: radial-gradient(ellipse at 50% 50%, #ffffff 0%, rgba(255,255,255,0.6) 40%, transparent 70%);
+    animation: blitz-hvit 1.8s ease-out forwards;
+  }
+  .blitz-lag.gul {
+    background: radial-gradient(ellipse at 50% 50%, #f0e080 0%, rgba(240,224,128,0.4) 50%, transparent 75%);
+    animation: blitz-gul 1.8s ease-out forwards;
+    animation-delay: 0.05s;
+  }
+  .blitz-lag.tekst {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 6vw, 4rem);
+    font-weight: 800;
+    color: var(--bg);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    animation: blitz-tekst 1.8s ease-out forwards;
+    animation-delay: 0.1s;
+  }
+
+  @keyframes blitz-hvit {
+    0%   { opacity: 0; transform: scale(0.5); }
+    8%   { opacity: 1; transform: scale(1.05); }
+    20%  { opacity: 0.9; transform: scale(1); }
+    60%  { opacity: 0.4; }
+    100% { opacity: 0; transform: scale(1.1); }
+  }
+  @keyframes blitz-gul {
+    0%   { opacity: 0; transform: scale(0.6); }
+    10%  { opacity: 0.8; transform: scale(1); }
+    50%  { opacity: 0.5; }
+    100% { opacity: 0; transform: scale(1.08); }
+  }
+  @keyframes blitz-tekst {
+    0%   { opacity: 0; transform: scale(0.7); }
+    15%  { opacity: 1; transform: scale(1.05); }
+    30%  { transform: scale(1); }
+    70%  { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  @media (max-width: 900px) {
+    .hovud-layout { flex-direction: column; }
+    .boble-kolonne { position: static; width: 100%; }
+    .svar-grid { grid-template-columns: 1fr; }
+    header, .instruksjon, .hovud-layout, .knapp-seksjon { padding-left: 20px; padding-right: 20px; }
+  }
+  @media (max-width: 580px) {
+    .boble { white-space: normal; }
+  }
+
+  /* ── TO-KOLONNE LAYOUT ── */
+  .hovud-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    padding: 0 48px;
+  }
+
+  .boble-kolonne {
+    width: 280px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 20px;
+    padding: 28px 24px 28px 0;
+  }
+
+  .boble-kolonne-tittel {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-bottom: 16px;
+  }
+
+  .boble-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 52px;
+  }
+
+  .boble {
+    white-space: normal;
+    text-align: left;
+    border-radius: 8px;
+    width: 100%;
+  }
+
+  .svar-kolonne {
+    flex: 1;
+    padding: 28px 0 48px 32px;
+    border-left: 1px solid var(--line);
+  }
+
+  .svar-kolonne-tittel {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-bottom: 20px;
+  }
+
+  .svar-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="glitch-bar"></div>
+  <div class="glitch-bar"></div>
+  <div class="glitch-bar"></div>
+  <div class="header-inner">
+    <div>
+      <div class="tag">Leseforståelse</div>
+      <h1>Zu viele <em>Nachrichten?</em></h1>
+      <p class="header-sub">Om medietrøtthet, tillit og å finne ro i støyen</p>
+    </div>
+    <div class="live"><div class="live-dot"></div>Breaking News</div>
+  </div>
+</header>
+
+<!-- INSTRUKSJON -->
+<div class="instruksjon">
+  Dra hvert spørsmål ned til det svaret som passer best. To spørsmål hører ikke til noen av svarene – la dem ligge igjen.
+</div>
+
+<!-- HOVUD-LAYOUT -->
+<div class="hovud-layout">
+
+  <!-- VENSTRE: STICKY BOBLER -->
+  <div class="boble-kolonne">
+    <div class="boble-kolonne-tittel">Spørsmål – dra til riktig svar</div>
+    <div class="boble-grid" id="bobleGrid">
+      <div class="boble" data-id="1" draggable="true">Wie gehst du mit schlechten Nachrichten um?</div>
+      <div class="boble" data-id="2" draggable="true">Schaust du oft auf dein Handy, um up to date zu bleiben?</div>
+      <div class="boble" data-id="3" draggable="true">Vertraust du noch den Medien?</div>
+      <div class="boble" data-id="4" draggable="true">Versuchst du, deinen Nachrichtenkonsum zu begrenzen?</div>
+      <div class="boble" data-id="5" draggable="true">Fühlst du dich verpflichtet, informiert zu bleiben?</div>
+      <div class="boble" data-id="6" draggable="true">Welche Nachrichtenquellen bevorzugst du?</div>
+      <div class="boble" data-id="7" draggable="true">Glaubst du, soziale Medien verbreiten absichtlich Falschinformationen?</div>
+      <div class="boble" data-id="8" draggable="true">Hast du schon mal eine Nachrichtenpause gemacht?</div>
+    </div>
+  </div>
+
+  <!-- HØYRE: SVAR -->
+  <div class="svar-kolonne">
+    <div class="svar-kolonne-tittel">Svar – slipp spørsmålet her</div>
+    <div class="svar-grid">
+
+    <div class="svar-kort" id="sk1">
+      <div class="drop-zone" data-svar="1" id="dz1">Slipp spørsmål her</div>
+      <div class="svar-nummer">Svar 1</div>
+      <div class="svar-tekst">Ich habe vor einem Jahr aufgehört, Nachrichten zu lesen – komplett. Am Anfang hatte ich ein schlechtes Gewissen, aber jetzt fühle ich mich viel ruhiger. Meine Freunde halten mich auf dem Laufenden, wenn wirklich etwas Wichtiges passiert.</div>
+    </div>
+
+    <div class="svar-kort" id="sk2">
+      <div class="drop-zone" data-svar="2" id="dz2">Slipp spørsmål her</div>
+      <div class="svar-nummer">Svar 2</div>
+      <div class="svar-tekst">Ich checke mein Handy ständig – morgens als erstes, abends als letztes, und zwischendurch immer wieder. Ich weiß, dass es nicht gut für mich ist, aber ich kann nicht aufhören. Was, wenn ich etwas Wichtiges verpasse?</div>
+    </div>
+
+    <div class="svar-kort" id="sk3">
+      <div class="drop-zone" data-svar="3" id="dz3">Slipp spørsmål her</div>
+      <div class="svar-nummer">Svar 3</div>
+      <div class="svar-tekst">Ich weiß ehrlich gesagt nicht mehr, wem ich glauben soll. Alle behaupten, die anderen lügen. Früher habe ich einfach den großen Zeitungen vertraut, aber jetzt bin ich mir bei niemandem mehr sicher.</div>
+    </div>
+
+    <div class="svar-kort" id="sk4">
+      <div class="drop-zone" data-svar="4" id="dz4">Slipp spørsmål her</div>
+      <div class="svar-nummer">Svar 4</div>
+      <div class="svar-tekst">Ich versuche, Nachrichten nur einmal am Tag zu lesen – abends nach der Arbeit. Aber meistens schaue ich schon mittags aufs Handy. Es ist schwieriger, als es klingt.</div>
+    </div>
+
+    <div class="svar-kort" id="sk5">
+      <div class="drop-zone" data-svar="5" id="dz5">Slipp spørsmål her</div>
+      <div class="svar-nummer">Svar 5</div>
+      <div class="svar-tekst">Ja, absolut. Auch wenn die Nachrichten belastend sind, finde ich es wichtig, informiert zu bleiben. Wie soll man sonst wählen gehen oder politisch mitreden? Wegsehen ist für mich keine Option.</div>
+    </div>
+
+    <div class="svar-kort" id="sk6">
+      <div class="drop-zone" data-svar="6" id="dz6">Slipp spørsmål her</div>
+      <div class="svar-nummer">Svar 6</div>
+      <div class="svar-tekst">Eine gedruckte Zeitung ist mir lieber als das Handy-Scrollen. Das fühlt sich ruhiger an – kein Algorithmus, keine Pop-ups. Ich wähle selbst aus, was ich lese, und nicht das, was mir jemand empfiehlt.</div>
+    </div>
+
+  </div><!-- /svar-grid -->
+  </div><!-- /svar-kolonne -->
+</div><!-- /hovud-layout -->
+
+<!-- KNAPPER -->
+<div class="knapp-seksjon">
+  <button class="sjekk-knapp" id="sjekkBtn" onclick="sjekkSvar()" disabled>Sjekk svarene</button>
+  <span class="resultat-tekst" id="resultatTekst"></span>
+</div>
+
+<div class="konfetti-container" id="konfettiContainer"></div>
+
+<script>
+  // Fasit:
+  // Svar 1: Wie gehst du mit schlechten Nachrichten um? → boble 1
+  // Svar 2: Schaust du oft auf dein Handy? → boble 2
+  // Svar 3: Vertraust du noch den Medien? → boble 3
+  // Svar 4: Versuchst du, deinen Nachrichtenkonsum zu begrenzen? → boble 4
+  // Svar 5: Fühlst du dich verpflichtet, informiert zu bleiben? → boble 5
+  // Svar 6: Welche Nachrichtenquellen bevorzugst du? → boble 6
+  // Boble 7 (Glaubst du, soziale Medien verbreiten absichtlich Falschinformationen?) → ingen
+  // Boble 8 (Hast du schon mal eine Nachrichtenpause gemacht?) → ingen
+
+  const fasit = { '1': '8', '2': '2', '3': '3', '4': '4', '5': '5', '6': '6' };
+
+  // State
+  const plassert = {}; // svar-id → boble-id
+
+  // Boble-farger for gjenbruk i drop zone
+  const bobleInfo = {
+    '1': { farge: '#d4c278', bg: 'rgba(220,200,140,0.12)', border: '#8a7a40' },
+    '2': { farge: '#c0a8a0', bg: 'rgba(185,165,158,0.12)', border: '#7a6560' },
+    '3': { farge: '#d0c070', bg: 'rgba(215,200,145,0.12)', border: '#857840' },
+    '4': { farge: '#bca8a4', bg: 'rgba(182,162,158,0.12)', border: '#786068' },
+    '5': { farge: '#d4c880', bg: 'rgba(220,210,160,0.12)', border: '#888048' },
+    '6': { farge: '#bea8a4', bg: 'rgba(183,165,160,0.12)', border: '#786268' },
+    '7': { farge: '#c8b868', bg: 'rgba(210,198,148,0.10)', border: '#7a7038' },
+    '8': { farge: '#b8a09c', bg: 'rgba(180,162,156,0.10)', border: '#705e60' },
+  };
+
+  let dragId = null;
+
+  // Drag from boble grid
+  document.querySelectorAll('.boble').forEach(b => {
+    b.addEventListener('dragstart', e => {
+      dragId = b.dataset.id;
+      setTimeout(() => b.classList.add('dragging'), 0);
+    });
+    b.addEventListener('dragend', () => b.classList.remove('dragging'));
+  });
+
+  // Drop zones
+  document.querySelectorAll('.drop-zone').forEach(dz => {
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
+    dz.addEventListener('dragleave', () => dz.classList.remove('over'));
+    dz.addEventListener('drop', e => {
+      e.preventDefault();
+      dz.classList.remove('over');
+      if (!dragId) return;
+
+      const svarId = dz.dataset.svar;
+
+      // Hvis drop zone allerede har en boble, send den tilbake
+      if (plassert[svarId]) { returnerBoble(plassert[svarId]); }
+
+      // Hvis bobla allerede er plassert et annet sted, fjern den derfra
+      for (const [sid, bid] of Object.entries(plassert)) {
+        if (bid === dragId) { toemDropzone(sid); break; }
+      }
+
+      plasserBoble(svarId, dragId);
+      dragId = null;
+      oppdaterKnapp();
+    });
+  });
+
+  function plasserBoble(svarId, bobleId) {
+    plassert[svarId] = bobleId;
+    const dz = document.getElementById('dz' + svarId);
+    const info = bobleInfo[bobleId];
+    const bobleEl = document.querySelector(`.boble[data-id="${bobleId}"]`);
+    const tekst = bobleEl.textContent;
+
+    dz.classList.add('har-boble');
+    dz.style.borderColor = info.border;
+    dz.style.background = info.bg;
+    dz.innerHTML = `
+      <span class="boble-plassert" style="color:${info.farge};border-color:${info.border};background:${info.bg}">${tekst}</span>
+      <button class="fjern-knapp" onclick="fjernBoble('${svarId}')">✕</button>
+    `;
+    bobleEl.classList.add('plassert');
+  }
+
+  function toemDropzone(svarId) {
+    delete plassert[svarId];
+    const dz = document.getElementById('dz' + svarId);
+    dz.classList.remove('har-boble');
+    dz.style.borderColor = '';
+    dz.style.background = '';
+    dz.innerHTML = 'Slipp spørsmål her';
+    document.getElementById('sk' + svarId).classList.remove('riktig', 'feil');
+  }
+
+  function returnerBoble(bobleId) {
+    const bobleEl = document.querySelector(`.boble[data-id="${bobleId}"]`);
+    bobleEl.classList.remove('plassert');
+  }
+
+  function fjernBoble(svarId) {
+    const bobleId = plassert[svarId];
+    if (!bobleId) return;
+    returnerBoble(bobleId);
+    toemDropzone(svarId);
+    oppdaterKnapp();
+    // Fjern fasit-markering
+    document.getElementById('resultatTekst').textContent = '';
+    document.querySelectorAll('.svar-kort').forEach(k => k.classList.remove('riktig', 'feil'));
+  }
+
+  function oppdaterKnapp() {
+    const antall = Object.keys(plassert).length;
+    document.getElementById('sjekkBtn').disabled = antall < 6;
+  }
+
+  function sjekkSvar() {
+    let riktige = 0;
+    for (const [svarId, bobleId] of Object.entries(plassert)) {
+      const kort = document.getElementById('sk' + svarId);
+      kort.classList.remove('riktig', 'feil');
+      if (fasit[svarId] === bobleId) {
+        kort.classList.add('riktig');
+        riktige++;
+      } else {
+        kort.classList.add('feil');
+      }
+    }
+
+    const resultat = document.getElementById('resultatTekst');
+    if (riktige === 6) {
+      resultat.textContent = 'Alt riktig!';
+      resultat.style.color = 'var(--correct)';
+      avisKonfetti();
+    } else {
+      resultat.textContent = riktige + ' av 6 riktige – prøv igjen!';
+      resultat.style.color = 'var(--wrong)';
+    }
+  }
+
+  function avisKonfetti() {
+    const container = document.getElementById('konfettiContainer');
+    container.innerHTML = `
+      <div class="blitz-lag hvit"></div>
+      <div class="blitz-lag gul"></div>
+      <div class="blitz-lag tekst">Sehr gut!</div>
+    `;
+    container.classList.add('aktiv');
+    setTimeout(() => {
+      container.classList.remove('aktiv');
+      container.innerHTML = '';
+    }, 2200);
+  }
+</script>
+</body>
+</html>

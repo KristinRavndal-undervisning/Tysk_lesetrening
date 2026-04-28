@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tysk 2 – Familie und Beziehungen</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #0e0b0d;
+    --bg-card:     #1a1318;
+    --line:        #2e2028;
+    --burg:        #7a2a3a;
+    --burg-dim:    #3a1018;
+    --rose:        #c8909a;
+    --rose-dim:    #5a3040;
+    --sand:        #c8b090;
+    --sand-dim:    #5a4830;
+    --mauve:       #b090a8;
+    --mauve-dim:   #483848;
+    --white:       #f0ebe8;
+    --grey:        #888;
+    --correct:     #8a6070;
+    --wrong:       #9b2226;
+  }
+
+  body {
+    font-family: 'Lora', Georgia, serif;
+    background: var(--bg);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    padding: 36px 48px 28px;
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(122,42,58,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 50%, rgba(200,144,154,0.06) 0%, transparent 60%);
+    animation: breathe 8s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  @keyframes breathe {
+    0%   { opacity: 0.6; }
+    100% { opacity: 1; }
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--burg), var(--rose-dim), transparent);
+  }
+
+  .header-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--rose);
+    border: 1px solid var(--rose-dim);
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    background: rgba(200,144,154,0.06);
+  }
+
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--white);
+    letter-spacing: -0.01em;
+  }
+  header h1 em {
+    color: var(--rose);
+    font-style: normal;
+  }
+
+  .header-sub {
+    font-size: 0.88rem;
+    color: #999;
+    margin-top: 8px;
+    font-style: italic;
+    font-weight: 300;
+    font-family: 'Lora', serif;
+  }
+
+  /* pulsing heart decoration */
+  .hjerte-deko {
+    font-size: 28px;
+    opacity: 0.3;
+    animation: pulse-heart 3s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  @keyframes pulse-heart {
+    0%,100% { transform: scale(1);    opacity: 0.3; }
+    50%      { transform: scale(1.15); opacity: 0.5; }
+  }
+
+  /* ── INSTRUKSJON ── */
+  .instruksjon {
+    padding: 10px 48px;
+    font-size: 0.83rem;
+    color: #999;
+    font-style: italic;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255,255,255,0.02);
+    font-family: 'Lora', serif;
+  }
+
+  /* ── HOVUD-LAYOUT ── */
+  .hovud-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    padding: 0 48px;
+  }
+
+  /* ── BOBLE-KOLONNE ── */
+  .boble-kolonne {
+    width: 280px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 20px;
+    padding: 28px 24px 28px 0;
+  }
+
+  .boble-kolonne-tittel {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-bottom: 16px;
+  }
+
+  .boble-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .boble {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 600;
+    padding: 9px 14px;
+    border-radius: 8px;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+    border: 1.5px solid;
+    letter-spacing: 0.01em;
+    width: 100%;
+    text-align: left;
+    line-height: 1.4;
+  }
+  .boble:hover { transform: translateX(3px); box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+  .boble:active { cursor: grabbing; }
+  .boble.dragging { opacity: 0.3; }
+  .boble.plassert { display: none; }
+
+  /* boble-farger - varme duse toner */
+  .boble[data-id="1"] { background: rgba(200,144,154,0.12); border-color: #7a5060; color: #c8909a; }
+  .boble[data-id="2"] { background: rgba(200,176,144,0.12); border-color: #7a6040; color: #c8b090; }
+  .boble[data-id="3"] { background: rgba(176,144,168,0.12); border-color: #685060; color: #b090a8; }
+  .boble[data-id="4"] { background: rgba(200,144,154,0.10); border-color: #704858; color: #be8898; }
+  .boble[data-id="5"] { background: rgba(200,176,144,0.10); border-color: #705840; color: #bea888; }
+  .boble[data-id="6"] { background: rgba(176,144,168,0.10); border-color: #604858; color: #a888a0; }
+  .boble[data-id="7"] { background: rgba(200,144,154,0.08); border-color: #684050; color: #b08088; }
+  .boble[data-id="8"] { background: rgba(200,176,144,0.08); border-color: #685038; color: #b09878; }
+
+  /* ── SVAR-KOLONNE ── */
+  .svar-kolonne {
+    flex: 1;
+    padding: 28px 0 48px 32px;
+    border-left: 1px solid var(--line);
+  }
+
+  .svar-kolonne-tittel {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-bottom: 20px;
+  }
+
+  .svar-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .svar-kort {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px 18px 14px;
+    transition: border-color 0.2s;
+  }
+  .svar-kort.riktig { border-color: var(--correct); }
+  .svar-kort.feil   { border-color: var(--wrong); }
+
+  /* drop zone */
+  .drop-zone {
+    min-height: 40px;
+    border: 1.5px dashed var(--line);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.7rem;
+    color: #444;
+    letter-spacing: 0.05em;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .drop-zone.over {
+    border-color: var(--rose);
+    background: rgba(200,144,154,0.06);
+    color: var(--rose);
+  }
+  .drop-zone.har-boble {
+    border-style: solid;
+    color: transparent;
+    justify-content: flex-start;
+    padding: 4px 8px;
+  }
+  .drop-zone .fjern-knapp {
+    position: absolute;
+    right: 6px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none;
+    color: #555; cursor: pointer;
+    font-size: 0.75rem; padding: 2px 4px;
+    transition: color 0.15s;
+  }
+  .drop-zone .fjern-knapp:hover { color: var(--wrong); }
+
+  .drop-zone .boble-plassert {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1.5px solid;
+    pointer-events: none;
+    line-height: 1.4;
+  }
+
+  .svar-nummer {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-bottom: 8px;
+  }
+
+  .svar-tekst {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.93rem;
+    line-height: 1.82;
+    color: #c8c0b8;
+    font-weight: 400;
+  }
+
+  /* ── KNAPPER ── */
+  .knapp-seksjon {
+    padding: 0 48px 48px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .sjekk-knapp {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 28px;
+    background: var(--burg);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 2px 10px rgba(122,42,58,0.3);
+  }
+  .sjekk-knapp:hover:not(:disabled) { background: #9a3a4a; transform: translateY(-1px); }
+  .sjekk-knapp:disabled { background: var(--burg-dim); color: #555; cursor: not-allowed; box-shadow: none; }
+
+  .resultat-tekst {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── HJERTE-FEIRING ── */
+  .konfetti-container {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 999;
+    overflow: hidden;
+  }
+  .hjerte {
+    position: fixed;
+    left: 50%; top: 50%;
+    font-size: 24px;
+    opacity: 0;
+    animation: fly-out linear forwards;
+    transform-origin: center;
+  }
+  @keyframes fly-out {
+    0%   { opacity: 1; transform: translate(-50%, -50%) scale(0.5); }
+    20%  { opacity: 1; transform: translate(var(--tx20), var(--ty20)) scale(1.2); }
+    70%  { opacity: 0.8; transform: translate(var(--tx70), var(--ty70)) scale(0.9); }
+    100% { opacity: 0; transform: translate(var(--tx100), var(--ty100)) scale(0.5); }
+  }
+
+  @media (max-width: 860px) {
+    .hovud-layout { flex-direction: column; padding: 0 20px; }
+    .boble-kolonne { position: static; width: 100%; padding: 20px 0; }
+    .svar-kolonne { border-left: none; border-top: 1px solid var(--line); padding: 20px 0; }
+    .svar-grid { grid-template-columns: 1fr; }
+    header, .instruksjon, .knapp-seksjon { padding-left: 20px; padding-right: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="tag">Leseforståelse</div>
+      <h1>Familie und <em>Beziehungen</em></h1>
+      <p class="header-sub">Det nære, det vanskelige og det som betyr mest</p>
+    </div>
+    <div class="hjerte-deko">♥</div>
+  </div>
+</header>
+
+<div class="instruksjon">
+  Dra hvert spørsmål til det svaret som passer best. To spørsmål hører ikke til noen av svarene – la dem ligge igjen.
+</div>
+
+<div class="hovud-layout">
+
+  <!-- VENSTRE: STICKY BOBLER -->
+  <div class="boble-kolonne">
+    <div class="boble-kolonne-tittel">Spørsmål – dra til riktig svar</div>
+    <div class="boble-grid" id="bobleGrid">
+      <div class="boble" data-id="3" draggable="true">Sind Freunde für dich genauso wichtig wie Familie?</div>
+      <div class="boble" data-id="8" draggable="true">Wie ist es für dich, weit weg von deiner Familie zu wohnen?</div>
+      <div class="boble" data-id="1" draggable="true">Wie ist dein Verhältnis zu deiner Familie?</div>
+      <div class="boble" data-id="4" draggable="true">Wie viele Kinder möchtest du einmal haben?</div>
+      <div class="boble" data-id="7" draggable="true">Hast du schon mal einen Konflikt in der Familie erlebt?</div>
+      <div class="boble" data-id="2" draggable="true">Hast du schon mal eine wichtige Beziehung verloren?</div>
+      <div class="boble" data-id="5" draggable="true">Was ist das Beste und das Schlimmste daran, Geschwister zu haben?</div>
+      <div class="boble" data-id="6" draggable="true">Brauchst du manchmal Abstand von deiner Familie?</div>
+    </div>
+  </div>
+
+  <!-- HØYRE: SVAR -->
+  <div class="svar-kolonne">
+    <div class="svar-kolonne-tittel">Svar – slipp spørsmålet her</div>
+    <div class="svar-grid">
+
+      <div class="svar-kort" id="sk1">
+        <div class="drop-zone" data-svar="1" id="dz1">Slipp spørsmål her</div>
+        <div class="svar-nummer">Svar 1</div>
+        <div class="svar-tekst">Wir sind sehr eng – vielleicht ein bisschen zu eng. Ich rufe meine Mutter fast jeden Tag an, und sie ruft mich an, wenn ich es nicht tue. Ich weiß, dass das nicht für jeden normal ist, aber für mich fühlt es sich richtig an.</div>
+      </div>
+
+      <div class="svar-kort" id="sk2">
+        <div class="drop-zone" data-svar="2" id="dz2">Slipp spørsmål her</div>
+        <div class="svar-nummer">Svar 2</div>
+        <div class="svar-tekst">Mit meinem Vater war es lange Zeit schwierig – wir haben kaum geredet. Aber seit ein paar Jahren versuchen wir beide, das zu ändern. Es ist langsam, aber ich glaube, wir kommen uns näher. Das gibt mir Hoffnung.</div>
+      </div>
+
+      <div class="svar-kort" id="sk3">
+        <div class="drop-zone" data-svar="3" id="dz3">Slipp spørsmål her</div>
+        <div class="svar-nummer">Svar 3</div>
+        <div class="svar-tekst">Für mich sind Freunde wichtiger als Familie. Familie ist das, was man nicht wählen kann – Freunde schon. Meine engsten Freunde kennen mich besser als meine Geschwister. Das sagt eigentlich alles.</div>
+      </div>
+
+      <div class="svar-kort" id="sk4">
+        <div class="drop-zone" data-svar="4" id="dz4">Slipp spørsmål her</div>
+        <div class="svar-nummer">Svar 4</div>
+        <div class="svar-tekst">Wir haben zwei Kinder, und das Leben ist laut, chaotisch und wunderbar. Manchmal wünsche ich mir eine Stunde ganz für mich – einfach still sitzen. Aber wenn ich abends neben meinen Kindern sitze, weiß ich, wofür das alles ist.</div>
+      </div>
+
+      <div class="svar-kort" id="sk5">
+        <div class="drop-zone" data-svar="5" id="dz5">Slipp spørsmål her</div>
+        <div class="svar-nummer">Svar 5</div>
+        <div class="svar-tekst">Ich habe vor drei Jahren meinen Großvater verloren – er war der Mensch, der mich am besten verstanden hat. Seitdem merke ich, wie sich Verlust anfühlt: nicht wie ein Ende, sondern wie eine Lücke, die bleibt.</div>
+      </div>
+
+      <div class="svar-kort" id="sk6">
+        <div class="drop-zone" data-svar="6" id="dz6">Slipp spørsmål her</div>
+        <div class="svar-nummer">Svar 6</div>
+        <div class="svar-tekst">Ich wohne seit Jahren weit weg von meiner Familie. Am Anfang war das eine bewusste Entscheidung – ich brauchte den Abstand. Inzwischen vermisse ich sie öfter, als ich erwartet hatte. Aber zurückziehen will ich trotzdem nicht.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- KNAPPER -->
+<div class="knapp-seksjon">
+  <button class="sjekk-knapp" id="sjekkBtn" onclick="sjekkSvar()" disabled>Sjekk svarene</button>
+  <span class="resultat-tekst" id="resultatTekst"></span>
+</div>
+
+<div class="konfetti-container" id="konfettiContainer"></div>
+
+<script>
+  // Fasit:
+  // Svar 1: Wie ist dein Verhältnis zu deiner Familie? → boble 1
+  // Svar 2: Hast du schon mal einen Konflikt in der Familie erlebt? → boble 7
+  // Svar 3: Sind Freunde für dich genauso wichtig wie Familie? → boble 3
+  // Svar 4: Was bedeutet es dir, eine eigene Familie zu gründen? → boble 8
+  // Svar 5: Hast du schon mal eine wichtige Beziehung verloren? → boble 2
+  // Svar 6: Brauchst du manchmal Abstand von deiner Familie? → boble 6
+  // Boble 4 (Wie hat sich deine Familie verändert?) → ingen
+  // Boble 5 (Vermisst du Menschen?) → ingen — svar 5 passer best på boble 2
+
+  const fasit = { '1': '1', '2': '7', '3': '3', '4': '6', '5': '2', '6': '8' };
+
+  const bobleInfo = {
+    '1': { farge: '#c8909a', bg: 'rgba(200,144,154,0.12)', border: '#7a5060' },
+    '2': { farge: '#c8b090', bg: 'rgba(200,176,144,0.12)', border: '#7a6040' },
+    '3': { farge: '#b090a8', bg: 'rgba(176,144,168,0.12)', border: '#685060' },
+    '4': { farge: '#be8898', bg: 'rgba(200,144,154,0.10)', border: '#704858' },
+    '5': { farge: '#bea888', bg: 'rgba(200,176,144,0.10)', border: '#705840' },
+    '6': { farge: '#a888a0', bg: 'rgba(176,144,168,0.10)', border: '#604858' },
+    '7': { farge: '#b08088', bg: 'rgba(200,144,154,0.08)', border: '#684050' },
+    '8': { farge: '#b09878', bg: 'rgba(200,176,144,0.08)', border: '#685038' },
+  };
+
+  const plassert = {};
+  let dragId = null;
+
+  document.querySelectorAll('.boble').forEach(b => {
+    b.addEventListener('dragstart', () => {
+      dragId = b.dataset.id;
+      setTimeout(() => b.classList.add('dragging'), 0);
+    });
+    b.addEventListener('dragend', () => b.classList.remove('dragging'));
+  });
+
+  document.querySelectorAll('.drop-zone').forEach(dz => {
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
+    dz.addEventListener('dragleave', () => dz.classList.remove('over'));
+    dz.addEventListener('drop', e => {
+      e.preventDefault();
+      dz.classList.remove('over');
+      if (!dragId) return;
+      const svarId = dz.dataset.svar;
+      if (plassert[svarId]) returnerBoble(plassert[svarId]);
+      for (const [sid, bid] of Object.entries(plassert)) {
+        if (bid === dragId) { toemDropzone(sid); break; }
+      }
+      plasserBoble(svarId, dragId);
+      dragId = null;
+      oppdaterKnapp();
+    });
+  });
+
+  function plasserBoble(svarId, bobleId) {
+    plassert[svarId] = bobleId;
+    const dz = document.getElementById('dz' + svarId);
+    const info = bobleInfo[bobleId];
+    const tekst = document.querySelector(`.boble[data-id="${bobleId}"]`).textContent;
+    dz.classList.add('har-boble');
+    dz.style.borderColor = info.border;
+    dz.style.background = info.bg;
+    dz.innerHTML = `
+      <span class="boble-plassert" style="color:${info.farge};border-color:${info.border};background:${info.bg}">${tekst}</span>
+      <button class="fjern-knapp" onclick="fjernBoble('${svarId}')">✕</button>
+    `;
+    document.querySelector(`.boble[data-id="${bobleId}"]`).classList.add('plassert');
+  }
+
+  function toemDropzone(svarId) {
+    delete plassert[svarId];
+    const dz = document.getElementById('dz' + svarId);
+    dz.classList.remove('har-boble');
+    dz.style.borderColor = '';
+    dz.style.background = '';
+    dz.innerHTML = 'Slipp spørsmål her';
+    document.getElementById('sk' + svarId).classList.remove('riktig', 'feil');
+  }
+
+  function returnerBoble(bobleId) {
+    document.querySelector(`.boble[data-id="${bobleId}"]`).classList.remove('plassert');
+  }
+
+  function fjernBoble(svarId) {
+    const bobleId = plassert[svarId];
+    if (!bobleId) return;
+    returnerBoble(bobleId);
+    toemDropzone(svarId);
+    oppdaterKnapp();
+    document.getElementById('resultatTekst').textContent = '';
+    document.querySelectorAll('.svar-kort').forEach(k => k.classList.remove('riktig', 'feil'));
+  }
+
+  function oppdaterKnapp() {
+    document.getElementById('sjekkBtn').disabled = Object.keys(plassert).length < 6;
+  }
+
+  function sjekkSvar() {
+    let riktige = 0;
+    for (const [svarId, bobleId] of Object.entries(plassert)) {
+      const kort = document.getElementById('sk' + svarId);
+      kort.classList.remove('riktig', 'feil');
+      if (fasit[svarId] === bobleId) {
+        kort.classList.add('riktig'); riktige++;
+      } else {
+        kort.classList.add('feil');
+      }
+    }
+    const resultat = document.getElementById('resultatTekst');
+    if (riktige === 6) {
+      resultat.textContent = 'Alt riktig!';
+      resultat.style.color = '#c8909a';
+      hjerteFeiring();
+    } else {
+      resultat.textContent = riktige + ' av 6 riktige – prøv igjen!';
+      resultat.style.color = 'var(--wrong)';
+    }
+  }
+
+  function hjerteFeiring() {
+    const container = document.getElementById('konfettiContainer');
+    container.innerHTML = '';
+    const hjerter = ['♥', '♡', '❤', '♥', '♡'];
+    const antall = 24;
+
+    for (let i = 0; i < antall; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'hjerte';
+        el.textContent = hjerter[i % hjerter.length];
+
+        const angle = (i / antall) * 360 + (Math.random() * 20 - 10);
+        const rad = angle * Math.PI / 180;
+        const dist1 = 80 + Math.random() * 60;
+        const dist2 = 200 + Math.random() * 150;
+        const dist3 = 350 + Math.random() * 200;
+
+        const tx = (d) => `calc(-50% + ${Math.cos(rad) * d}px)`;
+        const ty = (d) => `calc(-50% + ${Math.sin(rad) * d}px)`;
+
+        el.style.setProperty('--tx20',  tx(dist1));
+        el.style.setProperty('--ty20',  ty(dist1));
+        el.style.setProperty('--tx70',  tx(dist2));
+        el.style.setProperty('--ty70',  ty(dist2));
+        el.style.setProperty('--tx100', tx(dist3));
+        el.style.setProperty('--ty100', ty(dist3));
+
+        const colors = ['#c8909a', '#b090a8', '#c8b090', '#d4a8b0', '#a88898'];
+        el.style.color = colors[i % colors.length];
+        el.style.fontSize = (18 + Math.random() * 16) + 'px';
+        el.style.animationDuration = (1.2 + Math.random() * 0.8) + 's';
+        el.style.animationDelay = '0s';
+
+        container.appendChild(el);
+        setTimeout(() => el.remove(), 2200);
+      }, i * 60);
+    }
+  }
+</script>
+</body>
+</html>

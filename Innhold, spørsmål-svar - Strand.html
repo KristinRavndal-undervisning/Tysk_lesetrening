@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tysk 2 – Ein Tag am Strand</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #f5f0e8;
+    --bg-card:     #fdf9f2;
+    --line:        #e0d4c0;
+    --sand:        #c8a860;
+    --sand-light:  #e8d498;
+    --sand-pale:   #f5ecd8;
+    --ocean:       #3a7a9a;
+    --ocean-light: #6aaac8;
+    --ocean-pale:  #d8eef8;
+    --sun:         #e8a820;
+    --sun-pale:    #fdf0c8;
+    --white:       #fffef8;
+    --ink:         #2a2018;
+    --ink-mid:     #5a4830;
+    --ink-light:   #8a7858;
+    --correct:     #3a7a9a;
+    --wrong:       #c04040;
+  }
+
+  body {
+    font-family: 'Lora', Georgia, serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    padding: 36px 48px 28px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #d4eef8 0%, #e8f6fc 40%, var(--bg) 100%);
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* animated wave */
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: -10%; right: -10%;
+    height: 6px;
+    background: linear-gradient(90deg,
+      transparent 0%, var(--ocean-light) 20%,
+      var(--ocean) 40%, var(--ocean-light) 60%,
+      var(--ocean) 80%, transparent 100%);
+    opacity: 0.4;
+    animation: wave 4s ease-in-out infinite;
+    border-radius: 50%;
+  }
+  @keyframes wave {
+    0%,100% { transform: translateX(-3%) scaleY(1); }
+    50%      { transform: translateX(3%) scaleY(1.5); }
+  }
+
+  /* sun rays */
+  header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: 60px;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, rgba(232,168,32,0.25) 0%, rgba(232,168,32,0.08) 40%, transparent 70%);
+    animation: sun-pulse 5s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+  @keyframes sun-pulse {
+    0%   { transform: scale(1);    opacity: 0.7; }
+    100% { transform: scale(1.15); opacity: 1; }
+  }
+
+  .header-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  .tag {
+    display: inline-block;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ocean);
+    border: 1px solid rgba(58,122,154,0.3);
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    background: rgba(58,122,154,0.06);
+  }
+
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  header h1 em {
+    color: var(--ocean);
+    font-style: normal;
+  }
+
+  .header-sub {
+    font-size: 0.88rem;
+    color: var(--ink-light);
+    margin-top: 8px;
+    font-style: italic;
+    font-weight: 300;
+    font-family: 'Lora', serif;
+  }
+
+  /* ── INSTRUKSJON ── */
+  .instruksjon {
+    padding: 10px 48px;
+    font-size: 0.83rem;
+    color: var(--ink-light);
+    font-style: italic;
+    border-bottom: 1px solid var(--line);
+    background: var(--sand-pale);
+    font-family: 'Lora', serif;
+  }
+
+  /* ── HOVUD-LAYOUT ── */
+  .hovud-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    padding: 0 48px;
+  }
+
+  /* ── BOBLE-KOLONNE ── */
+  .boble-kolonne {
+    width: 290px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 20px;
+    padding: 28px 24px 28px 0;
+  }
+
+  .boble-kolonne-tittel {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 16px;
+  }
+
+  .boble-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .boble {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.76rem;
+    font-weight: 600;
+    padding: 9px 14px;
+    border-radius: 8px;
+    cursor: grab;
+    user-select: none;
+    transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+    border: 1.5px solid;
+    width: 100%;
+    text-align: left;
+    line-height: 1.4;
+  }
+  .boble:hover { transform: translateX(3px); box-shadow: 0 4px 14px rgba(58,122,154,0.15); }
+  .boble:active { cursor: grabbing; }
+  .boble.dragging { opacity: 0.3; }
+  .boble.plassert { display: none; }
+
+  /* boble-farger - strand-palett */
+  .boble[data-id="1"] { background: rgba(58,122,154,0.10);  border-color: #5a9ab8; color: var(--ocean); }
+  .boble[data-id="2"] { background: rgba(200,168,96,0.12);  border-color: #a88840; color: #8a6820; }
+  .boble[data-id="3"] { background: rgba(58,122,154,0.08);  border-color: #4a8aaa; color: #2a6a8a; }
+  .boble[data-id="4"] { background: rgba(232,168,32,0.10);  border-color: #b88820; color: #8a6010; }
+  .boble[data-id="5"] { background: rgba(58,122,154,0.12);  border-color: #6aaac8; color: #2a6888; }
+  .boble[data-id="6"] { background: rgba(200,168,96,0.10);  border-color: #988030; color: #786020; }
+  .boble[data-id="7"] { background: rgba(232,168,32,0.08);  border-color: #a87818; color: #786010; }
+  .boble[data-id="8"] { background: rgba(58,122,154,0.07);  border-color: #3a7898; color: #286080; }
+
+  /* ── SVAR-KOLONNE ── */
+  .svar-kolonne {
+    flex: 1;
+    padding: 28px 0 48px 32px;
+    border-left: 1px solid var(--line);
+  }
+
+  .svar-kolonne-tittel {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 20px;
+  }
+
+  .svar-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .svar-kort {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 16px 18px 14px;
+    transition: border-color 0.2s;
+  }
+  .svar-kort.riktig { border-color: var(--correct); background: #eef6fc; }
+  .svar-kort.feil   { border-color: var(--wrong);   background: #fdf0f0; }
+
+  .drop-zone {
+    min-height: 40px;
+    border: 1.5px dashed var(--line);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.7rem;
+    color: #b0a090;
+    letter-spacing: 0.05em;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+    margin-bottom: 14px;
+  }
+  .drop-zone.over {
+    border-color: var(--ocean);
+    background: var(--ocean-pale);
+    color: var(--ocean);
+  }
+  .drop-zone.har-boble {
+    border-style: solid;
+    color: transparent;
+    justify-content: flex-start;
+    padding: 4px 8px;
+  }
+  .drop-zone .fjern-knapp {
+    position: absolute;
+    right: 6px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none;
+    color: #b0a090; cursor: pointer;
+    font-size: 0.75rem; padding: 2px 4px;
+    transition: color 0.15s;
+  }
+  .drop-zone .fjern-knapp:hover { color: var(--wrong); }
+
+  .drop-zone .boble-plassert {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 6px;
+    border: 1.5px solid;
+    pointer-events: none;
+    line-height: 1.4;
+  }
+
+  .svar-nummer {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-light);
+    margin-bottom: 8px;
+  }
+
+  .svar-tekst {
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.93rem;
+    line-height: 1.82;
+    color: var(--ink-mid);
+    font-weight: 400;
+  }
+
+  /* ── KNAPPER ── */
+  .knapp-seksjon {
+    padding: 0 48px 48px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .sjekk-knapp {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 28px;
+    background: var(--ocean);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    box-shadow: 0 2px 10px rgba(58,122,154,0.25);
+  }
+  .sjekk-knapp:hover:not(:disabled) { background: #2a6a8a; transform: translateY(-1px); }
+  .sjekk-knapp:disabled { background: #a0c0d0; color: #fff; cursor: not-allowed; box-shadow: none; }
+
+  .resultat-tekst {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+
+  /* ── BØLGE-FEIRING ── */
+  .konfetti-container {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 999;
+    overflow: hidden;
+  }
+
+  .boelge-lag {
+    position: absolute;
+    left: -10%; right: -10%;
+    height: 120px;
+    border-radius: 50%;
+    opacity: 0;
+    animation: boelge-opp ease-out forwards;
+  }
+  @keyframes boelge-opp {
+    0%   { opacity: 0.7; transform: translateY(100vh) scaleY(1); }
+    60%  { opacity: 0.5; }
+    100% { opacity: 0; transform: translateY(-20vh) scaleY(0.5); }
+  }
+
+  .glitter-bit {
+    position: fixed;
+    border-radius: 50%;
+    opacity: 0;
+    animation: glitter-fly ease-out forwards;
+  }
+  @keyframes glitter-fly {
+    0%   { opacity: 1; transform: translate(0, 0) scale(1); }
+    60%  { opacity: 0.8; }
+    100% { opacity: 0; transform: translate(var(--gx), var(--gy)) scale(0.3); }
+  }
+
+  @media (max-width: 860px) {
+    .hovud-layout { flex-direction: column; padding: 0 20px; }
+    .boble-kolonne { position: static; width: 100%; padding: 20px 0; }
+    .svar-kolonne { border-left: none; border-top: 1px solid var(--line); padding: 20px 0; }
+    .svar-grid { grid-template-columns: 1fr; }
+    header, .instruksjon, .knapp-seksjon { padding-left: 20px; padding-right: 20px; }
+    .strand-deko { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="tag">Leseforståelse</div>
+      <h1>Ein Tag am <em>Strand</em></h1>
+      <p class="header-sub">Sol, sand og alt det som følger med</p>
+    </div>
+    <div class="hjerte-deko" style="display:none"></div>
+  </div>
+</header>
+
+<div class="instruksjon">
+  Dra hvert spørsmål til det svaret som passer best. To spørsmål hører ikke til noen av svarene – la dem ligge igjen.
+</div>
+
+<div class="hovud-layout">
+
+  <div class="boble-kolonne">
+    <div class="boble-kolonne-tittel">Spørsmål – dra til riktig svar</div>
+    <div class="boble-grid" id="bobleGrid">
+      <div class="boble" data-id="4" draggable="true">Stört dich der Sand überall?</div>
+      <div class="boble" data-id="1" draggable="true">Was packst du immer in deine Strandtasche?</div>
+      <div class="boble" data-id="7" draggable="true">Hast du ein Lieblingslesebuch für den Urlaub?</div>
+      <div class="boble" data-id="5" draggable="true">Gehst du gern ins Wasser?</div>
+      <div class="boble" data-id="2" draggable="true">Bist du schon mal richtig schlimm verbrannt?</div>
+      <div class="boble" data-id="8" draggable="true">Isst du gern Eis am Strand?</div>
+      <div class="boble" data-id="6" draggable="true">Kannst du am Strand gut entspannen?</div>
+      <div class="boble" data-id="3" draggable="true">Was machst du am liebsten am Strand?</div>
+    </div>
+  </div>
+
+  <div class="svar-kolonne">
+    <div class="svar-kolonne-tittel">Svar – slipp spørsmålet her</div>
+    <div class="svar-grid">
+
+      <div class="svar-kort" id="sk1">
+        <div class="drop-zone" data-svar="1" id="dz1">Slipp spørsmål her</div>
+        <div class="svar-nummer">Svar 1</div>
+        <div class="svar-tekst">Sonnencreme, Wasser, ein Handtuch und immer ein Buch – das sind die Grundlagen. Dazu noch Sonnenbrille und Flip-Flops. Ich habe auch immer eine kleine Plastiktüte dabei, weil der Sand in absolut allem landet.</div>
+      </div>
+
+      <div class="svar-kort" id="sk2">
+        <div class="drop-zone" data-svar="2" id="dz2">Slipp spørsmål her</div>
+        <div class="svar-nummer">Svar 2</div>
+        <div class="svar-tekst">Einmal in Griechenland – ich war jung und unvorsichtig. Die Schultern so rot, dass ich nachts kaum schlafen konnte. Seitdem nehme ich Sonnencreme sehr ernst. Faktor 50, keine Diskussion.</div>
+      </div>
+
+      <div class="svar-kort" id="sk3">
+        <div class="drop-zone" data-svar="3" id="dz3">Slipp spørsmål her</div>
+        <div class="svar-nummer">Svar 3</div>
+        <div class="svar-tekst">Im Wasser sein – je höher die Wellen, desto besser. Ich kann stundenlang im Meer spielen, tauchen, gegen die Wellen springen. Am Strand liegen und nichts tun ist für mich pure Verschwendung.</div>
+      </div>
+
+      <div class="svar-kort" id="sk4">
+        <div class="drop-zone" data-svar="4" id="dz4">Slipp spørsmål her</div>
+        <div class="svar-nummer">Svar 4</div>
+        <div class="svar-tekst">Ja, aber es gehört einfach dazu. Sand im Handtuch, Sand in der Tasche, Sand zwischen den Zehen – und am schlimmsten im Essen. Aber ich würde trotzdem nie tauschen. Ein Strand ohne Sand ist ja kein Strand.</div>
+      </div>
+
+      <div class="svar-kort" id="sk5">
+        <div class="drop-zone" data-svar="5" id="dz5">Slipp spørsmål her</div>
+        <div class="svar-nummer">Svar 5</div>
+        <div class="svar-tekst">Unter einem Sonnenschirm liegen, ein gutes Buch aufmachen und einfach lesen – da finde ich wirklich zur Ruhe. Das Meer rauscht im Hintergrund, ab und zu ein kühles Getränk. Mehr brauche ich nicht.</div>
+      </div>
+
+      <div class="svar-kort" id="sk6">
+        <div class="drop-zone" data-svar="6" id="dz6">Slipp spørsmål her</div>
+        <div class="svar-nummer">Svar 6</div>
+        <div class="svar-tekst">Ich gehe schon ins Wasser, aber meistens nur bis zur Hüfte. Es ist mir oft zu kalt, und ehrlich gesagt sind mir Wellen etwas unheimlich. Ich plansche gern am Rand, aber tief rein? Lieber nicht.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="knapp-seksjon">
+  <button class="sjekk-knapp" id="sjekkBtn" onclick="sjekkSvar()" disabled>Sjekk svarene</button>
+  <span class="resultat-tekst" id="resultatTekst"></span>
+</div>
+
+<div class="konfetti-container" id="konfettiContainer"></div>
+
+<script>
+  // Fasit:
+  // Svar 1: Was packst du immer in deine Strandtasche? → boble 1
+  // Svar 2: Bist du schon mal richtig schlimm verbrannt? → boble 2
+  // Svar 3: Was machst du am liebsten am Strand? → boble 3 (waves) — boble 6 er distraktør
+  // Svar 4: Stört dich der Sand überall? → boble 4
+  // Svar 5: Kannst du am Strand gut entspannen? → boble 6 (lesen, Sonnenschirm)
+  // Svar 6: Gehst du gern ins Wasser? → boble 5
+  // Til overs: boble 7 (Lieblingslesebuch) og boble 8 (Eis am Strand)
+
+  const fasit = { '1': '1', '2': '2', '3': '3', '4': '4', '5': '6', '6': '5' };
+
+  const bobleInfo = {
+    '1': { farge: '#3a7a9a', bg: 'rgba(58,122,154,0.10)',  border: '#5a9ab8' },
+    '2': { farge: '#8a6820', bg: 'rgba(200,168,96,0.12)',  border: '#a88840' },
+    '3': { farge: '#2a6a8a', bg: 'rgba(58,122,154,0.08)',  border: '#4a8aaa' },
+    '4': { farge: '#8a6010', bg: 'rgba(232,168,32,0.10)',  border: '#b88820' },
+    '5': { farge: '#2a6888', bg: 'rgba(58,122,154,0.12)',  border: '#6aaac8' },
+    '6': { farge: '#786020', bg: 'rgba(200,168,96,0.10)',  border: '#988030' },
+    '7': { farge: '#786010', bg: 'rgba(232,168,32,0.08)',  border: '#a87818' },
+    '8': { farge: '#286080', bg: 'rgba(58,122,154,0.07)',  border: '#3a7898' },
+  };
+
+  const plassert = {};
+  let dragId = null;
+
+  document.querySelectorAll('.boble').forEach(b => {
+    b.addEventListener('dragstart', () => {
+      dragId = b.dataset.id;
+      setTimeout(() => b.classList.add('dragging'), 0);
+    });
+    b.addEventListener('dragend', () => b.classList.remove('dragging'));
+  });
+
+  document.querySelectorAll('.drop-zone').forEach(dz => {
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
+    dz.addEventListener('dragleave', () => dz.classList.remove('over'));
+    dz.addEventListener('drop', e => {
+      e.preventDefault();
+      dz.classList.remove('over');
+      if (!dragId) return;
+      const svarId = dz.dataset.svar;
+      if (plassert[svarId]) returnerBoble(plassert[svarId]);
+      for (const [sid, bid] of Object.entries(plassert)) {
+        if (bid === dragId) { toemDropzone(sid); break; }
+      }
+      plasserBoble(svarId, dragId);
+      dragId = null;
+      oppdaterKnapp();
+    });
+  });
+
+  function plasserBoble(svarId, bobleId) {
+    plassert[svarId] = bobleId;
+    const dz = document.getElementById('dz' + svarId);
+    const info = bobleInfo[bobleId];
+    const tekst = document.querySelector(`.boble[data-id="${bobleId}"]`).textContent;
+    dz.classList.add('har-boble');
+    dz.style.borderColor = info.border;
+    dz.style.background = info.bg;
+    dz.innerHTML = `
+      <span class="boble-plassert" style="color:${info.farge};border-color:${info.border};background:${info.bg}">${tekst}</span>
+      <button class="fjern-knapp" onclick="fjernBoble('${svarId}')">✕</button>
+    `;
+    document.querySelector(`.boble[data-id="${bobleId}"]`).classList.add('plassert');
+  }
+
+  function toemDropzone(svarId) {
+    delete plassert[svarId];
+    const dz = document.getElementById('dz' + svarId);
+    dz.classList.remove('har-boble');
+    dz.style.borderColor = '';
+    dz.style.background = '';
+    dz.innerHTML = 'Slipp spørsmål her';
+    document.getElementById('sk' + svarId).classList.remove('riktig', 'feil');
+  }
+
+  function returnerBoble(bobleId) {
+    document.querySelector(`.boble[data-id="${bobleId}"]`).classList.remove('plassert');
+  }
+
+  function fjernBoble(svarId) {
+    const bobleId = plassert[svarId];
+    if (!bobleId) return;
+    returnerBoble(bobleId);
+    toemDropzone(svarId);
+    oppdaterKnapp();
+    document.getElementById('resultatTekst').textContent = '';
+    document.querySelectorAll('.svar-kort').forEach(k => k.classList.remove('riktig', 'feil'));
+  }
+
+  function oppdaterKnapp() {
+    document.getElementById('sjekkBtn').disabled = Object.keys(plassert).length < 6;
+  }
+
+  function sjekkSvar() {
+    let riktige = 0;
+    for (const [svarId, bobleId] of Object.entries(plassert)) {
+      const kort = document.getElementById('sk' + svarId);
+      kort.classList.remove('riktig', 'feil');
+      if (fasit[svarId] === bobleId) {
+        kort.classList.add('riktig'); riktige++;
+      } else {
+        kort.classList.add('feil');
+      }
+    }
+    const resultat = document.getElementById('resultatTekst');
+    if (riktige === 6) {
+      resultat.textContent = 'Alt riktig!';
+      resultat.style.color = 'var(--ocean)';
+      strandFeiring();
+    } else {
+      resultat.textContent = riktige + ' av 6 riktige – prøv igjen!';
+      resultat.style.color = 'var(--wrong)';
+    }
+  }
+
+  function strandFeiring() {
+    const container = document.getElementById('konfettiContainer');
+    container.innerHTML = '';
+
+    // Bølger som skyller opp
+    const boelgefarger = [
+      'rgba(58,122,154,0.25)',
+      'rgba(106,170,200,0.2)',
+      'rgba(216,238,248,0.35)',
+      'rgba(58,122,154,0.15)',
+    ];
+    boelgefarger.forEach((farge, i) => {
+      const lag = document.createElement('div');
+      lag.className = 'boelge-lag';
+      lag.style.bottom = (i * 30) + 'px';
+      lag.style.background = farge;
+      lag.style.animationDuration = (1.2 + i * 0.3) + 's';
+      lag.style.animationDelay = (i * 0.15) + 's';
+      container.appendChild(lag);
+    });
+
+    // Glitrende partikler fra midten
+    const farger = ['#f4d35e','#e8a820','#fff8b0','#f0c040','#ffe080','#ffffff','#ffd700'];
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    const antall = 60;
+
+    for (let i = 0; i < antall; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'glitter-bit';
+        const size = (3 + Math.random() * 6) + 'px';
+        const angle = Math.random() * 360;
+        const dist = 100 + Math.random() * 300;
+        const rad = angle * Math.PI / 180;
+        const gx = Math.cos(rad) * dist + 'px';
+        const gy = Math.sin(rad) * dist + 'px';
+        el.style.cssText = `
+          left: ${cx}px; top: ${cy}px;
+          width: ${size}; height: ${size};
+          background: ${farger[Math.floor(Math.random() * farger.length)]};
+          box-shadow: 0 0 ${3 + Math.random()*4}px rgba(255,220,50,0.8);
+          animation-duration: ${0.8 + Math.random() * 0.8}s;
+        `;
+        el.style.setProperty('--gx', gx);
+        el.style.setProperty('--gy', gy);
+        container.appendChild(el);
+        setTimeout(() => el.remove(), 1800);
+      }, i * 25);
+    }
+
+    setTimeout(() => { container.innerHTML = ''; }, 3000);
+  }
+</script>
+</body>
+</html>
