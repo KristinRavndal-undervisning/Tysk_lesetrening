@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deutsch – Absätze ordnen: Das richtige Studium finden</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:      #0f2340;
+  --navy2:     #071528;
+  --steel:     #2a4d7a;
+  --sky:       #4a7fa8;
+  --sky-l:     #ddeef8;
+  --amber:     #c8820a;
+  --amber-l:   #fdf3dc;
+  --parchment: #f8f5ee;
+  --parchment2:#ede9de;
+  --ink:       #0f1e30;
+  --ink-soft:  #4a5f72;
+  --card:      #fdfcf8;
+  --border:    #c8d8e8;
+  --red:       #b83232;
+  --redl:      #fbeaea;
+  --shadow:    rgba(15,35,64,.10);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Jost', sans-serif;
+  background: var(--parchment);
+  color: var(--ink);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 95% 2%, rgba(42,77,122,.10) 0%, transparent 45%),
+    radial-gradient(ellipse at 2% 98%, rgba(200,130,10,.07) 0%, transparent 40%);
+}
+
+.page-header {
+  background: linear-gradient(150deg, var(--navy2) 0%, var(--navy) 55%, var(--steel) 100%);
+  color: #fff;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 24px rgba(7,21,40,.4);
+}
+.header-geo { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.geo-circle { position: absolute; border-radius: 50%; border: 1px solid rgba(255,255,255,.06); }
+.geo-circle:nth-child(1) { width: 280px; height: 280px; top: -100px; right: 3%; }
+.geo-circle:nth-child(2) { width: 180px; height: 180px; top: -50px;  right: 8%;  border-color: rgba(255,255,255,.04); }
+.geo-circle:nth-child(3) { width: 420px; height: 420px; top: -160px; right: -2%; border-color: rgba(255,255,255,.03); }
+.geo-line { position: absolute; background: rgba(255,255,255,.05); transform-origin: center; }
+.geo-line:nth-child(4) { width: 1px; height: 300px; top: -80px; right: 11%; transform: rotate(25deg); }
+.geo-line:nth-child(5) { width: 1px; height: 300px; top: -60px; right: 15%; transform: rotate(-15deg); }
+.geo-line:nth-child(6) { width: 1px; height: 250px; top: -40px; right: 7%;  transform: rotate(55deg); }
+.header-accent {
+  position: absolute; width: 70px; height: 70px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,130,10,.55) 0%, transparent 70%);
+  top: 8px; right: 10%;
+  animation: pulse-accent 5s ease-in-out infinite;
+}
+@keyframes pulse-accent { 0%,100% { transform: scale(1); opacity: .7; } 50% { transform: scale(1.2); opacity: 1; } }
+.page-header::after {
+  content: ''; display: block; height: 28px; background: var(--parchment);
+  clip-path: ellipse(54% 100% at 48% 100%); position: relative; z-index: 2;
+}
+.header-inner { position: relative; max-width: 1200px; margin: 0 auto; padding: 1.9rem 1rem 1.7rem 1.4rem; z-index: 1; }
+.kurs-tag { font-size: 10px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.45); margin-bottom: .3rem; }
+.page-header h1 { font-family: 'Cormorant Garamond', serif; font-size: 2.1rem; font-weight: 700; line-height: 1.1; color: #fff; text-shadow: 0 2px 16px rgba(0,0,0,.3); }
+.page-header h1 em { font-style: italic; color: #f0c060; }
+.header-meta { margin-top: .35rem; font-size: 12.5px; color: rgba(255,255,255,.45); }
+
+.wrap { max-width: 1200px; margin: 0 auto; padding: 1.75rem 1rem 3rem; }
+
+.instr-box { display: flex; gap: .85rem; align-items: flex-start; padding: .9rem 1.1rem; background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--amber); border-radius: 10px; margin-bottom: 1.6rem; box-shadow: 0 2px 10px var(--shadow); }
+.instr-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 1px; }
+.instr-text { font-size: 15px; line-height: 1.65; color: var(--ink); }
+.instr-text strong { font-weight: 600; }
+
+.fixed-label { display: flex; align-items: center; gap: .5rem; font-size: 10.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--sky); margin-bottom: .45rem; }
+.fixed-label::before { content: ''; display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--sky); }
+.tag-gitt { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--sky); background: var(--sky-l); padding: .15rem .55rem; border-radius: 20px; border: 1px solid #9ac4de; }
+.fixed-para { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--sky); border-radius: 10px; padding: 1rem 1.25rem; font-size: 15.5px; line-height: 1.85; color: var(--ink); margin-bottom: 1.6rem; box-shadow: 0 2px 10px var(--shadow); }
+
+.cols { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 1.1rem; margin-bottom: 1.2rem; }
+.col-label { font-size: 10.5px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: .6rem; display: flex; align-items: center; gap: .4rem; }
+.col-label-left::before  { content: '◈'; color: var(--amber); }
+.col-label-right::before { content: '◧'; color: var(--ink-soft); }
+
+.para-card { background: var(--card); border: 1.5px solid var(--border); border-radius: 10px; padding: .9rem 1rem; font-size: 15px; line-height: 1.8; color: var(--ink); cursor: pointer; transition: border-color .15s, background .13s, box-shadow .13s, transform .1s; margin-bottom: .65rem; box-shadow: 0 1px 4px var(--shadow); }
+.para-card:last-child { margin-bottom: 0; }
+.para-card:hover { border-color: var(--steel); box-shadow: 0 3px 12px var(--shadow); transform: translateY(-1px); }
+.para-card.p-sel { border: 2px solid var(--amber); background: var(--amber-l); box-shadow: 0 0 0 3px rgba(200,130,10,.12), 0 3px 12px var(--shadow); transform: translateY(-1px); }
+.para-card.p-used { opacity: .28; pointer-events: none; transform: none; }
+.para-nr { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: .3rem; }
+
+.slot-card { border: 1.5px dashed var(--border); border-radius: 10px; padding: .9rem 1rem; font-size: 15px; line-height: 1.8; color: var(--ink-soft); background: var(--parchment2); cursor: pointer; transition: border-color .15s, background .13s; margin-bottom: .65rem; min-height: 76px; display: flex; flex-direction: column; gap: .25rem; }
+.slot-card:last-child { margin-bottom: 0; }
+.slot-card:hover { border-color: var(--steel); background: #d8e4f0; }
+.slot-card.s-filled { border-style: solid; border-color: var(--border); background: var(--card); color: var(--ink); }
+.slot-card.s-filled:hover { border-color: var(--red); background: var(--redl); color: var(--red); }
+.slot-card.s-ok  { border-color: var(--sky) !important; background: var(--sky-l) !important; color: #0a2e45 !important; cursor: default; pointer-events: none; }
+.slot-card.s-bad { border-color: var(--red) !important; background: var(--redl) !important; color: var(--red) !important; }
+.slot-nr { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); flex-shrink: 0; }
+.slot-card.s-ok .slot-nr  { color: var(--sky); }
+.slot-card.s-bad .slot-nr { color: var(--red); }
+.slot-empty-txt { font-style: italic; font-size: 12.5px; }
+
+.aktionsleiste { display: flex; align-items: center; gap: .65rem; flex-wrap: wrap; padding: .85rem 1rem; background: var(--card); border: 1px solid var(--border); border-radius: 10px; margin-bottom: .5rem; box-shadow: 0 1px 4px var(--shadow); }
+.btn { font-family: 'Jost', sans-serif; font-size: 13.5px; font-weight: 600; padding: .5rem 1.25rem; border-radius: 8px; cursor: pointer; transition: all .15s; border: 1.5px solid var(--border); background: var(--card); color: var(--ink); }
+.btn:hover { background: var(--parchment2); border-color: #9ab4cc; }
+.btn-primary { background: linear-gradient(135deg, var(--steel) 0%, var(--navy) 100%); color: #fff; border-color: var(--navy); box-shadow: 0 2px 8px rgba(15,35,64,.25); }
+.btn-primary:hover { background: linear-gradient(135deg, #1e3d6a 0%, #040e1c 100%); }
+.btn-ghost { color: var(--ink-soft); }
+
+.hint { font-size: 12.5px; color: var(--ink-soft); padding: .3rem .9rem .45rem; font-style: italic; }
+
+.fb { font-size: 13px; padding: .4rem .85rem; border-radius: 6px; }
+.fb.ok  { background: var(--sky-l); color: #0a2e45; border: 1px solid #9ac4de; }
+.fb.bad { background: var(--redl);  color: var(--red); border: 1px solid #f0b4b4; }
+
+.progress { display: flex; gap: 5px; align-items: center; margin-right: .3rem; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); transition: background .2s; }
+.dot.set   { background: var(--amber); }
+.dot.right { background: var(--sky); }
+.dot.wrong { background: var(--red); }
+
+.score-panel { display: none; margin-top: 1rem; padding: 1.1rem 1.3rem; background: var(--card); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 2px 10px var(--shadow); }
+.score-panel.visible { display: block; }
+.score-title { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 700; margin-bottom: .5rem; }
+.score-breakdown { display: grid; grid-template-columns: repeat(5, 1fr); gap: .5rem; margin-top: .75rem; }
+.score-item { text-align: center; padding: .5rem .3rem; border-radius: 8px; font-size: 12px; border: 1px solid var(--border); background: var(--parchment2); }
+.score-item .si-nr { font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: .2rem; }
+.score-item.si-ok  { background: var(--sky-l); border-color: #9ac4de; }
+.score-item.si-bad { background: var(--redl);  border-color: #f0b4b4; }
+.score-item .si-icon { font-size: 1.1rem; }
+
+#fw-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; display: none; }
+
+@media (max-width: 620px) {
+  .cols { grid-template-columns: 1fr; }
+  .score-breakdown { grid-template-columns: repeat(3, 1fr); }
+  .page-header h1 { font-size: 1.55rem; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="fw-canvas"></canvas>
+
+<header class="page-header">
+  <div class="header-geo">
+    <div class="geo-circle"></div>
+    <div class="geo-circle"></div>
+    <div class="geo-circle"></div>
+    <div class="geo-line"></div>
+    <div class="geo-line"></div>
+    <div class="geo-line"></div>
+  </div>
+  <div class="header-accent"></div>
+  <div class="header-inner">
+    <div class="kurs-tag">Deutsch · Leseverstehen</div>
+    <h1>Das richtige Studium <em>finden</em></h1>
+    <div class="header-meta">Aufgabe: Absätze in die richtige Reihenfolge bringen</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="instr-box">
+    <div class="instr-icon">🎓</div>
+    <div class="instr-text">
+      <strong>Slik gjør du det:</strong><br>
+      <strong>Klikk</strong> på et avsnitt til venstre for å velge det, og klikk deretter på riktig plass til høyre.
+      Vil du angre? Klikk på et avsnitt du allerede har plassert, så kommer det tilbake til venstre.
+    </div>
+  </div>
+
+  <div class="fixed-label">Avsnitt 1 <span class="tag-gitt">✓ Gitt</span></div>
+  <div class="fixed-para">
+    Nach dem Abitur stehen viele vor der gleichen Frage: Und jetzt? Studium, Ausbildung, Arbeit,
+    Auslandsjahr? Die Möglichkeiten sind endlos, und genau das macht die Entscheidung schwer.
+    Wer die Wahl aber systematisch angeht, statt einfach zu warten, bis sich etwas richtig anfühlt,
+    kommt deutlich schneller ans Ziel.
+  </div>
+
+  <div class="cols">
+    <div>
+      <div class="col-label col-label-left">Avsnitt – tilfeldig rekkefølge</div>
+      <div id="para-pool">
+
+        <div class="para-card" id="pB" onclick="selPara('B')">
+          <div class="para-nr">Avsnitt –</div>
+          Dieser systematische Weg beginnt mit einer einfachen, aber wichtigen Frage: Was macht
+          mir wirklich Spaß? Nicht was die Eltern gut finden oder was Freunde machen, sondern was
+          einen selbst antreibt. Da ein Studium drei bis fünf Jahre dauert, lohnt es sich, diese Frage
+          ernst zu nehmen. Wer sich für ein Fach entscheidet, das ihn kalt lässt, merkt das
+          spätestens im zweiten Semester.
+        </div>
+
+        <div class="para-card" id="pC" onclick="selPara('C')">
+          <div class="para-nr">Avsnitt –</div>
+          Interessen allein reichen jedoch nicht. Bei beliebten Studiengängen wie Medizin,
+          Psychologie oder Jura entscheidet der Notendurchschnitt darüber, wer einen Platz
+          bekommt, da die Nachfrage das Angebot bei weitem übersteigt. Wer seinen
+          Traumstudiengang knapp verfehlt, sollte trotzdem nicht aufgeben: Wartesemester,
+          Eignungstests und ähnliche Fächer an anderen Hochschulen sind oft ein zweiter Weg rein.
+        </div>
+
+        <div class="para-card" id="pD" onclick="selPara('D')">
+          <div class="para-nr">Avsnitt –</div>
+          Neben Interessen und Noten lohnt es sich außerdem, einen Blick in die Zukunft zu werfen.
+          Welche Berufe gibt es nach dem Studium, und wie sehen die Jobaussichten aus? Obwohl
+          Geld nicht alles ist, ist es völlig legitim zu fragen, was am Ende finanziell herauskommt.
+          Ein Studium ist eine Investition von Jahren, und wer das im Hinterkopf behält, trifft eine
+          realistischere Entscheidung.
+        </div>
+
+        <div class="para-card" id="pE" onclick="selPara('E')">
+          <div class="para-nr">Avsnitt –</div>
+          Am Ende geht es darum, diese drei Faktoren zusammenzubringen: Was liegt mir? Was sind
+          meine Noten? Und wo führt das hin? Die ideale Wahl liegt dort, wo alle drei möglichst gut
+          zusammenpassen, auch wenn das selten perfekt gelingt. Wer verschiedene Optionen
+          nebeneinanderlegt und offen bleibt, findet meistens einen Weg, der zu einem passt.
+        </div>
+
+        <div class="para-card" id="pF" onclick="selPara('F')">
+          <div class="para-nr">Avsnitt –</div>
+          Falls die Wahl trotzdem nicht stimmt, ist das kein Grund zur Panik. Viele Studierende
+          wechseln das Fach nach dem ersten oder zweiten Semester, weil sie erst dann merken, was
+          wirklich zu ihnen passt. Eine Entscheidung zu treffen bedeutet nicht, sich für immer
+          festzulegen. Wer einmal angefangen hat, weiß nach kurzer Zeit deutlich mehr als vorher,
+          und das macht die nächste Entscheidung leichter.
+        </div>
+
+      </div>
+    </div>
+
+    <div>
+      <div class="col-label col-label-right">Rekkefølge – plasser avsnittene her</div>
+      <div class="slot-card" id="s2" onclick="fillSlot('s2')">
+        <div class="slot-nr">Avsnitt 2</div>
+        <span class="slot-empty-txt">– ikke plassert –</span>
+      </div>
+      <div class="slot-card" id="s3" onclick="fillSlot('s3')">
+        <div class="slot-nr">Avsnitt 3</div>
+        <span class="slot-empty-txt">– ikke plassert –</span>
+      </div>
+      <div class="slot-card" id="s4" onclick="fillSlot('s4')">
+        <div class="slot-nr">Avsnitt 4</div>
+        <span class="slot-empty-txt">– ikke plassert –</span>
+      </div>
+      <div class="slot-card" id="s5" onclick="fillSlot('s5')">
+        <div class="slot-nr">Avsnitt 5</div>
+        <span class="slot-empty-txt">– ikke plassert –</span>
+      </div>
+      <div class="slot-card" id="s6" onclick="fillSlot('s6')">
+        <div class="slot-nr">Avsnitt 6</div>
+        <span class="slot-empty-txt">– ikke plassert –</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="aktionsleiste">
+    <div class="progress">
+      <div class="dot" id="d1"></div>
+      <div class="dot" id="d2"></div>
+      <div class="dot" id="d3"></div>
+      <div class="dot" id="d4"></div>
+      <div class="dot" id="d5"></div>
+    </div>
+    <button class="btn btn-primary" onclick="pruefen()">Sjekk svar</button>
+    <button class="btn btn-ghost" onclick="zurueck()">Nullstill</button>
+    <span id="fb"></span>
+  </div>
+  <div class="hint" id="hint">Klikk først på et avsnitt til venstre, deretter på en ledig plass til høyre.</div>
+
+  <div class="score-panel" id="scorePanel">
+    <div class="score-title" id="scoreTitle"></div>
+    <div class="score-breakdown">
+      <div class="score-item" id="si2"><div class="si-nr">Avsnitt 2</div><div class="si-icon" id="sii2">–</div></div>
+      <div class="score-item" id="si3"><div class="si-nr">Avsnitt 3</div><div class="si-icon" id="sii3">–</div></div>
+      <div class="score-item" id="si4"><div class="si-nr">Avsnitt 4</div><div class="si-icon" id="sii4">–</div></div>
+      <div class="score-item" id="si5"><div class="si-nr">Avsnitt 5</div><div class="si-icon" id="sii5">–</div></div>
+      <div class="score-item" id="si6"><div class="si-nr">Avsnitt 6</div><div class="si-icon" id="sii6">–</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+var RICHTIG = { s2:'B', s3:'C', s4:'D', s5:'E', s6:'F' };
+
+var TXT = {
+  B: 'Dieser systematische Weg beginnt mit einer einfachen, aber wichtigen Frage: Was macht mir wirklich Spaß? Nicht was die Eltern gut finden oder was Freunde machen, sondern was einen selbst antreibt. Da ein Studium drei bis fünf Jahre dauert, lohnt es sich, diese Frage ernst zu nehmen. Wer sich für ein Fach entscheidet, das ihn kalt lässt, merkt das spätestens im zweiten Semester.',
+  C: 'Interessen allein reichen jedoch nicht. Bei beliebten Studiengängen wie Medizin, Psychologie oder Jura entscheidet der Notendurchschnitt darüber, wer einen Platz bekommt, da die Nachfrage das Angebot bei weitem übersteigt. Wer seinen Traumstudiengang knapp verfehlt, sollte trotzdem nicht aufgeben: Wartesemester, Eignungstests und ähnliche Fächer an anderen Hochschulen sind oft ein zweiter Weg rein.',
+  D: 'Neben Interessen und Noten lohnt es sich außerdem, einen Blick in die Zukunft zu werfen. Welche Berufe gibt es nach dem Studium, und wie sehen die Jobaussichten aus? Obwohl Geld nicht alles ist, ist es völlig legitim zu fragen, was am Ende finanziell herauskommt. Ein Studium ist eine Investition von Jahren, und wer das im Hinterkopf behält, trifft eine realistischere Entscheidung.',
+  E: 'Am Ende geht es darum, diese drei Faktoren zusammenzubringen: Was liegt mir? Was sind meine Noten? Und wo führt das hin? Die ideale Wahl liegt dort, wo alle drei möglichst gut zusammenpassen, auch wenn das selten perfekt gelingt. Wer verschiedene Optionen nebeneinanderlegt und offen bleibt, findet meistens einen Weg, der zu einem passt.',
+  F: 'Falls die Wahl trotzdem nicht stimmt, ist das kein Grund zur Panik. Viele Studierende wechseln das Fach nach dem ersten oder zweiten Semester, weil sie erst dann merken, was wirklich zu ihnen passt. Eine Entscheidung zu treffen bedeutet nicht, sich für immer festzulegen. Wer einmal angefangen hat, weiß nach kurzer Zeit deutlich mehr als vorher, und das macht die nächste Entscheidung leichter.'
+};
+
+var CORRECT_ORDER = ['B','C','D','E','F'];
+var sel   = null;
+var slots = {};
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+function countCorrect(arr) {
+  var n = 0;
+  arr.forEach(function(key, i) { if (key === CORRECT_ORDER[i]) n++; });
+  return n;
+}
+function safeShuffle() {
+  var result, attempts = 0;
+  do { result = shuffle(CORRECT_ORDER); attempts++; }
+  while (countCorrect(result) >= 3 && attempts < 100);
+  return result;
+}
+(function applyShuffleToDOM() {
+  var order = safeShuffle();
+  var container = document.getElementById('para-pool');
+  order.forEach(function(key) {
+    var el = document.getElementById('p' + key);
+    if (el) container.appendChild(el);
+  });
+})();
+
+function updateDots() {
+  var n = Object.keys(slots).length;
+  ['d1','d2','d3','d4','d5'].forEach(function(id, i) {
+    var d = document.getElementById(id);
+    d.classList.remove('set','right','wrong');
+    if (i < n) d.classList.add('set');
+  });
+}
+function setHint(txt) { document.getElementById('hint').textContent = txt; }
+
+function selPara(key) {
+  var el = document.getElementById('p' + key);
+  if (el.classList.contains('p-used')) return;
+  document.querySelectorAll('.para-card').forEach(function(c) { c.classList.remove('p-sel'); });
+  el.classList.add('p-sel');
+  sel = key;
+  setHint('Bra – klikk nå på en ledig plass til høyre.');
+}
+
+function fillSlot(sid) {
+  var slot = document.getElementById(sid);
+  if (slot.classList.contains('s-ok')) return;
+  if (!sel) {
+    if (slots[sid]) {
+      document.getElementById('p' + slots[sid]).classList.remove('p-used');
+      delete slots[sid];
+      slot.classList.remove('s-filled','s-bad');
+      slot.innerHTML = '<div class="slot-nr">Avsnitt ' + sid.replace('s','') + '</div><span class="slot-empty-txt">– ikke plassert –</span>';
+      updateDots();
+      setHint('Avsnittet er fjernet – velg et nytt til venstre.');
+    }
+    return;
+  }
+  if (slots[sid]) { document.getElementById('p' + slots[sid]).classList.remove('p-used'); }
+  slots[sid] = sel;
+  slot.innerHTML = '<div class="slot-nr">Avsnitt ' + sid.replace('s','') + '</div><span>' + TXT[sel] + '</span>';
+  slot.classList.remove('s-bad');
+  slot.classList.add('s-filled');
+  document.getElementById('p' + sel).classList.remove('p-sel');
+  document.getElementById('p' + sel).classList.add('p-used');
+  sel = null;
+  updateDots();
+  var n = Object.keys(slots).length;
+  setHint(n < 5 ? 'Plass ' + n + ' satt – fortsett!' : 'Alle fem plasser er fylt – klikk på «Sjekk svar»!');
+  document.getElementById('fb').innerHTML = '';
+}
+
+function pruefen() {
+  if (Object.keys(slots).length < 5) {
+    document.getElementById('fb').innerHTML = '<span class="fb bad">Plasser alle fem avsnittene først.</span>';
+    return;
+  }
+  var r = 0;
+  ['s2','s3','s4','s5','s6'].forEach(function(sid) {
+    var ok = RICHTIG[sid] === slots[sid];
+    var slot = document.getElementById(sid);
+    slot.classList.remove('s-filled','s-bad');
+    slot.classList.add(ok ? 's-ok' : 's-bad');
+    var nr = sid.replace('s','');
+    var si  = document.getElementById('si'  + nr);
+    var sii = document.getElementById('sii' + nr);
+    si.classList.remove('si-ok','si-bad');
+    si.classList.add(ok ? 'si-ok' : 'si-bad');
+    sii.textContent = ok ? '✓' : '✗';
+    var dotIdx = ['s2','s3','s4','s5','s6'].indexOf(sid);
+    var dot = document.getElementById('d' + (dotIdx + 1));
+    dot.classList.remove('set');
+    dot.classList.add(ok ? 'right' : 'wrong');
+    if (ok) r++;
+  });
+  document.getElementById('fb').innerHTML = r === 5
+    ? '<span class="fb ok">Utmerket! Alle fem avsnittene er i riktig rekkefølge. 🎉</span>'
+    : '<span class="fb bad">' + r + ' av 5 riktige.</span>';
+  document.getElementById('scoreTitle').textContent =
+    r === 5 ? 'Resultat: 5 av 5 – perfekt!'
+    : r >= 3 ? 'Resultat: ' + r + ' av 5 – bra jobbet!'
+    : 'Resultat: ' + r + ' av 5 – prøv igjen!';
+  document.getElementById('scorePanel').classList.add('visible');
+  setHint('');
+  if (r === 5) launchFireworks();
+}
+
+function zurueck() {
+  slots = {}; sel = null;
+  document.querySelectorAll('.para-card').forEach(function(c) { c.classList.remove('p-sel','p-used'); });
+  ['s2','s3','s4','s5','s6'].forEach(function(sid) {
+    var slot = document.getElementById(sid);
+    slot.classList.remove('s-filled','s-ok','s-bad');
+    slot.innerHTML = '<div class="slot-nr">Avsnitt ' + sid.replace('s','') + '</div><span class="slot-empty-txt">– ikke plassert –</span>';
+  });
+  ['d1','d2','d3','d4','d5'].forEach(function(id) { document.getElementById(id).classList.remove('set','right','wrong'); });
+  ['si2','si3','si4','si5','si6'].forEach(function(id) {
+    var si = document.getElementById(id);
+    si.classList.remove('si-ok','si-bad');
+    document.getElementById('sii' + id.replace('si','')).textContent = '–';
+  });
+  document.getElementById('fb').innerHTML = '';
+  document.getElementById('scorePanel').classList.remove('visible');
+  setHint('Klikk først på et avsnitt til venstre, deretter på en ledig plass til høyre.');
+}
+
+function launchFireworks() {
+  var canvas = document.getElementById('fw-canvas');
+  canvas.style.display = 'block';
+  var ctx = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  var particles = [];
+  var colors = ['#2a4d7a','#4a7fa8','#c8820a','#f0c060','#ddeef8','#0f2340','#fff'];
+  function Particle(x, y, color) {
+    this.x = x; this.y = y; this.color = color;
+    var angle = Math.random() * Math.PI * 2;
+    var speed = 2 + Math.random() * 6;
+    this.vx = Math.cos(angle) * speed;
+    this.vy = Math.sin(angle) * speed - 2;
+    this.alpha = 1; this.radius = 2 + Math.random() * 3;
+    this.gravity = 0.12; this.decay = 0.013 + Math.random() * 0.012;
+  }
+  function burst(x, y) {
+    var color = colors[Math.floor(Math.random() * colors.length)];
+    for (var i = 0; i < 60; i++) particles.push(new Particle(x, y, color));
+  }
+  var bursts = [
+    { t: 100, x: .25, y: .25 }, { t: 400, x: .75, y: .20 },
+    { t: 700, x: .50, y: .35 }, { t: 1100, x: .20, y: .40 },
+    { t: 1500, x: .80, y: .30 }, { t: 1900, x: .50, y: .20 }
+  ];
+  var start = performance.now();
+  bursts.forEach(function(b) { setTimeout(function() { burst(canvas.width * b.x, canvas.height * b.y); }, b.t); });
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(function(p) {
+      p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.alpha -= p.decay;
+      ctx.save(); ctx.globalAlpha = Math.max(0, p.alpha);
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = p.color; ctx.fill(); ctx.restore();
+    });
+    particles = particles.filter(function(p) { return p.alpha > 0; });
+    if (performance.now() - start < 4000 || particles.length > 0) { requestAnimationFrame(animate); }
+    else { canvas.style.display = 'none'; ctx.clearRect(0, 0, canvas.width, canvas.height); }
+  }
+  requestAnimationFrame(animate);
+}
+</script>
+</body>
+</html>

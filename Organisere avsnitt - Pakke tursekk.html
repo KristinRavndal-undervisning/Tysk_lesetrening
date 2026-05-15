@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deutsch – Absätze ordnen: Den Rucksack richtig packen</title>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,600;0,700;1,600&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --forest:    #1e4d2b;
+  --forest2:   #16391f;
+  --moss:      #4a7c59;
+  --moss-l:    #d6eadc;
+  --ember:     #c46a1a;
+  --ember-l:   #fdf0e3;
+  --sage:      #f0f5f1;
+  --sage2:     #e2ede5;
+  --ink:       #1a2a1e;
+  --ink-soft:  #4a5e4f;
+  --card:      #fafcfb;
+  --border:    #c8dace;
+  --red:       #b83232;
+  --redl:      #fbeaea;
+  --shadow:    rgba(20,50,28,.09);
+  --white:     #ffffff;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--sage);
+  color: var(--ink);
+  min-height: 100vh;
+  background-image:
+    radial-gradient(ellipse at 90% 5%, rgba(74,124,89,.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 5% 95%, rgba(196,106,26,.07) 0%, transparent 45%);
+}
+
+/* ── HEADER ─────────────────────────────────────────── */
+.page-header {
+  background: linear-gradient(135deg, var(--forest2) 0%, var(--forest) 60%, var(--moss) 100%);
+  color: #fff;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(20,50,28,.35);
+}
+
+/* Topographic lines texture */
+.header-topo {
+  position: absolute;
+  inset: 0;
+  opacity: .07;
+  background-image:
+    repeating-radial-gradient(ellipse at 70% 60%, transparent 0px, transparent 18px, rgba(255,255,255,.8) 19px, transparent 20px),
+    repeating-radial-gradient(ellipse at 30% 40%, transparent 0px, transparent 28px, rgba(255,255,255,.5) 29px, transparent 30px);
+}
+
+/* Pine tree silhouette right side */
+.header-trees {
+  position: absolute;
+  right: 0; bottom: 0;
+  width: 220px; height: 100%;
+  opacity: .12;
+  background-image:
+    /* tree 1 */
+    polygon(50% 0%, 20% 60%, 35% 60%, 15% 85%, 40% 85%, 30% 100%, 70% 100%, 60% 85%, 85% 85%, 65% 60%, 80% 60%);
+}
+
+/* Bottom wave */
+.page-header::after {
+  content: '';
+  display: block;
+  height: 30px;
+  background: var(--sage);
+  clip-path: ellipse(52% 100% at 48% 100%);
+  margin-top: -1px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Ember accent dot */
+.header-accent {
+  position: absolute;
+  width: 90px; height: 90px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,106,26,.6) 0%, rgba(196,106,26,0) 70%);
+  top: -20px; right: 12%;
+  animation: glow 5s ease-in-out infinite;
+}
+@keyframes glow {
+  0%,100% { transform: scale(1);    opacity: .7; }
+  50%      { transform: scale(1.15); opacity: 1; }
+}
+
+.header-inner {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.8rem 1rem 1.9rem 1.4rem;
+  z-index: 1;
+}
+.kurs-tag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.55);
+  margin-bottom: .3rem;
+}
+.page-header h1 {
+  font-family: 'Bitter', serif;
+  font-size: 1.85rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: #fff;
+  text-shadow: 0 2px 12px rgba(0,0,0,.25);
+}
+.page-header h1 em {
+  font-style: italic;
+  color: #a8d5b0;
+}
+.header-meta {
+  margin-top: .35rem;
+  font-size: 12.5px;
+  color: rgba(255,255,255,.55);
+}
+
+/* ── CONTAINER ──────────────────────────────────────── */
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.75rem 1rem 3rem;
+}
+
+/* ── INSTRUCTION BOX ────────────────────────────────── */
+.instr-box {
+  display: flex;
+  gap: .85rem;
+  align-items: flex-start;
+  padding: .9rem 1.1rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--ember);
+  border-radius: 10px;
+  margin-bottom: 1.6rem;
+  box-shadow: 0 2px 10px var(--shadow);
+}
+.instr-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 1px; }
+.instr-text { font-size: 15px; line-height: 1.65; color: var(--ink); }
+.instr-text strong { font-weight: 700; }
+
+/* ── FIXED PARAGRAPH ────────────────────────────────── */
+.fixed-label {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--moss);
+  margin-bottom: .45rem;
+}
+.fixed-label::before {
+  content: '';
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--moss);
+}
+.tag-gitt {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--moss);
+  background: var(--moss-l);
+  padding: .15rem .55rem;
+  border-radius: 20px;
+  border: 1px solid #9fc9aa;
+}
+.fixed-para {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--moss);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  font-size: 15.5px;
+  line-height: 1.85;
+  color: var(--ink);
+  margin-bottom: 1.6rem;
+  box-shadow: 0 2px 10px var(--shadow);
+}
+
+/* ── TWO-COLUMN LAYOUT ──────────────────────────────── */
+.cols {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  gap: 1.1rem;
+  margin-bottom: 1.2rem;
+}
+.col-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: .6rem;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+.col-label-left::before  { content: '◈'; color: var(--ember); }
+.col-label-right::before { content: '◧'; color: var(--ink-soft); }
+
+/* ── PARAGRAPH CARDS ────────────────────────────────── */
+.para-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: .9rem 1rem;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color .15s, background .13s, box-shadow .13s, transform .1s;
+  margin-bottom: .65rem;
+  box-shadow: 0 1px 4px var(--shadow);
+}
+.para-card:last-child { margin-bottom: 0; }
+.para-card:hover {
+  border-color: var(--moss);
+  box-shadow: 0 3px 12px var(--shadow);
+  transform: translateY(-1px);
+}
+.para-card.p-sel {
+  border: 2px solid var(--ember);
+  background: var(--ember-l);
+  box-shadow: 0 0 0 3px rgba(196,106,26,.12), 0 3px 12px var(--shadow);
+  transform: translateY(-1px);
+}
+.para-card.p-used {
+  opacity: .28;
+  pointer-events: none;
+  transform: none;
+}
+.para-nr {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: .3rem;
+}
+
+/* ── SLOTS ──────────────────────────────────────────── */
+.slot-card {
+  border: 1.5px dashed var(--border);
+  border-radius: 10px;
+  padding: .9rem 1rem;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink-soft);
+  background: var(--sage2);
+  cursor: pointer;
+  transition: border-color .15s, background .13s;
+  margin-bottom: .65rem;
+  min-height: 76px;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+}
+.slot-card:last-child { margin-bottom: 0; }
+.slot-card:hover { border-color: var(--moss); background: #d0e4d5; }
+.slot-card.s-filled { border-style: solid; border-color: var(--border); background: var(--card); color: var(--ink); }
+.slot-card.s-filled:hover { border-color: var(--red); background: var(--redl); color: var(--red); }
+.slot-card.s-ok  { border-color: var(--moss) !important; background: var(--moss-l) !important; color: #1a3d22 !important; cursor: default; pointer-events: none; }
+.slot-card.s-bad { border-color: var(--red) !important; background: var(--redl) !important; color: var(--red) !important; }
+.slot-nr { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); flex-shrink: 0; }
+.slot-card.s-ok .slot-nr  { color: var(--moss); }
+.slot-card.s-bad .slot-nr { color: var(--red); }
+.slot-empty-txt { font-style: italic; font-size: 12.5px; }
+
+/* ── ACTION BAR ─────────────────────────────────────── */
+.aktionsleiste {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  flex-wrap: wrap;
+  padding: .85rem 1rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: .5rem;
+  box-shadow: 0 1px 4px var(--shadow);
+}
+.btn {
+  font-family: 'Nunito', sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: .5rem 1.25rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all .15s;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  color: var(--ink);
+}
+.btn:hover { background: var(--sage2); border-color: #9fc9aa; }
+.btn-primary {
+  background: linear-gradient(135deg, var(--moss) 0%, var(--forest) 100%);
+  color: #fff;
+  border-color: var(--forest);
+  box-shadow: 0 2px 8px rgba(30,77,43,.25);
+}
+.btn-primary:hover { background: linear-gradient(135deg, #3d6b4a 0%, #102b16 100%); }
+.btn-ghost { color: var(--ink-soft); }
+
+.hint { font-size: 12.5px; color: var(--ink-soft); padding: .3rem .9rem .45rem; font-style: italic; }
+
+/* ── FEEDBACK ───────────────────────────────────────── */
+.fb { font-size: 13px; padding: .4rem .85rem; border-radius: 6px; }
+.fb.ok  { background: var(--moss-l); color: #1a3d22; border: 1px solid #9fc9aa; }
+.fb.bad { background: var(--redl);   color: var(--red); border: 1px solid #f0b4b4; }
+
+/* ── PROGRESS DOTS ──────────────────────────────────── */
+.progress { display: flex; gap: 5px; align-items: center; margin-right: .3rem; }
+.dot { width: 9px; height: 9px; border-radius: 50%; background: var(--border); transition: background .2s; }
+.dot.set   { background: var(--ember); }
+.dot.right { background: var(--moss); }
+.dot.wrong { background: var(--red); }
+
+/* ── SCORE PANEL ────────────────────────────────────── */
+.score-panel { display: none; margin-top: 1rem; padding: 1.1rem 1.3rem; background: var(--card); border: 1px solid var(--border); border-radius: 10px; box-shadow: 0 2px 10px var(--shadow); }
+.score-panel.visible { display: block; }
+.score-title { font-family: 'Bitter', serif; font-size: 1.1rem; font-weight: 700; margin-bottom: .5rem; }
+.score-breakdown { display: grid; grid-template-columns: repeat(5, 1fr); gap: .5rem; margin-top: .75rem; }
+.score-item { text-align: center; padding: .5rem .3rem; border-radius: 8px; font-size: 12px; border: 1px solid var(--border); background: var(--sage2); }
+.score-item .si-nr { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: .2rem; }
+.score-item.si-ok  { background: var(--moss-l); border-color: #9fc9aa; }
+.score-item.si-bad { background: var(--redl);   border-color: #f0b4b4; }
+.score-item .si-icon { font-size: 1.1rem; }
+
+/* ── FIREWORKS ──────────────────────────────────────── */
+#fw-canvas { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; display: none; }
+
+/* ── RESPONSIVE ─────────────────────────────────────── */
+@media (max-width: 620px) {
+  .cols { grid-template-columns: 1fr; }
+  .score-breakdown { grid-template-columns: repeat(3, 1fr); }
+  .page-header h1 { font-size: 1.45rem; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="fw-canvas"></canvas>
+
+<header class="page-header">
+  <div class="header-topo"></div>
+  <div class="header-accent"></div>
+  <div class="header-inner">
+    <div class="kurs-tag">Deutsch · Leseverstehen</div>
+    <h1>Den Rucksack <em>richtig packen</em></h1>
+    <div class="header-meta">Aufgabe: Absätze in die richtige Reihenfolge bringen</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="instr-box">
+    <div class="instr-icon">🎒</div>
+    <div class="instr-text">
+      <strong>Slik gjør du det:</strong><br>
+      <strong>Klikk</strong> på et avsnitt til venstre for å velge det, og klikk deretter på riktig plass til høyre.
+      Vil du angre? Klikk på et avsnitt du allerede har plassert, så kommer det tilbake til venstre.
+    </div>
+  </div>
+
+  <div class="fixed-label">Avsnitt 1 <span class="tag-gitt">✓ Gitt</span></div>
+  <div class="fixed-para">
+    Wer zum ersten Mal mit Hängematte und Schlafsack in der norwegischen Natur übernachtet, steht
+    vor einer wichtigen Frage: Was kommt in den Rucksack, und wie packt man ihn richtig? Die Antwort
+    darauf entscheidet nicht nur über den Komfort, sondern auch über die Sicherheit auf dem Berg. Der
+    erste Schritt beginnt deshalb schon zu Hause, bevor man das Haus überhaupt verlässt.
+  </div>
+
+  <div class="cols">
+    <div>
+      <div class="col-label col-label-left">Avsnitt – tilfeldig rekkefølge</div>
+      <div id="para-pool">
+
+        <div class="para-card" id="pB" onclick="selPara('B')">
+          <div class="para-nr">Avsnitt –</div>
+          Dieser erste Schritt bedeutet, das Grundprinzip zu verstehen. Schwere und selten benötigte Ausrüstung
+          gehört nach unten. Das betrifft vor allem die Hängematte, den Schlafsack und ein eventuelles
+          Tarp als Regenschutz. Diese Gegenstände braucht man erst am Abend, daher können sie tief im
+          Rucksack verstaut werden. Wichtig dabei ist, sie in wasserdichte Packsäcke einzupacken, da
+          Regen in Norwegen jederzeit und ohne Vorwarnung kommen kann.
+        </div>
+
+        <div class="para-card" id="pC" onclick="selPara('C')">
+          <div class="para-nr">Avsnitt –</div>
+          Darüber, also in der Mitte des Rucksacks, kommen Lebensmittel, Kochausrüstung und Kleidung.
+          Für eine Sommertour empfiehlt sich leichte Merinowolle statt Baumwolle, da Baumwolle beim
+          Schwitzen feucht bleibt und den Träger auskühlt. Auch Regenjacke und Regenhose sollten zwar griffbereit,
+          aber nicht ganz oben liegen. Wasserdichte Packsäcke sind hier ebenfalls sinnvoll, besonders für
+          Ersatzkleidung und Schlafsocken.
+        </div>
+
+        <div class="para-card" id="pD" onclick="selPara('D')">
+          <div class="para-nr">Avsnitt –</div>
+          Was hingegen ganz oben in den Rucksack gehört, sind die Dinge, die man unterwegs schnell
+          zur Hand haben muss: Karte und Kompass, Sonnencreme, Snacks und eine Wasserflasche. In die
+          Seitentaschen kommen Trinkflasche und Wanderstöcke. Die Stirnlampe gehört ebenfalls nach
+          oben, auch im Sommer, da man auf dem Berg schnell in unerwartete Dunkelheit geraten kann.
+          Außerdem sollte das Erste-Hilfe-Set immer leicht erreichbar sein.
+        </div>
+
+        <div class="para-card" id="pE" onclick="selPara('E')">
+          <div class="para-nr">Avsnitt –</div>
+          Zur richtigen Planung gehört jedoch mehr als nur das Verstauen von Snacks und Wasserflasche.
+          Denn was man isst und trinkt, beeinflusst direkt, wie weit und wie sicher man unterwegs ist.
+          Energiedichte Lebensmittel wie Nüsse, Haferflocken und getrocknetes Obst sind ideal: Sie
+          wiegen wenig, brauchen keine Kühlung und liefern ausdauernde Energie. Wer Gewicht sparen
+          möchte, hat in Norwegen einen großen Vorteil: Das Wasser in Bächen und Seen ist in der Regel
+          sauber und trinkbar. Dennoch sollte man immer etwas Wasser dabei haben, besonders in
+          unbekanntem Gelände, wo die nächste Quelle unsicher ist. Wer Ernährung und Flüssigkeit gut
+          plant, merkt schnell, dass ein leichter Rucksack nicht nur den Rücken schont.
+        </div>
+
+        <div class="para-card" id="pF" onclick="selPara('F')">
+          <div class="para-nr">Avsnitt –</div>
+          Zum Thema Gewicht gehört auch die Frage, was man besser zu Hause lässt. Dicke Jeans,
+          Glasflaschen, mehrere Bücher und unnötige Elektronik belasten den Rucksack unnötig.
+          Als Faustregel gilt: Der Rucksack sollte nicht mehr als ein Viertel des eigenen Körpergewichts
+          wiegen. Wer leicht unterwegs ist, kommt weiter, genießt mehr und kommt sicherer ans Ziel.
+          Die Natur braucht keine Statussymbole, sie belohnt Vorbereitung.
+        </div>
+
+      </div>
+    </div>
+
+    <div>
+      <div class="col-label col-label-right">Rekkefølge – plasser avsnittene her</div>
+
+      <div class="slot-card" id="s2" onclick="fillSlot('s2')">
+        <div class="slot-nr">Avsnitt 2</div>
+        <span class="slot-empty-txt">– ikke plassert –</span>
+      </div>
+      <div class="slot-card" id="s3" onclick="fillSlot('s3')">
+        <div class="slot-nr">Avsnitt 3</div>
+        <span class="slot-empty-txt">– ikke plassert –</span>
+      </div>
+      <div class="slot-card" id="s4" onclick="fillSlot('s4')">
+        <div class="slot-nr">Avsnitt 4</div>
+        <span class="slot-empty-txt">– ikke plassert –</span>
+      </div>
+      <div class="slot-card" id="s5" onclick="fillSlot('s5')">
+        <div class="slot-nr">Avsnitt 5</div>
+        <span class="slot-empty-txt">– ikke plassert –</span>
+      </div>
+      <div class="slot-card" id="s6" onclick="fillSlot('s6')">
+        <div class="slot-nr">Avsnitt 6</div>
+        <span class="slot-empty-txt">– ikke plassert –</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="aktionsleiste">
+    <div class="progress">
+      <div class="dot" id="d1"></div>
+      <div class="dot" id="d2"></div>
+      <div class="dot" id="d3"></div>
+      <div class="dot" id="d4"></div>
+      <div class="dot" id="d5"></div>
+    </div>
+    <button class="btn btn-primary" onclick="pruefen()">Sjekk svar</button>
+    <button class="btn btn-ghost" onclick="zurueck()">Nullstill</button>
+    <span id="fb"></span>
+  </div>
+  <div class="hint" id="hint">Klikk først på et avsnitt til venstre, deretter på en ledig plass til høyre.</div>
+
+  <div class="score-panel" id="scorePanel">
+    <div class="score-title" id="scoreTitle"></div>
+    <div class="score-breakdown">
+      <div class="score-item" id="si2"><div class="si-nr">Avsnitt 2</div><div class="si-icon" id="sii2">–</div></div>
+      <div class="score-item" id="si3"><div class="si-nr">Avsnitt 3</div><div class="si-icon" id="sii3">–</div></div>
+      <div class="score-item" id="si4"><div class="si-nr">Avsnitt 4</div><div class="si-icon" id="sii4">–</div></div>
+      <div class="score-item" id="si5"><div class="si-nr">Avsnitt 5</div><div class="si-icon" id="sii5">–</div></div>
+      <div class="score-item" id="si6"><div class="si-nr">Avsnitt 6</div><div class="si-icon" id="sii6">–</div></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────
+// Correct order: B(2) → C(3) → D(4) → E(5) → F(6)
+var RICHTIG = { s2:'B', s3:'C', s4:'D', s5:'E', s6:'F' };
+
+var TXT = {
+  B: 'Dieser erste Schritt bedeutet, das Grundprinzip zu verstehen. Schwere und selten benötigte Ausrüstung gehört nach unten. Das betrifft vor allem die Hängematte, den Schlafsack und ein eventuelles Tarp als Regenschutz. Diese Gegenstände braucht man erst am Abend, daher können sie tief im Rucksack verstaut werden. Wichtig dabei ist, sie in wasserdichte Packsäcke einzupacken, da Regen in Norwegen jederzeit und ohne Vorwarnung kommen kann.',
+  C: 'Darüber, also in der Mitte des Rucksacks, kommen Lebensmittel, Kochausrüstung und Kleidung. Für eine Sommertour empfiehlt sich leichte Merinowolle statt Baumwolle, da Baumwolle beim Schwitzen feucht bleibt und den Träger auskühlt. Auch Regenjacke und Regenhose sollten zwar griffbereit, aber nicht ganz oben liegen. Wasserdichte Packsäcke sind hier ebenfalls sinnvoll, besonders für Ersatzkleidung und Schlafsocken.',
+  D: 'Was hingegen ganz oben in den Rucksack gehört, sind die Dinge, die man unterwegs schnell zur Hand haben muss: Karte und Kompass, Sonnencreme, Snacks und eine Wasserflasche. Wanderstöcke lassen sich außen am Rucksack befestigen. Die Stirnlampe gehört ebenfalls nach oben, auch im Sommer, da man auf dem Berg schnell in unerwartete Dunkelheit geraten kann. Außerdem sollte das Erste-Hilfe-Set immer leicht erreichbar sein.',
+  E: 'Zur richtigen Planung gehört jedoch mehr als nur das Verstauen von Snacks und Wasserflasche. Denn was man isst und trinkt, beeinflusst direkt, wie weit und wie sicher man unterwegs ist. Energiedichte Lebensmittel wie Nüsse, Haferflocken und getrocknetes Obst sind ideal: Sie wiegen wenig, brauchen keine Kühlung und liefern ausdauernde Energie. Wer Gewicht sparen möchte, hat in Norwegen einen großen Vorteil: Das Wasser in Bächen und Seen ist in der Regel sauber und trinkbar. Dennoch sollte man immer etwas Wasser dabei haben, besonders in unbekanntem Gelände, wo die nächste Quelle unsicher ist. Wer Ernährung und Flüssigkeit gut plant, merkt schnell, dass ein leichter Rucksack nicht nur den Rücken schont.',
+  F: 'Zum Thema Gewicht gehört auch die Frage, was man besser zu Hause lässt. Dicke Jeans, Glasflaschen, mehrere Bücher und unnötige Elektronik belasten den Rucksack unnötig. Als Faustregel gilt: Der Rucksack sollte nicht mehr als ein Viertel des eigenen Körpergewichts wiegen. Wer leicht unterwegs ist, kommt weiter, genießt mehr und kommt sicherer ans Ziel. Die Natur braucht keine Statussymbole, sie belohnt Vorbereitung.'
+};
+
+var CORRECT_ORDER = ['B','C','D','E','F'];
+
+// ── STATE ─────────────────────────────────────────────────────────────
+var sel   = null;
+var slots = {};
+
+// ── SHUFFLE ───────────────────────────────────────────────────────────
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+function countCorrect(arr) {
+  var n = 0;
+  arr.forEach(function(key, i) { if (key === CORRECT_ORDER[i]) n++; });
+  return n;
+}
+function safeShuffle() {
+  var result, attempts = 0;
+  do { result = shuffle(CORRECT_ORDER); attempts++; }
+  while (countCorrect(result) >= 3 && attempts < 100);
+  return result;
+}
+(function applyShuffleToDOM() {
+  var order = safeShuffle();
+  var container = document.getElementById('para-pool');
+  order.forEach(function(key) {
+    var el = document.getElementById('p' + key);
+    if (el) container.appendChild(el);
+  });
+})();
+
+// ── HELPERS ───────────────────────────────────────────────────────────
+function updateDots() {
+  var n = Object.keys(slots).length;
+  ['d1','d2','d3','d4','d5'].forEach(function(id, i) {
+    var d = document.getElementById(id);
+    d.classList.remove('set','right','wrong');
+    if (i < n) d.classList.add('set');
+  });
+}
+function setHint(txt) { document.getElementById('hint').textContent = txt; }
+
+// ── SELECT ────────────────────────────────────────────────────────────
+function selPara(key) {
+  var el = document.getElementById('p' + key);
+  if (el.classList.contains('p-used')) return;
+  document.querySelectorAll('.para-card').forEach(function(c) { c.classList.remove('p-sel'); });
+  el.classList.add('p-sel');
+  sel = key;
+  setHint('Bra – klikk nå på en ledig plass til høyre.');
+}
+
+// ── FILL SLOT ─────────────────────────────────────────────────────────
+function fillSlot(sid) {
+  var slot = document.getElementById(sid);
+  if (slot.classList.contains('s-ok')) return;
+
+  if (!sel) {
+    if (slots[sid]) {
+      document.getElementById('p' + slots[sid]).classList.remove('p-used');
+      delete slots[sid];
+      slot.classList.remove('s-filled','s-bad');
+      slot.innerHTML = '<div class="slot-nr">Avsnitt ' + sid.replace('s','') + '</div><span class="slot-empty-txt">– ikke plassert –</span>';
+      updateDots();
+      setHint('Avsnittet er fjernet – velg et nytt til venstre.');
+    }
+    return;
+  }
+
+  if (slots[sid]) {
+    document.getElementById('p' + slots[sid]).classList.remove('p-used');
+  }
+
+  slots[sid] = sel;
+  slot.innerHTML = '<div class="slot-nr">Avsnitt ' + sid.replace('s','') + '</div><span>' + TXT[sel] + '</span>';
+  slot.classList.remove('s-bad');
+  slot.classList.add('s-filled');
+
+  document.getElementById('p' + sel).classList.remove('p-sel');
+  document.getElementById('p' + sel).classList.add('p-used');
+  sel = null;
+
+  updateDots();
+  var n = Object.keys(slots).length;
+  setHint(n < 5 ? 'Plass ' + n + ' satt – fortsett!' : 'Alle fem plasser er fylt – klikk på «Sjekk svar»!');
+  document.getElementById('fb').innerHTML = '';
+}
+
+// ── PRÜFEN ────────────────────────────────────────────────────────────
+function pruefen() {
+  if (Object.keys(slots).length < 5) {
+    document.getElementById('fb').innerHTML = '<span class="fb bad">Plasser alle fem avsnittene først.</span>';
+    return;
+  }
+
+  var r = 0;
+  ['s2','s3','s4','s5','s6'].forEach(function(sid) {
+    var ok = RICHTIG[sid] === slots[sid];
+    var slot = document.getElementById(sid);
+    slot.classList.remove('s-filled','s-bad');
+    slot.classList.add(ok ? 's-ok' : 's-bad');
+
+    var nr = sid.replace('s','');
+    var si  = document.getElementById('si'  + nr);
+    var sii = document.getElementById('sii' + nr);
+    si.classList.remove('si-ok','si-bad');
+    si.classList.add(ok ? 'si-ok' : 'si-bad');
+    sii.textContent = ok ? '✓' : '✗';
+
+    var dotIdx = ['s2','s3','s4','s5','s6'].indexOf(sid);
+    var dot = document.getElementById('d' + (dotIdx + 1));
+    dot.classList.remove('set');
+    dot.classList.add(ok ? 'right' : 'wrong');
+
+    if (ok) r++;
+  });
+
+  document.getElementById('fb').innerHTML = r === 5
+    ? '<span class="fb ok">Utmerket! Alle fem avsnittene er i riktig rekkefølge. 🎉</span>'
+    : '<span class="fb bad">' + r + ' av 5 riktige.</span>';
+
+  document.getElementById('scoreTitle').textContent =
+    r === 5 ? 'Resultat: 5 av 5 – perfekt!'
+    : r >= 3 ? 'Resultat: ' + r + ' av 5 – bra jobbet!'
+    : 'Resultat: ' + r + ' av 5 – prøv igjen!';
+
+  document.getElementById('scorePanel').classList.add('visible');
+  setHint('');
+
+  if (r === 5) launchFireworks();
+}
+
+// ── RESET ─────────────────────────────────────────────────────────────
+function zurueck() {
+  slots = {}; sel = null;
+  document.querySelectorAll('.para-card').forEach(function(c) { c.classList.remove('p-sel','p-used'); });
+  ['s2','s3','s4','s5','s6'].forEach(function(sid) {
+    var slot = document.getElementById(sid);
+    slot.classList.remove('s-filled','s-ok','s-bad');
+    slot.innerHTML = '<div class="slot-nr">Avsnitt ' + sid.replace('s','') + '</div><span class="slot-empty-txt">– ikke plassert –</span>';
+  });
+  ['d1','d2','d3','d4','d5'].forEach(function(id) { document.getElementById(id).classList.remove('set','right','wrong'); });
+  ['si2','si3','si4','si5','si6'].forEach(function(id) {
+    var si = document.getElementById(id);
+    si.classList.remove('si-ok','si-bad');
+    document.getElementById('sii' + id.replace('si','')).textContent = '–';
+  });
+  document.getElementById('fb').innerHTML = '';
+  document.getElementById('scorePanel').classList.remove('visible');
+  setHint('Klikk først på et avsnitt til venstre, deretter på en ledig plass til høyre.');
+}
+
+// ── FIREWORKS ─────────────────────────────────────────────────────────
+function launchFireworks() {
+  var canvas = document.getElementById('fw-canvas');
+  canvas.style.display = 'block';
+  var ctx = canvas.getContext('2d');
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var particles = [];
+  var colors = ['#4a7c59','#a8d5b0','#c46a1a','#ffe0a0','#1e4d2b','#d6eadc','#fff'];
+
+  function Particle(x, y, color) {
+    this.x = x; this.y = y; this.color = color;
+    var angle = Math.random() * Math.PI * 2;
+    var speed = 2 + Math.random() * 6;
+    this.vx = Math.cos(angle) * speed;
+    this.vy = Math.sin(angle) * speed - 2;
+    this.alpha = 1;
+    this.radius = 2 + Math.random() * 3;
+    this.gravity = 0.12;
+    this.decay = 0.013 + Math.random() * 0.012;
+  }
+
+  function burst(x, y) {
+    var color = colors[Math.floor(Math.random() * colors.length)];
+    for (var i = 0; i < 60; i++) particles.push(new Particle(x, y, color));
+  }
+
+  var bursts = [
+    { t: 100,  x: .25, y: .25 },
+    { t: 400,  x: .75, y: .20 },
+    { t: 700,  x: .50, y: .35 },
+    { t: 1100, x: .20, y: .40 },
+    { t: 1500, x: .80, y: .30 },
+    { t: 1900, x: .50, y: .20 },
+  ];
+  var start = performance.now();
+  bursts.forEach(function(b) {
+    setTimeout(function() { burst(canvas.width * b.x, canvas.height * b.y); }, b.t);
+  });
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(function(p) {
+      p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.alpha -= p.decay;
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, p.alpha);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.fill();
+      ctx.restore();
+    });
+    particles = particles.filter(function(p) { return p.alpha > 0; });
+    if (performance.now() - start < 4000 || particles.length > 0) {
+      requestAnimationFrame(animate);
+    } else {
+      canvas.style.display = 'none';
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  }
+  requestAnimationFrame(animate);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deutsch – Absätze ordnen: Ein Tag in der Schule</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper:    #faf6ee;
+  --paper2:   #f3ede0;
+  --ink:      #2b2318;
+  --ink-soft: #6b5d4f;
+  --rule:     #e0d6c4;
+  --accent:   #8b4513;       /* brun – «blyant» */
+  --accent2:  #3a6645;       /* grønn – korrekt */
+  --accent2l: #dff0e6;
+  --red:      #b83232;
+  --redl:     #fbe8e8;
+  --amber:    #b87a20;
+  --bordeaux: #5c1a1a;
+  --shadow:   rgba(43,35,24,.1);
+  --card:     #fffdf7;
+  --border:   #d4c9b5;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  /* Subtle lined-paper background */
+  background-image:
+    repeating-linear-gradient(
+      transparent,
+      transparent 31px,
+      var(--rule) 31px,
+      var(--rule) 32px
+    );
+  background-attachment: fixed;
+}
+
+/* ── HEADER ─────────────────────────────────────────── */
+.page-header {
+  background: var(--accent);
+  background-image: linear-gradient(135deg, #8b4513 0%, #6b3310 100%);
+  color: #fff;
+  padding: 1.6rem 2rem 1.4rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 3px 12px var(--shadow);
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    0deg, transparent, transparent 11px,
+    rgba(255,255,255,.05) 11px, rgba(255,255,255,.05) 12px
+  );
+}
+.page-header::after {
+  content: '';
+  position: absolute;
+  left: 3.2rem;
+  top: 0; bottom: 0;
+  width: 2px;
+  background: rgba(255,200,150,.35);
+}
+.header-inner {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 2.2rem;
+}
+.kurs-tag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.65);
+  margin-bottom: .3rem;
+}
+.page-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: #fff;
+}
+.page-header h1 em {
+  font-style: italic;
+  color: #ffd6a5;
+}
+.header-meta {
+  margin-top: .35rem;
+  font-size: 12.5px;
+  color: rgba(255,255,255,.6);
+}
+
+/* ── CONTAINER ──────────────────────────────────────── */
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.75rem 1rem 3rem;
+}
+
+/* ── INSTRUCTION BOX ────────────────────────────────── */
+.instr-box {
+  display: flex;
+  gap: .85rem;
+  align-items: flex-start;
+  padding: .9rem 1.1rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 7px;
+  margin-bottom: 1.6rem;
+  box-shadow: 0 1px 6px var(--shadow);
+}
+.instr-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.instr-text {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--ink);
+}
+.instr-text strong { font-weight: 600; }
+
+/* ── FIXED PARAGRAPH ────────────────────────────────── */
+.fixed-label {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  margin-bottom: .45rem;
+}
+.fixed-label::before {
+  content: '';
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--accent2);
+}
+.fixed-para {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent2);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  font-size: 15.5px;
+  line-height: 1.85;
+  color: var(--ink);
+  margin-bottom: 1.6rem;
+  box-shadow: 0 2px 10px var(--shadow);
+  position: relative;
+}
+.fixed-para-UNUSED::after {
+  content: '✓ Gitt';
+  position: absolute;
+  top: .6rem; right: .85rem;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  background: var(--accent2l);
+  padding: .15rem .55rem;
+  border-radius: 20px;
+}
+
+/* ── VORGEGEBEN TAG ─────────────────────────────────── */
+.tag-gitt {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--accent2);
+  background: var(--accent2l);
+  padding: .15rem .55rem;
+  border-radius: 20px;
+  border: 1px solid #acd5ba;
+}
+
+/* ── TWO-COLUMN LAYOUT ──────────────────────────────── */
+.cols {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  gap: 1.1rem;
+  margin-bottom: 1.2rem;
+}
+
+.col-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: .6rem;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+}
+.col-label-left::before { content: '◈'; color: var(--accent); }
+.col-label-right::before { content: '◧'; color: var(--ink-soft); }
+
+/* ── PARAGRAPH CARDS (left) ─────────────────────────── */
+.para-card {
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  padding: .9rem 1rem;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color .15s, background .13s, box-shadow .13s, transform .1s;
+  margin-bottom: .65rem;
+  position: relative;
+  box-shadow: 0 1px 4px var(--shadow);
+}
+.para-card:last-child { margin-bottom: 0; }
+.para-card:hover {
+  border-color: #b09a80;
+  box-shadow: 0 3px 10px var(--shadow);
+  transform: translateY(-1px);
+}
+.para-card.p-sel {
+  border: 2px solid var(--accent);
+  background: #fdf0e4;
+  box-shadow: 0 0 0 3px rgba(139,69,19,.12), 0 3px 10px var(--shadow);
+  transform: translateY(-1px);
+}
+.para-card.p-used {
+  opacity: .28;
+  pointer-events: none;
+  transform: none;
+}
+.para-nr {
+  font-family: 'Playfair Display', serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: .3rem;
+}
+
+/* ── SLOTS (right) ──────────────────────────────────── */
+.slot-card {
+  border: 1.5px dashed var(--border);
+  border-radius: 9px;
+  padding: .9rem 1rem;
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--ink-soft);
+  background: var(--paper2);
+  cursor: pointer;
+  transition: border-color .15s, background .13s;
+  margin-bottom: .65rem;
+  min-height: 76px;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+}
+.slot-card:last-child { margin-bottom: 0; }
+.slot-card:hover { border-color: #b09a80; background: #ede7d8; }
+.slot-card.s-filled {
+  border-style: solid;
+  border-color: var(--border);
+  background: var(--card);
+  color: var(--ink);
+  cursor: pointer;
+}
+.slot-card.s-filled:hover {
+  border-color: var(--red);
+  background: var(--redl);
+  color: var(--red);
+}
+.slot-card.s-ok {
+  border-color: var(--accent2) !important;
+  background: var(--accent2l) !important;
+  color: #1d4d2c !important;
+  cursor: default;
+  pointer-events: none;
+}
+.slot-card.s-bad {
+  border-color: var(--red) !important;
+  background: var(--redl) !important;
+  color: var(--bordeaux) !important;
+}
+.slot-nr {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  flex-shrink: 0;
+}
+.slot-card.s-ok .slot-nr { color: var(--accent2); }
+.slot-card.s-bad .slot-nr { color: var(--red); }
+.slot-empty-txt { font-style: italic; font-size: 12.5px; }
+
+/* ── ACTION BAR ─────────────────────────────────────── */
+.aktionsleiste {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  flex-wrap: wrap;
+  padding: .85rem 1rem;
+  background: var(--paper2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: .5rem;
+  box-shadow: 0 1px 4px var(--shadow);
+}
+.btn {
+  font-family: 'Source Sans 3', sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: .5rem 1.25rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all .15s;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  color: var(--ink);
+}
+.btn:hover { background: #ede7d9; border-color: #b09a80; }
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.btn-primary:hover { background: #6b3310; border-color: #6b3310; }
+.btn-ghost { color: var(--ink-soft); }
+
+.hint {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  padding: .3rem .9rem .45rem;
+  font-style: italic;
+}
+
+/* ── FEEDBACK ───────────────────────────────────────── */
+.fb { font-size: 13px; padding: .4rem .85rem; border-radius: 5px; }
+.fb.ok  { background: var(--accent2l); color: #1a4429; border: 1px solid #acd5ba; }
+.fb.bad { background: var(--redl);     color: var(--bordeaux); border: 1px solid #f0b4b4; }
+
+/* ── PROGRESS DOTS ──────────────────────────────────── */
+.progress {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  margin-right: .3rem;
+}
+.dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background .2s;
+}
+.dot.set    { background: var(--amber); }
+.dot.right  { background: var(--accent2); }
+.dot.wrong  { background: var(--red); }
+
+/* ── SCORE PANEL ────────────────────────────────────── */
+.score-panel {
+  display: none;
+  margin-top: 1rem;
+  padding: 1.1rem 1.3rem;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  box-shadow: 0 2px 10px var(--shadow);
+}
+.score-panel.visible { display: block; }
+.score-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: .5rem;
+}
+.score-breakdown {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: .5rem;
+  margin-top: .75rem;
+}
+.score-item {
+  text-align: center;
+  padding: .5rem .3rem;
+  border-radius: 6px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  background: var(--paper2);
+}
+.score-item .si-nr {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: .2rem;
+}
+.score-item.si-ok  { background: var(--accent2l); border-color: #acd5ba; }
+.score-item.si-bad { background: var(--redl);     border-color: #f0b4b4; }
+.score-item .si-icon { font-size: 1.1rem; }
+
+/* ── RESPONSIVE ─────────────────────────────────────── */
+@media (max-width: 620px) {
+  .cols { grid-template-columns: 1fr; }
+  .score-breakdown { grid-template-columns: repeat(3, 1fr); }
+  .page-header h1 { font-size: 1.4rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="header-inner">
+    <div class="kurs-tag">Deutsch · Leseverstehen</div>
+    <h1>Ein Tag in <em>der Schule</em></h1>
+    <div class="header-meta">Aufgabe: Absätze in die richtige Reihenfolge bringen</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- INSTRUCTION -->
+  <div class="instr-box">
+    <div class="instr-icon">📋</div>
+    <div class="instr-text">
+      <strong>Slik gjør du det:</strong><br>
+      <strong>Klikk</strong> på et avsnitt til venstre for å velge det, og klikk deretter på riktig plass til høyre.
+      Vil du angre? Klikk på et avsnitt du allerede har plassert, så kommer det tilbake til venstre.
+    </div>
+  </div>
+
+  <!-- FIXED PARAGRAPH -->
+  <div class="fixed-label">Avsnitt 1 <span class="tag-gitt">✓ Gitt</span></div>
+  <div class="fixed-para">
+    Der Wecker klingelt um halb sieben, und Lena streckt sich schlaftrunken im Bett aus. Heute
+    ist Montag, der erste Schultag nach den Herbstferien. Sie frühstückt schnell, packt ihre
+    Schultasche und macht sich auf den Weg. Draußen ist es noch dunkel, und ein kalter Wind
+    weht durch die leeren Straßen. Lena zieht die Jacke enger und denkt an den langen Tag,
+    der vor ihr liegt.
+  </div>
+
+  <!-- TWO COLUMNS -->
+  <div class="cols">
+    <div id="para-pool">
+      <div class="col-label col-label-left">Avsnitt – tilfeldig rekkefølge</div>
+
+      <div class="para-card" id="pC" onclick="selPara('C')">
+        <div class="para-nr">Avsnitt –</div>
+        Nach zwei weiteren Stunden läutet es zur Pause. Sie setzt sich mit ihrer besten Freundin Maja auf eine Bank im
+        Schulhof. Die beiden reden über das Wochenende und über den anstehenden
+        Klassenausflug nach Dresden. Obwohl die Pause nur zwanzig Minuten dauert, tut die
+        frische Luft gut. Als die Glocke läutet, geht Lena etwas ruhiger in die nächste Stunde –
+        Deutsch, worauf sie sich eigentlich freut.
+      </div>
+
+      <div class="para-card" id="pE" onclick="selPara('E')">
+        <div class="para-nr">Avsnitt –</div>
+        Auf dem Heimweg steckt Lena sich die Kopfhörer in die Ohren und geht den Tag im
+        Kopf noch einmal durch. Ein Gedicht aus dem Deutschunterricht geht ihr nicht aus dem
+        Kopf, denn es hat sie mehr berührt, als sie erwartet hatte. Sie beschließt, es heute Abend
+        noch einmal in Ruhe zu lesen. Müde, aber nicht unzufrieden, biegt sie in ihre Straße ein.
+      </div>
+
+      <div class="para-card" id="pD" onclick="selPara('D')">
+        <div class="para-nr">Avsnitt –</div>
+        Die letzten beiden Stunden sind Chemie. Herr Brandt erklärt ein Experiment zur
+        Reaktion von Säuren und Basen, das die Schülerinnen und Schüler selbst durchführen
+        sollen. Lena arbeitet sorgfältig und notiert alle Beobachtungen in ihr Heft. Als das
+        Ergebnis mit der Theorie übereinstimmt, ist sie ehrlich stolz, denn Chemie fällt ihr
+        nämlich nicht immer leicht.
+      </div>
+
+      <div class="para-card" id="pB" onclick="selPara('B')">
+        <div class="para-nr">Avsnitt –</div>
+        Die ersten beiden Stunden sind Mathematik. Frau Sommer bespricht die Ergebnisse des
+        letzten Tests und erklärt dabei, wo die häufigsten Fehler gemacht wurden. Lena hat
+        acht von zehn Punkten, nicht perfekt, aber sie ist zufrieden. Anschließend bekommen
+        alle eine neue Aufgabe zur Prozentrechnung, die Lena nachdenklich macht. Sie versteht das
+        Prinzip, aber sie fühlt sich bei den Rechenwegen noch unsicher.
+      </div>
+
+      <div class="para-card" id="pF" onclick="selPara('F')">
+        <div class="para-nr">Avsnitt –</div>
+        Nach der letzten Stunde treffen sich Lena und ein paar Klassenkameraden vor dem
+        Schuleingang. Sie reden kurz über das Chemiexperiment und lachen über einen Witz,
+        den Jonas erzählt. Nach ein paar Minuten verabschieden sie sich. Einige nehmen den
+        Bus, Lena geht zu Fuß.
+      </div>
+
+    </div>
+
+    <!-- RIGHT: numbered slots -->
+    <div>
+      <div class="col-label col-label-right">Rekkefølge – plasser avsnittene her</div>
+
+      <div class="slot-card" id="s2" onclick="fillSlot('s2')">
+        <div class="slot-nr">Avsnitt 2</div>
+        <span class="slot-empty-txt">– ikke plassert –</span>
+      </div>
+      <div class="slot-card" id="s3" onclick="fillSlot('s3')">
+        <div class="slot-nr">Avsnitt 3</div>
+        <span class="slot-empty-txt">– ikke plassert –</span>
+      </div>
+      <div class="slot-card" id="s4" onclick="fillSlot('s4')">
+        <div class="slot-nr">Avsnitt 4</div>
+        <span class="slot-empty-txt">– ikke plassert –</span>
+      </div>
+      <div class="slot-card" id="s5" onclick="fillSlot('s5')">
+        <div class="slot-nr">Avsnitt 5</div>
+        <span class="slot-empty-txt">– ikke plassert –</span>
+      </div>
+      <div class="slot-card" id="s6" onclick="fillSlot('s6')">
+        <div class="slot-nr">Avsnitt 6</div>
+        <span class="slot-empty-txt">– ikke plassert –</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ACTION BAR -->
+  <div class="aktionsleiste">
+    <div class="progress">
+      <div class="dot" id="d1"></div>
+      <div class="dot" id="d2"></div>
+      <div class="dot" id="d3"></div>
+      <div class="dot" id="d4"></div>
+      <div class="dot" id="d5"></div>
+    </div>
+    <button class="btn btn-primary" onclick="pruefen()">Sjekk svar</button>
+    <button class="btn btn-ghost" onclick="zurueck()">Nullstill</button>
+    <span id="fb"></span>
+  </div>
+  <div class="hint" id="hint">Klikk først på et avsnitt til venstre, deretter på en ledig plass til høyre.</div>
+
+  <!-- SCORE PANEL -->
+  <div class="score-panel" id="scorePanel">
+    <div class="score-title" id="scoreTitle"></div>
+    <div class="score-breakdown">
+      <div class="score-item" id="si2"><div class="si-nr">Avsnitt 2</div><div class="si-icon" id="sii2">–</div></div>
+      <div class="score-item" id="si3"><div class="si-nr">Avsnitt 3</div><div class="si-icon" id="sii3">–</div></div>
+      <div class="score-item" id="si4"><div class="si-nr">Avsnitt 4</div><div class="si-icon" id="sii4">–</div></div>
+      <div class="score-item" id="si5"><div class="si-nr">Avsnitt 5</div><div class="si-icon" id="sii5">–</div></div>
+      <div class="score-item" id="si6"><div class="si-nr">Avsnitt 6</div><div class="si-icon" id="sii6">–</div></div>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+// ── DATA ────────────────────────────────────────────────────────────
+// Correct order: B(2) → C(3) → D(4) → E(5) → F(6)
+var RICHTIG = { s2:'B', s3:'C', s4:'D', s5:'F', s6:'E' };
+
+var TXT = {
+  B: 'Die ersten beiden Stunden sind Mathematik. Frau Sommer bespricht die Ergebnisse des letzten Tests und erklärt dabei, wo die häufigsten Fehler gemacht wurden. Lena hat acht von zehn Punkten, nicht perfekt, aber sie ist zufrieden. Anschließend bekommen alle eine neue Aufgabe zur Prozentrechnung, die Lena nachdenklich macht. Sie versteht das Prinzip, aber sie fühlt sich bei den Rechenwegen noch unsicher.',
+  C: 'Nach zwei weiteren Stunden läutet es zur Pause. Sie setzt sich mit ihrer besten Freundin Maja auf eine Bank im Schulhof. Die beiden reden über das Wochenende und über den anstehenden Klassenausflug nach Dresden. Obwohl die Pause nur zwanzig Minuten dauert, tut die frische Luft gut. Als die Glocke läutet, geht Lena etwas ruhiger in die nächste Stunde – Deutsch, worauf sie sich eigentlich freut.',
+  D: 'Die letzten beiden Stunden sind Chemie. Herr Brandt erklärt ein Experiment zur Reaktion von Säuren und Basen, das die Schülerinnen und Schüler selbst durchführen sollen. Lena arbeitet sorgfältig und notiert alle Beobachtungen in ihr Heft. Als das Ergebnis mit der Theorie übereinstimmt, ist sie ehrlich stolz, denn Chemie fällt ihr nämlich nicht immer leicht.',
+  E: 'Auf dem Heimweg steckt Lena sich die Kopfhörer in die Ohren und geht den Tag im Kopf noch einmal durch. Ein Gedicht aus dem Deutschunterricht geht ihr nicht aus dem Kopf, denn es hat sie mehr berührt, als sie erwartet hatte. Sie beschließt, es heute Abend noch einmal in Ruhe zu lesen. Müde, aber nicht unzufrieden, biegt sie in ihre Straße ein.',
+  F: 'Nach der letzten Stunde treffen sich Lena und ein paar Klassenkameraden vor dem Schuleingang. Sie reden kurz über das Chemiexperiment und lachen über einen Witz, den Jonas erzählt. Nach ein paar Minuten verabschieden sie sich. Einige nehmen den Bus, Lena geht zu Fuß.'
+};
+
+// ── SHUFFLE ──────────────────────────────────────────────────────────
+// Correct order: B C D E F (positions 2–6)
+var CORRECT_ORDER = ['B','C','D','F','E'];
+
+function shuffle(arr) {
+  var a = arr.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function countCorrect(arr) {
+  var n = 0;
+  arr.forEach(function(key, i) { if (key === CORRECT_ORDER[i]) n++; });
+  return n;
+}
+
+function safeShuffle() {
+  var result;
+  var attempts = 0;
+  do {
+    result = shuffle(CORRECT_ORDER);
+    attempts++;
+  } while (countCorrect(result) >= 3 && attempts < 100);
+  return result;
+}
+
+(function applyShuffleToDOM() {
+  var order = safeShuffle();
+  var container = document.getElementById('para-pool');
+  order.forEach(function(key) {
+    var el = document.getElementById('p' + key);
+    if (el) container.appendChild(el);
+  });
+})();
+
+// ── STATE ────────────────────────────────────────────────────────────
+var sel   = null;   // currently selected paragraph key ('B','C',…)
+var slots = {};     // { 's2': 'B', 's3': 'C', … }
+
+// ── HELPERS ──────────────────────────────────────────────────────────
+function updateDots() {
+  var n = Object.keys(slots).length;
+  ['d1','d2','d3','d4','d5'].forEach(function(id,i){
+    var d = document.getElementById(id);
+    d.classList.remove('set','right','wrong');
+    if (i < n) d.classList.add('set');
+  });
+}
+
+function setHint(txt) {
+  document.getElementById('hint').textContent = txt;
+}
+
+// ── SELECT PARAGRAPH ─────────────────────────────────────────────────
+function selPara(key) {
+  var el = document.getElementById('p' + key);
+  if (el.classList.contains('p-used')) return;
+  // deselect previous
+  document.querySelectorAll('.para-card').forEach(function(c) {
+    c.classList.remove('p-sel');
+  });
+  el.classList.add('p-sel');
+  sel = key;
+  setHint('Bra – klikk nå på en ledig plass til høyre.');
+}
+
+// ── FILL SLOT ────────────────────────────────────────────────────────
+function fillSlot(sid) {
+  var slot = document.getElementById(sid);
+  if (slot.classList.contains('s-ok')) return; // locked after correct check
+
+  // No paragraph selected: if slot is filled, remove it (return to pool)
+  if (!sel) {
+    if (slots[sid]) {
+      document.getElementById('p' + slots[sid]).classList.remove('p-used');
+      delete slots[sid];
+      slot.classList.remove('s-filled','s-bad');
+      slot.innerHTML =
+        '<div class="slot-nr">Avsnitt ' + sid.replace('s','') + '</div>' +
+        '<span class="slot-empty-txt">– ikke plassert –</span>';
+      updateDots();
+      setHint('Avsnittet er fjernet – velg et nytt til venstre.');
+    }
+    return;
+  }
+
+  // If slot already has a paragraph, return it to pool
+  if (slots[sid]) {
+    document.getElementById('p' + slots[sid]).classList.remove('p-used');
+  }
+
+  slots[sid] = sel;
+
+  // Build slot content
+  slot.innerHTML =
+    '<div class="slot-nr">Avsnitt ' + sid.replace('s','') + '</div>' +
+    '<span>' + TXT[sel] + '</span>';
+  slot.classList.remove('s-bad');
+  slot.classList.add('s-filled');
+
+  // Mark paragraph as used
+  document.getElementById('p' + sel).classList.remove('p-sel');
+  document.getElementById('p' + sel).classList.add('p-used');
+  sel = null;
+
+  updateDots();
+  var n = Object.keys(slots).length;
+  setHint(n < 5
+    ? 'Plass ' + n + ' satt – fortsett!'
+    : 'Alle fem plasser er fylt – klikk på «Sjekk svar»!'
+  );
+  document.getElementById('fb').innerHTML = '';
+}
+
+// ── PRÜFEN ───────────────────────────────────────────────────────────
+function pruefen() {
+  if (Object.keys(slots).length < 5) {
+    document.getElementById('fb').innerHTML =
+      '<span class="fb bad">Plasser alle fem avsnittene først.</span>';
+    return;
+  }
+
+  var r = 0;
+  ['s2','s3','s4','s5','s6'].forEach(function(sid) {
+    var ok = RICHTIG[sid] === slots[sid];
+    var slot = document.getElementById(sid);
+    slot.classList.remove('s-filled','s-bad');
+    slot.classList.add(ok ? 's-ok' : 's-bad');
+
+    // Score panel items
+    var si  = document.getElementById('si'  + sid.replace('s',''));
+    var sii = document.getElementById('sii' + sid.replace('s',''));
+    si.classList.remove('si-ok','si-bad');
+    si.classList.add(ok ? 'si-ok' : 'si-bad');
+    sii.textContent = ok ? '✓' : '✗';
+
+    // Progress dots
+    var dotIdx = ['s2','s3','s4','s5','s6'].indexOf(sid);
+    var dot = document.getElementById('d' + (dotIdx+1));
+    dot.classList.remove('set');
+    dot.classList.add(ok ? 'right' : 'wrong');
+
+    if (ok) r++;
+  });
+
+  document.getElementById('fb').innerHTML = r === 5
+    ? '<span class="fb ok">Veldig bra! Alle fem avsnittene er i riktig rekkefølge. 🎉</span>'
+    : '<span class="fb bad">' + r + ' av 5 riktige.</span>';
+
+  document.getElementById('scoreTitle').textContent =
+    r === 5 ? 'Resultat: 5 av 5 – utmerket!'
+    : r >= 3 ? 'Resultat: ' + r + ' av 5 – bra jobbet!'
+    : 'Resultat: ' + r + ' av 5 – prøv igjen!';
+
+  document.getElementById('scorePanel').classList.add('visible');
+  setHint('');
+}
+
+// ── ZURÜCKSETZEN ─────────────────────────────────────────────────────
+function zurueck() {
+  slots = {}; sel = null;
+
+  document.querySelectorAll('.para-card').forEach(function(c) {
+    c.classList.remove('p-sel','p-used');
+  });
+
+  ['s2','s3','s4','s5','s6'].forEach(function(sid) {
+    var slot = document.getElementById(sid);
+    slot.classList.remove('s-filled','s-ok','s-bad');
+    slot.innerHTML =
+      '<div class="slot-nr">Avsnitt ' + sid.replace('s','') + '</div>' +
+      '<span class="slot-empty-txt">– ikke plassert –</span>';
+  });
+
+  ['d1','d2','d3','d4','d5'].forEach(function(id) {
+    document.getElementById(id).classList.remove('set','right','wrong');
+  });
+
+  ['si2','si3','si4','si5','si6'].forEach(function(id) {
+    var si = document.getElementById(id);
+    si.classList.remove('si-ok','si-bad');
+    document.getElementById('sii' + id.replace('si','')).textContent = '–';
+  });
+
+  document.getElementById('fb').innerHTML = '';
+  document.getElementById('scorePanel').classList.remove('visible');
+  setHint('Klikk først på et avsnitt til venstre, deretter på en ledig plass til høyre.');
+}
+</script>
+</body>
+</html>
